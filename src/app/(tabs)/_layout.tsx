@@ -10,6 +10,7 @@ import { Link, Tabs } from "expo-router";
 import { Pressable } from "react-native";
 import Colors from "@/src/constants/Colors";
 import { useColorScheme } from "@/src/components/useColorScheme";
+import { Text } from "react-native";
 import { useClientOnlyValue } from "@/src/components/useClientOnlyValue";
 
 export default function TabLayout() {
@@ -63,16 +64,30 @@ export default function TabLayout() {
         name="search"
         options={{
           title: "Search",
-          tabBarActiveTintColor: "#5C5C5C",
+          tabBarActiveTintColor: colorScheme === "light" ? "#5C5C5C" : "white",
           tabBarItemStyle: {
             maxWidth: 70,
             padding: 5,
             marginTop: 5,
-            backgroundColor: "white",
+            backgroundColor: colorScheme === "light" ? "white" : "black",
             borderRadius: 10,
           },
-          tabBarIcon: ({ color }) => (
-            <Entypo name="magnifying-glass" size={30} color={color} />
+          tabBarLabel: ({ focused, color }) => (
+            <Text
+              style={{
+                color: !focused && colorScheme === "dark" ? "#A9A9A9" : color,
+                fontSize: 10,
+              }}
+            >
+              Search
+            </Text>
+          ),
+          tabBarIcon: ({ color, focused }) => (
+            <Entypo
+              name="magnifying-glass"
+              size={30}
+              color={!focused && colorScheme === "dark" ? "#A9A9A9" : color}
+            />
           ),
         }}
       />
