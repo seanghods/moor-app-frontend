@@ -67,7 +67,11 @@ export default function Communities() {
                 flex: 1,
               }}
             >
-              <MaterialIcons name="groups" size={25} color="black" />
+              <MaterialIcons
+                name="groups"
+                size={25}
+                color={Colors[colorScheme ?? "light"].text}
+              />
               <Text style={styles.postTitle}>{community.title}</Text>
               <Text
                 style={{ fontSize: 14, flexGrow: 1, paddingVertical: 3 }}
@@ -84,7 +88,11 @@ export default function Communities() {
                     alignItems: "flex-end",
                   }}
                 >
-                  <AntDesign name="hearto" size={16} color="black" />
+                  <AntDesign
+                    name="hearto"
+                    size={16}
+                    color={Colors[colorScheme ?? "light"].text}
+                  />
                   <Text style={{ fontSize: 14 }}>
                     {community.followers.length}
                   </Text>
@@ -99,7 +107,7 @@ export default function Communities() {
                   <MaterialCommunityIcons
                     name="comment-outline"
                     size={16}
-                    color="black"
+                    color={Colors[colorScheme ?? "light"].text}
                   />
                   <Text style={{ fontSize: 14 }}>{community.posts.length}</Text>
                 </View>

@@ -9,9 +9,8 @@ import {
 import { Link, Tabs } from "expo-router";
 import { Pressable } from "react-native";
 import Colors from "@/src/constants/Colors";
-import { useColorScheme } from "@/src/components/useColorScheme";
+import { useColorScheme } from "react-native";
 import { Text } from "react-native";
-import { useClientOnlyValue } from "@/src/components/useClientOnlyValue";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -30,7 +29,7 @@ export default function TabLayout() {
             <Pressable>
               {({ pressed }) => (
                 <MaterialCommunityIcons
-                  name="account-cowboy-hat"
+                  name="face-man-profile"
                   size={35}
                   color={Colors[colorScheme ?? "light"].text}
                   style={{ marginRight: 25, opacity: pressed ? 0.5 : 1 }}
@@ -39,7 +38,6 @@ export default function TabLayout() {
             </Pressable>
           </Link>
         ),
-        headerShown: useClientOnlyValue(false, true),
       }}
     >
       <Tabs.Screen

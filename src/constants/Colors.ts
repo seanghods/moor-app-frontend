@@ -26,4 +26,9 @@ export default {
     warning: "##FFE819",
     danger: "#FF392B",
   },
+  extraColors: {
+    lightGray: "#E0E0E0",
+    mediumGray: "#A9A9A9",
+    darkGray: "#5C5C5C",
+  },
 };
