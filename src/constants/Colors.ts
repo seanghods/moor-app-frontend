@@ -15,7 +15,7 @@ export default {
     danger: "#FF392B",
   },
   dark: {
-    text: "#fff",
+    text: "#E0E0E0",
     background: "#000",
     tint: tintColorDark,
     tabIconDefault: "#ccc",

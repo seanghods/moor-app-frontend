@@ -65,6 +65,8 @@ export default function TabLayout() {
           title: "Search",
           tabBarActiveTintColor: "#5C5C5C",
           tabBarItemStyle: {
+            maxWidth: 70,
+            padding: 5,
             marginTop: 5,
             backgroundColor: "white",
             borderRadius: 10,
