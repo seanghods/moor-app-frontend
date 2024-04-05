@@ -1,4 +1,4 @@
-export type Communities = {
+export type CommunityType = {
   id: string;
   // creator: mongoose.Schema.Types.ObjectId;
   title: string;
@@ -8,7 +8,7 @@ export type Communities = {
   posts: Array<number>;
 };
 
-const communities: Array<Communities> = [
+const communities: Array<CommunityType> = [
   {
     id: "iojaeri23",
     title: "Computers",

@@ -26,15 +26,11 @@ export default function Share() {
 
   const dynamicStyles = StyleSheet.create({
     textInput: {
-      backgroundColor: Colors[colorScheme ?? "light"].tabIconDefault,
-      borderRadius: 15,
       height: 40,
       paddingLeft: 5,
       width: "80%",
     },
     textArea: {
-      backgroundColor: Colors[colorScheme ?? "light"].tabIconDefault,
-      borderRadius: 15,
       height: 140,
       paddingLeft: 5,
       width: "80%",
@@ -44,14 +40,20 @@ export default function Share() {
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: Colors[colorScheme ?? "light"].tabIconDefault,
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.extraColors.lightGray
+          : Colors.extraColors.mediumGray,
       borderRadius: 20,
     },
     areaContainer: {
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "flex-start",
-      backgroundColor: Colors[colorScheme ?? "light"].tabIconDefault,
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.extraColors.lightGray
+          : Colors.extraColors.mediumGray,
       borderRadius: 20,
     },
   });
@@ -144,7 +146,7 @@ export default function Share() {
           }
         />
       </View>
-      <Button onPress={() => {}} title={"Submit"} />
+      <Button size={2} onPress={() => {}} title={"Submit"} />
     </View>
   );
 }

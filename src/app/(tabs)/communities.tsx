@@ -15,6 +15,7 @@ import {
 import { Text, View } from "@/src/components/Themed";
 import Colors from "@/src/constants/Colors";
 import communities from "@/assets/data/communityData";
+import { router } from "expo-router";
 
 export default function Communities() {
   const colorScheme = useColorScheme();
@@ -30,7 +31,13 @@ export default function Communities() {
       contentContainerStyle={styles.container}
       keyExtractor={(community) => community.id.toString()}
       renderItem={({ item: community }) => (
-        <View key={community.id} style={{ width: "100%" }}>
+        <TouchableOpacity
+          key={community.id}
+          onPress={() => {
+            router.push(`/communities/${community.id}`);
+          }}
+          style={{ width: "100%" }}
+        >
           <View
             style={{
               flexDirection: "row",
@@ -126,7 +133,7 @@ export default function Communities() {
               </View>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       )}
     />
     // </View>

@@ -11,17 +11,18 @@ import Colors from "../constants/Colors";
 type Props = {
   onPress: () => void;
   title: string;
+  size: number;
 };
 
 export default function Button(props: Props) {
   const colorScheme = useColorScheme();
-  const { onPress, title = "Save" } = props;
+  const { onPress, title = "Save", size } = props;
   const dynamicStyles = StyleSheet.create({
     button: {
       alignItems: "center",
       justifyContent: "center",
-      paddingVertical: 12,
-      paddingHorizontal: 32,
+      paddingVertical: size == 1 ? 6 : 12,
+      paddingHorizontal: size == 1 ? 16 : 32,
       borderRadius: 4,
       elevation: 3,
       backgroundColor: Colors[colorScheme ?? "light"].primary,

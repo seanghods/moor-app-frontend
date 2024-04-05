@@ -1,15 +1,48 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, TextInput, useColorScheme } from "react-native";
 import { Text, View } from "@/src/components/Themed";
+import Colors from "@/src/constants/Colors";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function Search() {
+  const colorScheme = useColorScheme();
+  const dynamicStyles = StyleSheet.create({
+    searchField: {
+      flex: 1,
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.extraColors.lightGray
+          : Colors.extraColors.darkGray,
+      borderRadius: 8,
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    input: {
+      padding: 10,
+      color:
+        colorScheme === "light"
+          ? Colors.extraColors.darkGray
+          : Colors.extraColors.lightGray,
+    },
+  });
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Search</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
+      <View style={styles.searchContainer}>
+        <View style={styles.searchSection}>
+          <View style={dynamicStyles.searchField}>
+            <FontAwesome
+              name="search"
+              size={20}
+              style={styles.searchIcon}
+              color={
+                colorScheme === "light"
+                  ? Colors.extraColors.darkGray
+                  : Colors.extraColors.lightGray
+              }
+            />
+            <TextInput style={dynamicStyles.input} placeholder="Search..." />
+          </View>
+        </View>
+      </View>
     </View>
   );
 }
@@ -17,13 +50,16 @@ export default function Search() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  searchContainer: { height: 60, backgroundColor: "#fff" },
+  searchSection: {
+    flexDirection: "row",
+    gap: 10,
+    flex: 1,
+    paddingHorizontal: 20,
     alignItems: "center",
-    justifyContent: "center",
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
+  searchIcon: { paddingLeft: 10 },
   separator: {
     marginVertical: 30,
     height: 1,
