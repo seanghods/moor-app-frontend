@@ -1,8 +1,7 @@
 import communities, { CommunityType } from "@/assets/data/communityData";
 import { PostType, posts } from "@/assets/data/postsData";
-import Button from "@/src/components/Button";
 import PostFeed from "@/src/components/PostFeed";
-import { Text, View } from "@/src/components/Themed";
+import { Text, View, Button } from "tamagui";
 import Colors from "@/src/constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
@@ -28,6 +27,7 @@ const communityPage = () => {
   }, []);
   return (
     <View
+      bg={"$background"}
       style={{
         flex: 1,
       }}
@@ -38,7 +38,7 @@ const communityPage = () => {
             flex: 1,
             gap: 3,
             padding: 8,
-            paddingTop: 2,
+            marginVertical: 2,
             borderBottomWidth: 2,
             borderBottomColor: colorScheme == "light" ? "#eee" : "#333333",
           }}
@@ -60,7 +60,9 @@ const communityPage = () => {
             padding: 5,
           }}
         >
-          <Button title="Follow" onPress={() => {}} size={1} />
+          <Button theme="blue" size="$4">
+            <Text style={{ fontWeight: "700", fontSize: 13 }}>Follow</Text>
+          </Button>
         </View>
       </View>
       <PostFeed posts={communityPosts} showCommunity={false} />
@@ -76,12 +78,12 @@ const styles = StyleSheet.create({
   },
   communityTitle: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: "700",
     paddingVertical: 10,
   },
   postTitle: {
     fontSize: 25,
-    fontWeight: "bold",
+    fontWeight: "700",
     padding: 3,
   },
   buttons: {

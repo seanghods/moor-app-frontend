@@ -1,9 +1,9 @@
-import { Text, View } from "@/src/components/Themed";
 import { router, useLocalSearchParams } from "expo-router";
 import { usePost } from "@/src/PostContext";
 import { useEffect } from "react";
 import {
   AntDesign,
+  Entypo,
   FontAwesome,
   MaterialCommunityIcons,
   MaterialIcons,
@@ -15,11 +15,9 @@ import {
   StyleSheet,
   Linking,
   Image,
-  TextInput,
   ScrollView,
 } from "react-native";
-import Button from "@/src/components/Button";
-import CommentFeed from "@/src/components/CommentFeed";
+import { Button, View, Text } from "tamagui";
 
 const postPage: React.FC = () => {
   const { id } = useLocalSearchParams();
@@ -84,7 +82,23 @@ const postPage: React.FC = () => {
             flex: 1,
           }}
         >
-          <Text style={styles.postTitle}>{currentPost?.title}</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginRight: 15,
+            }}
+          >
+            <Text style={styles.postTitle}>{currentPost?.title}</Text>
+            <TouchableOpacity>
+              <Entypo
+                name="dots-three-vertical"
+                size={16}
+                color={Colors[colorScheme ?? "light"].text}
+              />
+            </TouchableOpacity>
+          </View>
           <Text style={dynamicStyles.author}>
             {currentPost?.author.username}
           </Text>
@@ -141,48 +155,68 @@ const postPage: React.FC = () => {
         </View>
       </View>
       <View>
-        <View style={{ padding: 10 }}>
-          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: 20,
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ fontSize: 20, fontWeight: "700" }}>
             Discussion Board:
           </Text>
+          <TouchableOpacity>
+            <FontAwesome
+              name="pencil-square-o"
+              size={20}
+              style={{ marginRight: 15 }}
+              color="black"
+            />
+          </TouchableOpacity>
         </View>
-        <View style={{ gap: 10 }}>
-          {currentPost?.discussions.map((discussion) => {
+        <View style={{ gap: 20 }}>
+          {currentPost?.discussions.map((discussion, index) => {
             return (
-              <TouchableOpacity
-                style={{ alignItems: "center" }}
+              <Button
+                size={"$6"}
+                theme={
+                  discussion.title == "Discussion"
+                    ? "blue"
+                    : discussion.title == "Questions"
+                    ? "orange"
+                    : discussion.title == "More Resources"
+                    ? "green"
+                    : "blue"
+                }
+                style={{
+                  alignItems: "center",
+                  width: "90%",
+                  alignSelf: "center",
+                  height: 100,
+                }}
                 onPress={() => router.push(`/discussions/${discussion.id}`)}
+                key={index}
               >
                 <View
                   style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    width: "95%",
-                    padding: 25,
-                    borderRadius: 15,
-                    shadowColor: Colors.extraColors.mediumGray,
-                    shadowOpacity: 0.3,
-                    borderWidth: 2,
-                    borderColor: Colors.extraColors.mediumGray,
-                    backgroundColor:
-                      colorScheme === "light"
-                        ? Colors.extraColors.lightGray
-                        : Colors.extraColors.darkGray,
+                    gap: 10,
                   }}
                 >
-                  <Text style={{ fontWeight: "bold" }}>{discussion.title}</Text>
+                  <View style={{ alignItems: "center" }}>
+                    <Text style={{ fontWeight: "700" }}>
+                      {discussion.title}
+                    </Text>
+                  </View>
                   <View
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
-                      gap: 5,
-                      backgroundColor:
-                        colorScheme === "light"
-                          ? Colors.extraColors.lightGray
-                          : Colors.extraColors.darkGray,
+                      gap: 2,
+                      justifyContent: "center",
                     }}
                   >
-                    <Text style={{ fontSize: 16 }}>
+                    <Text style={{ fontSize: 14 }}>
                       {discussion.comments.length}
                     </Text>
                     <MaterialCommunityIcons
@@ -192,7 +226,7 @@ const postPage: React.FC = () => {
                     />
                   </View>
                 </View>
-              </TouchableOpacity>
+              </Button>
             );
           })}
         </View>
@@ -215,7 +249,7 @@ const styles = StyleSheet.create({
   },
   communityTitle: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: "700",
   },
   linkContainer: {
     width: "100%",
@@ -251,7 +285,7 @@ const styles = StyleSheet.create({
   body: { fontSize: 15, flexGrow: 1, padding: 8 },
   postTitle: {
     fontSize: 25,
-    fontWeight: "bold",
+    fontWeight: "700",
     paddingHorizontal: 3,
   },
   likeCommentContainer: {

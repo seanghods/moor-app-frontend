@@ -67,7 +67,7 @@ export const posts: Array<PostType> = [
       },
       {
         id: "ajodf342",
-        title: "Questions?",
+        title: "Questions",
         author: { username: "user1" },
         comments: [
           {
@@ -95,6 +95,12 @@ export const posts: Array<PostType> = [
             parentPost: "24124124sd",
           },
         ],
+      },
+      {
+        id: "fsdfawe2",
+        title: "More Resources",
+        author: { username: "user1" },
+        comments: [],
       },
     ],
   },

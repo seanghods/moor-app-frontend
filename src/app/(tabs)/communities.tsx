@@ -12,7 +12,7 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { Text, View } from "@/src/components/Themed";
+import { Text, View } from "tamagui";
 import Colors from "@/src/constants/Colors";
 import communities from "@/assets/data/communityData";
 import { router } from "expo-router";
@@ -146,11 +146,11 @@ const styles = StyleSheet.create({
   },
   communityTitle: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "700",
   },
   postTitle: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: "700",
   },
   buttons: {
     flexDirection: "row",

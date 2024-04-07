@@ -1,19 +1,27 @@
 import { usePost } from "@/src/PostContext";
-import Button from "@/src/components/Button";
 import CommentFeed from "@/src/components/CommentFeed";
-import { Text, View } from "@/src/components/Themed";
+import { Separator, Text, View } from "tamagui";
 import Colors from "@/src/constants/Colors";
-import { FontAwesome } from "@expo/vector-icons";
+import { Entypo, FontAwesome } from "@expo/vector-icons";
 import {
   ScrollView,
   StyleSheet,
   TextInput,
+  TouchableOpacity,
   useColorScheme,
 } from "react-native";
+import { Button } from "tamagui";
+import { useLocalSearchParams } from "expo-router";
+import { DiscussionType } from "@/assets/data/postsData";
+import { useState } from "react";
 
 const Discussion = () => {
   const colorScheme = useColorScheme();
+  const { id } = useLocalSearchParams();
   const { currentPost } = usePost();
+  const [currentDiscussion, setCurrentDiscussion] = useState<
+    DiscussionType | undefined
+  >(currentPost?.discussions.find((discussion) => discussion.id == id));
   const dynamicStyles = StyleSheet.create({
     textArea: {
       height: 100,
@@ -40,8 +48,30 @@ const Discussion = () => {
         backgroundColor: Colors[colorScheme ?? "light"].background,
       }}
     >
-      <View>
-        <Text>Discussion Title</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginRight: 15,
+        }}
+      >
+        <Text
+          style={{
+            padding: 15,
+            fontSize: 20,
+            fontWeight: "700",
+          }}
+        >
+          {currentDiscussion?.title}
+        </Text>
+        <TouchableOpacity>
+          <Entypo
+            name="dots-three-vertical"
+            size={18}
+            color={Colors[colorScheme ?? "light"].text}
+          />
+        </TouchableOpacity>
       </View>
       <View
         style={{
@@ -79,11 +109,12 @@ const Discussion = () => {
             paddingRight: 12,
           }}
         >
-          <Button title="Post" size={1} onPress={() => {}} />
+          <Button theme={"blue"}>Post</Button>
         </View>
       </View>
+      <Separator alignSelf="stretch" />
       <View>
-        <CommentFeed comments={currentPost?.discussions[0].comments} />
+        <CommentFeed comments={currentDiscussion?.comments} />
       </View>
     </ScrollView>
   );

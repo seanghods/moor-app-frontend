@@ -1,5 +1,5 @@
 import { StyleSheet, TextInput, useColorScheme } from "react-native";
-import { Text, View } from "@/src/components/Themed";
+// import { Text, View } from "@/src/components/Themed";
 import { useState } from "react";
 import Colors from "@/src/constants/Colors";
 import {
@@ -7,10 +7,11 @@ import {
   Entypo,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import Button from "@/src/components/Button";
+import { Text, View, Switch, Button, getTokenValue, Label } from "tamagui";
 
 export default function Share() {
   const colorScheme = useColorScheme();
+  const [postType, setPostType] = useState<"link" | "text">("link");
   const [postData, setPostData] = useState({
     community: "",
     title: "",
@@ -58,95 +59,158 @@ export default function Share() {
     },
   });
   return (
-    <View style={styles.container}>
-      <View style={{ padding: 10 }}>
+    <View style={styles.container} bg="$background">
+      <View style={{ padding: 15, paddingBottom: 0 }}>
         <Text
           style={{
-            fontSize: 30,
+            fontSize: 25,
             fontWeight: "700",
           }}
         >
-          Create Post
+          Share an Insight
         </Text>
       </View>
-      <View style={dynamicStyles.inputContainer}>
-        <MaterialIcons
-          name="groups"
-          style={{ padding: 10 }}
-          size={25}
-          color="black"
-        />
-        <TextInput
-          placeholder="community"
-          value={postData.community}
-          onChangeText={(value) => handleInputChange("community", value)}
-          style={dynamicStyles.textInput}
-          autoCapitalize="none"
-          placeholderTextColor={
-            colorScheme === "light"
-              ? Colors.extraColors.mediumGray
-              : Colors.extraColors.darkGray
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+        <Text style={{ fontSize: 16, fontWeight: "700" }}>Link</Text>
+        <Switch
+          checked={postType == "text"}
+          onCheckedChange={() =>
+            setPostType((prev) => (prev == "text" ? "link" : "text"))
           }
-        />
+          bg={postType == "text" ? "$blue3Dark" : "$accentBackground"}
+          native
+          size="$4"
+          nativeProps={{
+            ios_backgroundColor: getTokenValue("$blue10Dark"),
+            trackColor: {
+              false: getTokenValue("$blue10Dark"),
+              true: getTokenValue("$blue3Dark"),
+            },
+            thumbColor:
+              postType == "text"
+                ? getTokenValue("$blue10Dark")
+                : getTokenValue("$blue3Dark"),
+          }}
+        >
+          <Switch.Thumb bg={"$accentBackground"} animation="200ms" />
+        </Switch>
+        <Text style={{ fontSize: 16, fontWeight: "700" }}>Text</Text>
       </View>
-      <View style={dynamicStyles.inputContainer}>
-        <MaterialIcons
-          name="title"
-          style={{ padding: 10 }}
-          size={25}
-          color="black"
-        />
-        <TextInput
-          placeholder="title"
-          value={postData.title}
-          onChangeText={(value) => handleInputChange("title", value)}
-          style={dynamicStyles.textInput}
-          autoCapitalize="none"
-          placeholderTextColor={
-            colorScheme === "light"
-              ? Colors.extraColors.mediumGray
-              : Colors.extraColors.darkGray
-          }
-        />
+      <View>
+        <View>
+          <Text p={4} fontWeight={"700"}>
+            Community
+          </Text>
+        </View>
+        <View style={dynamicStyles.inputContainer}>
+          <MaterialIcons
+            name="groups"
+            style={{ padding: 10 }}
+            size={25}
+            color="black"
+          />
+          <TextInput
+            placeholder="community"
+            value={postData.community}
+            onChangeText={(value) => handleInputChange("community", value)}
+            style={dynamicStyles.textInput}
+            autoCapitalize="none"
+            placeholderTextColor={
+              colorScheme === "light"
+                ? Colors.extraColors.mediumGray
+                : Colors.extraColors.darkGray
+            }
+          />
+        </View>
       </View>
-      <View style={dynamicStyles.inputContainer}>
-        <Entypo name="link" style={{ padding: 10 }} size={25} color="black" />
-        <TextInput
-          placeholder="link"
-          value={postData.link}
-          onChangeText={(value) => handleInputChange("link", value)}
-          style={dynamicStyles.textInput}
-          autoCapitalize="none"
-          placeholderTextColor={
-            colorScheme === "light"
-              ? Colors.extraColors.mediumGray
-              : Colors.extraColors.darkGray
-          }
-        />
+      <View>
+        <View>
+          <Text mt={6} p={4} fontWeight={"700"}>
+            Title
+          </Text>
+        </View>
+        <View style={dynamicStyles.inputContainer}>
+          <MaterialIcons
+            name="title"
+            style={{ padding: 10 }}
+            size={25}
+            color="black"
+          />
+          <TextInput
+            placeholder="title"
+            value={postData.title}
+            onChangeText={(value) => handleInputChange("title", value)}
+            style={dynamicStyles.textInput}
+            autoCapitalize="none"
+            placeholderTextColor={
+              colorScheme === "light"
+                ? Colors.extraColors.mediumGray
+                : Colors.extraColors.darkGray
+            }
+          />
+        </View>
       </View>
-      <View style={dynamicStyles.areaContainer}>
-        <MaterialCommunityIcons
-          name="subtitles-outline"
-          style={{ padding: 10 }}
-          size={25}
-          color="black"
-        />
-        <TextInput
-          placeholder="body"
-          value={postData.body}
-          onChangeText={(value) => handleInputChange("body", value)}
-          style={dynamicStyles.textArea}
-          autoCapitalize="none"
-          multiline={true}
-          numberOfLines={4}
-          placeholderTextColor={
-            colorScheme === "light"
-              ? Colors.extraColors.mediumGray
-              : Colors.extraColors.darkGray
-          }
-        />
+      {postType == "link" && (
+        <View>
+          <View>
+            <Text mt={6} p={4} fontWeight={"700"}>
+              Link
+            </Text>
+          </View>
+          <View style={dynamicStyles.inputContainer}>
+            <Entypo
+              name="link"
+              style={{ padding: 10 }}
+              size={25}
+              color="black"
+            />
+            <TextInput
+              placeholder="link"
+              value={postData.link}
+              onChangeText={(value) => handleInputChange("link", value)}
+              style={dynamicStyles.textInput}
+              autoCapitalize="none"
+              placeholderTextColor={
+                colorScheme === "light"
+                  ? Colors.extraColors.mediumGray
+                  : Colors.extraColors.darkGray
+              }
+            />
+          </View>
+        </View>
+      )}
+      <View>
+        <View>
+          <Text mt={6} p={4} fontWeight={"700"}>
+            Description
+          </Text>
+        </View>
+        <View style={dynamicStyles.areaContainer}>
+          <MaterialCommunityIcons
+            name="subtitles-outline"
+            style={{ padding: 10 }}
+            size={25}
+            color="black"
+          />
+          <TextInput
+            placeholder="description"
+            value={postData.body}
+            onChangeText={(value) => handleInputChange("body", value)}
+            style={dynamicStyles.textArea}
+            autoCapitalize="none"
+            multiline={true}
+            numberOfLines={4}
+            placeholderTextColor={
+              colorScheme === "light"
+                ? Colors.extraColors.mediumGray
+                : Colors.extraColors.darkGray
+            }
+          />
+        </View>
       </View>
-      <Button size={2} onPress={() => {}} title={"Submit"} />
+      <Button mt={8} size={"$5"} fontWeight={"700"} bg={"$blue5"}>
+        Submit
+      </Button>
     </View>
   );
 }
@@ -156,6 +220,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
-    gap: 20,
+    gap: 5,
   },
 });
