@@ -25,6 +25,7 @@ export type CommentType = {
   body: string;
   parentPost: string;
   parentComment?: string;
+  children?: CommentType[];
 };
 
 export const posts: Array<PostType> = [
@@ -50,6 +51,7 @@ export const posts: Array<PostType> = [
             author: { username: "treta" },
             body: "The internet wiring underwater is wild.",
             parentPost: "24124124sd",
+            children: [],
           },
           {
             id: "dgs323",
@@ -62,6 +64,20 @@ export const posts: Array<PostType> = [
             author: { username: "seb" },
             body: "thanks for sharing!",
             parentPost: "24124124sd",
+          },
+          {
+            id: "sfadfafd",
+            author: { username: "bossy" },
+            body: "Never knew that.",
+            parentPost: "24124124sd",
+            parentComment: "dfssdf",
+          },
+          {
+            id: "gfv232",
+            author: { username: "wowOk" },
+            body: "Me neither, thanks for sharing OP.",
+            parentPost: "24124124sd",
+            parentComment: "sfadfafd",
           },
         ],
       },

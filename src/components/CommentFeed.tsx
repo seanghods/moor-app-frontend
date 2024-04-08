@@ -1,13 +1,8 @@
-import {
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
-} from "react-native";
+import { StyleSheet, useColorScheme } from "react-native";
 import { Text, View } from "tamagui";
-import Colors from "../constants/Colors";
 import { CommentType } from "@/assets/data/postsData";
-import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useState, useEffect } from "react";
+import CommentItem from "./CommentItem";
 
 type Props = {
   comments: Array<CommentType> | undefined;
@@ -15,10 +10,51 @@ type Props = {
 
 const CommentFeed: React.FC<Props> = ({ comments }) => {
   const colorScheme = useColorScheme();
+  const [processedComments, setProcessedComments] = useState<
+    Array<CommentType>
+  >([]);
+  useEffect(() => {
+    if (comments) {
+      setProcessedComments(nestComments(comments));
+    }
+  }, [comments]);
+  const nestComments = (
+    comments: Array<CommentType> | undefined
+  ): CommentType[] => {
+    if (comments !== undefined) {
+      const commentMap: {
+        [key: string]: CommentType & { children: CommentType[] };
+      } = {};
+
+      // First, create a map of all comments by their IDs
+      comments.forEach((comment) => {
+        commentMap[comment.id] = { ...comment, children: [] };
+      });
+
+      // Then, iterate through the comments to assign child comments
+      comments.forEach((comment) => {
+        if (comment.parentComment) {
+          commentMap[comment.parentComment].children.push(
+            commentMap[comment.id]
+          );
+        }
+      });
+
+      // Finally, filter out only top-level comments (those without a parentComment)
+      const finalComments = Object.values(commentMap).filter(
+        (comment) => !comment.parentComment
+      );
+
+      return finalComments;
+    } else {
+      return [];
+    }
+  };
+
   return (
     <>
       <View style={styles.container}>
-        {!comments || comments.length == 0 ? (
+        {!processedComments || processedComments.length == 0 ? (
           <View p={25}>
             <Text>
               There are no comments yet in this discussion board. Post one to
@@ -26,67 +62,9 @@ const CommentFeed: React.FC<Props> = ({ comments }) => {
             </Text>
           </View>
         ) : (
-          comments.map((comment, index) => (
-            <View key={index} style={{ gap: 5 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginRight: 15,
-                }}
-              >
-                <View
-                  style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
-                >
-                  <MaterialCommunityIcons
-                    name="face-man-profile"
-                    size={25}
-                    color={Colors[colorScheme ?? "light"].text}
-                  />
-                  <Text style={{ color: Colors[colorScheme ?? "light"].info }}>
-                    {comment.author.username}
-                  </Text>
-                </View>
-                <TouchableOpacity>
-                  <Entypo
-                    name="dots-three-vertical"
-                    size={16}
-                    color={Colors[colorScheme ?? "light"].text}
-                  />
-                </TouchableOpacity>
-              </View>
-              <Text style={{ fontSize: 16 }}>{comment.body}</Text>
-              <View style={{ flexDirection: "row", gap: 7 }}>
-                <View
-                  style={{ flexDirection: "row", gap: 3, alignItems: "center" }}
-                >
-                  <TouchableOpacity>
-                    <Ionicons name="chevron-up" size={15} color="black" />
-                  </TouchableOpacity>
-                  <Text> 1 </Text>
-                  <TouchableOpacity>
-                    <Ionicons name="chevron-down" size={15} color="black" />
-                  </TouchableOpacity>
-                </View>
-                <TouchableOpacity>
-                  <View style={{ flexDirection: "row", gap: 5 }}>
-                    <MaterialCommunityIcons
-                      name="comment-outline"
-                      size={16}
-                      color={Colors[colorScheme ?? "light"].info}
-                    />
-                    <Text
-                      style={{
-                        color: Colors[colorScheme ?? "light"].info,
-                        fontSize: 12,
-                      }}
-                    >
-                      Reply
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
+          processedComments.map((comment, index) => (
+            <View key={index}>
+              <CommentItem comment={comment} />
             </View>
           ))
         )}

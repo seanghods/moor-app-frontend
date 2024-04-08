@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { usePost } from "@/src/PostContext";
+import { usePost } from "@/src/app/context/PostContext";
 import { useEffect } from "react";
 import {
   AntDesign,
@@ -231,6 +231,7 @@ const postPage: React.FC = () => {
           })}
         </View>
       </View>
+      <View style={{ height: 40 }} />
     </ScrollView>
   );
 };

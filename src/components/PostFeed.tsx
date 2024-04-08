@@ -16,7 +16,7 @@ import {
 import { Text, View } from "@/src/components/Themed";
 import Colors from "@/src/constants/Colors";
 import { router } from "expo-router";
-import { usePost } from "@/src/PostContext";
+import { usePost } from "@/src/app/context/PostContext";
 
 type Props = {
   posts: Array<PostType>;

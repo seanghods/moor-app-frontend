@@ -16,7 +16,7 @@ interface PostProviderProps {
 
 // Create a provider component
 export const PostProvider: React.FC<PostProviderProps> = ({ children }) => {
-  const [currentPost, setCurrentPost] = useState<PostType | null>(null); // Initialize user state as null or from a persisted state
+  const [currentPost, setCurrentPost] = useState<PostType | null>(null);
 
   return (
     <PostContext.Provider value={{ currentPost, setCurrentPost }}>

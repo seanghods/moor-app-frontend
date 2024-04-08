@@ -1,4 +1,4 @@
-import { usePost } from "@/src/PostContext";
+import { usePost } from "@/src/app/context/PostContext";
 import CommentFeed from "@/src/components/CommentFeed";
 import { Separator, Text, View } from "tamagui";
 import Colors from "@/src/constants/Colors";
@@ -9,6 +9,8 @@ import {
   TextInput,
   TouchableOpacity,
   useColorScheme,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { Button } from "tamagui";
 import { useLocalSearchParams } from "expo-router";
@@ -41,82 +43,84 @@ const Discussion = () => {
     },
   });
   return (
-    <ScrollView
-      style={{
-        flex: 1,
-        width: "100%",
-        backgroundColor: Colors[colorScheme ?? "light"].background,
-      }}
-    >
-      <View
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <ScrollView
         style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginRight: 15,
+          flex: 1,
+          width: "100%",
+          backgroundColor: Colors[colorScheme ?? "light"].background,
         }}
       >
-        <Text
+        <View
           style={{
-            padding: 15,
-            fontSize: 20,
-            fontWeight: "700",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginRight: 15,
           }}
         >
-          {currentDiscussion?.title}
-        </Text>
-        <TouchableOpacity>
-          <Entypo
-            name="dots-three-vertical"
-            size={18}
-            color={Colors[colorScheme ?? "light"].text}
-          />
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          alignItems: "center",
-          padding: 10,
-        }}
-      >
-        <View style={dynamicStyles.commentContainer}>
-          <FontAwesome
-            name="pencil-square-o"
-            size={24}
-            style={{ padding: 10 }}
-            color="black"
-          />
-          <TextInput
-            placeholder="add a comment..."
-            // value={postData.body}
-            // onChangeText={(value) => handleInputChange("body", value)}
-            style={dynamicStyles.textArea}
-            autoCapitalize="none"
-            multiline={true}
-            numberOfLines={4}
-            placeholderTextColor={
-              colorScheme === "light"
-                ? Colors.extraColors.mediumGray
-                : Colors.extraColors.darkGray
-            }
-          />
+          <Text
+            style={{
+              padding: 15,
+              fontSize: 20,
+              fontWeight: "700",
+            }}
+          >
+            {currentDiscussion?.title}
+          </Text>
+          <TouchableOpacity>
+            <Entypo
+              name="dots-three-vertical"
+              size={18}
+              color={Colors[colorScheme ?? "light"].text}
+            />
+          </TouchableOpacity>
         </View>
         <View
           style={{
-            alignItems: "flex-end",
-            width: "90%",
-            paddingTop: 12,
-            paddingRight: 12,
+            alignItems: "center",
+            padding: 10,
           }}
         >
-          <Button theme={"blue"}>Post</Button>
+          <View style={dynamicStyles.commentContainer}>
+            <FontAwesome
+              name="pencil-square-o"
+              size={24}
+              style={{ padding: 10 }}
+              color="black"
+            />
+            <TextInput
+              placeholder="add a comment..."
+              // value={postData.body}
+              // onChangeText={(value) => handleInputChange("body", value)}
+              style={dynamicStyles.textArea}
+              autoCapitalize="none"
+              multiline={true}
+              numberOfLines={4}
+              placeholderTextColor={
+                colorScheme === "light"
+                  ? Colors.extraColors.mediumGray
+                  : Colors.extraColors.darkGray
+              }
+            />
+          </View>
+          <View
+            style={{
+              alignItems: "flex-end",
+              width: "90%",
+              paddingTop: 12,
+              paddingRight: 12,
+            }}
+          >
+            <Button theme={"blue"}>Post</Button>
+          </View>
         </View>
-      </View>
-      <Separator alignSelf="stretch" />
-      <View>
-        <CommentFeed comments={currentDiscussion?.comments} />
-      </View>
-    </ScrollView>
+        <Separator alignSelf="stretch" />
+        <View>
+          <CommentFeed comments={currentDiscussion?.comments} />
+        </View>
+      </ScrollView>
+    </TouchableWithoutFeedback>
   );
 };
 
