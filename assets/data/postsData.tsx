@@ -1,6 +1,6 @@
 export type PostType = {
   id: string;
-  author: { username: string };
+  author: { username: string; id: string };
   community: { title: string; id: string };
   thumbnail?: string;
   domain?: string;
@@ -15,13 +15,13 @@ export type PostType = {
 export type DiscussionType = {
   id: string;
   title: string;
-  author: { username: string };
+  author: { username: string; id: string };
   comments: Array<CommentType>;
 };
 
 export type CommentType = {
   id: string;
-  author: { username: string };
+  author: { username: string; id: string };
   body: string;
   parentPost: string;
   parentComment?: string;
@@ -32,7 +32,7 @@ export const posts: Array<PostType> = [
   {
     id: "24124124sd",
     title: "How Computers Work",
-    author: { username: "user1" },
+    author: { username: "user1", id: "1" },
     community: { title: "Computers", id: "iojaeri23" },
     thumbnail: "https://i.ytimg.com/vi/7_LPdttKXPc/hqdefault.jpg",
     domain: "www.youtube.com",
@@ -44,37 +44,37 @@ export const posts: Array<PostType> = [
       {
         id: "fdsf23",
         title: "Discussion",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [
           {
             id: "dfssdf",
-            author: { username: "treta" },
+            author: { username: "treta", id: "1" },
             body: "The internet wiring underwater is wild.",
             parentPost: "24124124sd",
             children: [],
           },
           {
             id: "dgs323",
-            author: { username: "qddg" },
+            author: { username: "qddg", id: "1" },
             body: "From my macbook to this.",
             parentPost: "24124124sd",
           },
           {
             id: "hgfhgij",
-            author: { username: "seb" },
+            author: { username: "seb", id: "1" },
             body: "thanks for sharing!",
             parentPost: "24124124sd",
           },
           {
             id: "sfadfafd",
-            author: { username: "bossy" },
+            author: { username: "bossy", id: "1" },
             body: "Never knew that.",
             parentPost: "24124124sd",
             parentComment: "dfssdf",
           },
           {
             id: "gfv232",
-            author: { username: "wowOk" },
+            author: { username: "wowOk", id: "1" },
             body: "Me neither, thanks for sharing OP.",
             parentPost: "24124124sd",
             parentComment: "sfadfafd",
@@ -84,29 +84,29 @@ export const posts: Array<PostType> = [
       {
         id: "ajodf342",
         title: "Questions",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [
           {
             id: "ijesot3",
-            author: { username: "bobby" },
+            author: { username: "bobby", id: "1" },
             body: "I love computers, great post",
             parentPost: "24124124sd",
           },
           {
             id: "dfssdf",
-            author: { username: "rick" },
+            author: { username: "rick", id: "1" },
             body: "The internet wiring underwater is wild.",
             parentPost: "24124124sd",
           },
           {
             id: "dgs323",
-            author: { username: "mohammed" },
+            author: { username: "mohammed", id: "1" },
             body: "From my macbook to this.",
             parentPost: "24124124sd",
           },
           {
             id: "hgfhgij",
-            author: { username: "seb" },
+            author: { username: "seb", id: "1" },
             body: "thanks for sharing!",
             parentPost: "24124124sd",
           },
@@ -115,7 +115,7 @@ export const posts: Array<PostType> = [
       {
         id: "fsdfawe2",
         title: "More Resources",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
     ],
@@ -123,7 +123,7 @@ export const posts: Array<PostType> = [
   {
     id: "24sda124sd",
     title: "My Experience with Jump Rope",
-    author: { username: "user1" },
+    author: { username: "user1", id: "1" },
     community: { title: "Fitness", id: "sdgsdgf34" },
     type: "text",
     body: "There are a lot of ways to work out these days. Boot camps, workout classes, yoga. This is why learning to jump rope got me in shape faster than any of the other exercises. Jumping rope is an incredible full-body cardio workout. It even tones the arms.",
@@ -132,19 +132,19 @@ export const posts: Array<PostType> = [
       {
         id: "fdsasf23",
         title: "Discussion",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
       {
         id: "fdsfaf23",
         title: "Questions",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
       {
         id: "fdsdff23",
         title: "More Resources",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
     ],
@@ -152,7 +152,7 @@ export const posts: Array<PostType> = [
   {
     id: "39042kjsf",
     title: "Surviving in Nature",
-    author: { username: "user2" },
+    author: { username: "user2", id: "1" },
     community: { title: "Nature", id: "fdg342" },
     thumbnail: "https://i.ytimg.com/vi/Z7baTi2w_0Q/maxresdefault.jpg",
     domain: "www.youtube.com",
@@ -164,19 +164,19 @@ export const posts: Array<PostType> = [
       {
         id: "dfdsasf23",
         title: "Discussion",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
       {
         id: "afdsfaf23",
         title: "Questions",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
       {
         id: "sfdsdff23",
         title: "More Resources",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
     ],
@@ -184,7 +184,7 @@ export const posts: Array<PostType> = [
   {
     id: "dfsdb342",
     title: "Teaching Tutorial",
-    author: { username: "user3" },
+    author: { username: "user3", id: "1" },
     community: { title: "Learning", id: "xxzxxz2" },
     thumbnail: "https://i.ytimg.com/vi/WwTpfVQgkU0/hqdefault.jpg",
     domain: "www.youtube.com",
@@ -196,19 +196,19 @@ export const posts: Array<PostType> = [
       {
         id: "fdsasfx23",
         title: "Discussion",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
       {
         id: "fdsfaxf23",
         title: "Questions",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
       {
         id: "fdxsdff23",
         title: "More Resources",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
     ],
@@ -216,7 +216,7 @@ export const posts: Array<PostType> = [
   {
     id: "434g32",
     title: "Cooking w Spices",
-    author: { username: "user4" },
+    author: { username: "user4", id: "1" },
     community: { title: "Cooking", id: "mfkldmkmlk23" },
     thumbnail: "https://i.ytimg.com/vi/bsYzWK3cxOM/maxresdefault.jpg",
     domain: "www.youtube.com",
@@ -228,19 +228,19 @@ export const posts: Array<PostType> = [
       {
         id: "fdsasfe23",
         title: "Discussion",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
       {
         id: "fdsfafe23",
         title: "Questions",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
       {
         id: "fdsdfef23",
         title: "More Resources",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
     ],
@@ -248,7 +248,7 @@ export const posts: Array<PostType> = [
   {
     id: "jifjieojio33",
     title: "All About Fire",
-    author: { username: "user1" },
+    author: { username: "user1", id: "1" },
     community: { title: "Nature", id: "fdg342" },
     type: "text",
     body: "The most important thing in nature is fire. Fire is what will keep you warm. Fire keeps away animals at night. Fire can be the start of shelter. Learning everything about fire is key! Let's learn more through this five step guide I wrote.",
@@ -257,19 +257,19 @@ export const posts: Array<PostType> = [
       {
         id: "fdsasxf23",
         title: "Discussion",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
       {
         id: "zfdsfaf23",
         title: "Questions",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
       {
         id: "xfdsdff23",
         title: "More Resources",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
     ],
@@ -277,7 +277,7 @@ export const posts: Array<PostType> = [
   {
     id: "34234fff",
     title: "Drawing Stick Figures",
-    author: { username: "user5" },
+    author: { username: "user5", id: "1" },
     community: { title: "Art", id: "vdvdv33" },
     thumbnail:
       "https://i.ytimg.com/vi/dBqZt_Q5aDQ/hq2.jpg?sqp=-oaymwEoCOADEOgC8quKqQMcGADwAQH4Ac4FgAKACooCDAgAEAEYYiBiKGIwDw==&rs=AOn4CLDhv2VrRehkmMKIJKzEpCAVzZHZCw",
@@ -290,19 +290,19 @@ export const posts: Array<PostType> = [
       {
         id: "afdsasf23",
         title: "Discussion",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
       {
         id: "yfdsfaf23",
         title: "Questions",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
       {
         id: "wtfdsdff23",
         title: "More Resources",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
     ],
@@ -310,7 +310,7 @@ export const posts: Array<PostType> = [
   {
     id: "2323ff52",
     title: "Exercise & Mental Health",
-    author: { username: "user6" },
+    author: { username: "user6", id: "1" },
     community: { title: "Fitness", id: "sdgsdgf34" },
     thumbnail:
       "https://www.helpguide.org/wp-content/uploads/2023/02/Mental-Health-Benefits-of-Exercise.jpeg",
@@ -323,19 +323,19 @@ export const posts: Array<PostType> = [
       {
         id: "fdsasfg23",
         title: "Discussion",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
       {
         id: "fdswfaf23",
         title: "Questions",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
       {
         id: "fdsdtff23",
         title: "More Resources",
-        author: { username: "user1" },
+        author: { username: "user1", id: "1" },
         comments: [],
       },
     ],

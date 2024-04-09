@@ -3,6 +3,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity, StyleSheet, useColorScheme } from "react-native";
 import { View, Text } from "tamagui";
 import Colors from "../constants/Colors";
+import { router } from "expo-router";
 
 type Props = {
   comment: CommentType;
@@ -12,16 +13,20 @@ const CommentItem: React.FC<Props> = ({ comment }) => {
   const colorScheme = useColorScheme();
   return (
     <View style={styles.commentItem}>
-      <View style={styles.commentHeader}>
-        <MaterialCommunityIcons
-          name="face-man-profile"
-          size={25}
-          color={Colors[colorScheme ?? "light"].text}
-        />
-        <Text style={{ color: Colors[colorScheme ?? "light"].info }}>
-          {comment.author.username}
-        </Text>
-      </View>
+      <TouchableOpacity
+        onPress={() => router.push(`/profiles/${comment.author.id}`)}
+      >
+        <View style={styles.commentHeader}>
+          <MaterialCommunityIcons
+            name="face-man-profile"
+            size={25}
+            color={Colors[colorScheme ?? "light"].text}
+          />
+          <Text style={{ color: Colors[colorScheme ?? "light"].info }}>
+            {comment.author.username}
+          </Text>
+        </View>
+      </TouchableOpacity>
       <Text style={{ fontSize: 16, marginBottom: 3 }}>{comment.body}</Text>
       <View style={{ flexDirection: "row", gap: 7 }}>
         <View style={{ flexDirection: "row", gap: 3, alignItems: "center" }}>

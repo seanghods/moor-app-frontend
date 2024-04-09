@@ -1,15 +1,16 @@
 import { StyleSheet } from "react-native";
 import { Text, View } from "tamagui";
+import { useUser } from "../context/UserContext";
 
 export default function Friends() {
+  const { user } = useUser();
+  //pull posts from following
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Friends</Text>
-      {/* <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      /> */}
+    <View bg={"$background"} flex={1}>
+      <Text py={24} width="80%" fontSize={16} alignSelf="center">
+        You aren't following anyone yet! Follow users to see their personal
+        posts appear here.
+      </Text>
     </View>
   );
 }

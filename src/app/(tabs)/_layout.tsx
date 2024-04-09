@@ -11,9 +11,12 @@ import { Pressable, TouchableOpacity } from "react-native";
 import Colors from "@/src/constants/Colors";
 import { useColorScheme } from "react-native";
 import { View, Text } from "@/src/components/Themed";
+import { useUser } from "../context/UserContext";
+import { Avatar } from "tamagui";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { user } = useUser();
 
   return (
     <Tabs
@@ -25,15 +28,17 @@ export default function TabLayout() {
         },
         tabBarInactiveTintColor: "black",
         headerRight: () => (
-          <Link href="/profile" asChild>
+          <Link href={`/profiles/${user?.id}`} asChild>
             <Pressable>
               {({ pressed }) => (
-                <MaterialCommunityIcons
-                  name="face-man-profile"
-                  size={35}
-                  color={Colors[colorScheme ?? "light"].text}
-                  style={{ marginRight: 25, opacity: pressed ? 0.5 : 1 }}
-                />
+                <Avatar
+                  size={"$3"}
+                  mr={25}
+                  circular
+                  style={{ opacity: pressed ? 0.5 : 1 }}
+                >
+                  <Avatar.Image src={user?.profileImage} />
+                </Avatar>
               )}
             </Pressable>
           </Link>
@@ -68,6 +73,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="groups" size={32} color={color} />
           ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen

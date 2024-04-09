@@ -65,16 +65,12 @@ function RootLayoutNav() {
               />
               <Stack.Screen name="posts/[id]" options={{ title: "Post" }} />
               <Stack.Screen
-                name="communities/[id]"
-                options={{ title: "Community" }}
-              />
-              <Stack.Screen
                 name="discussions/[id]"
                 options={{ title: "Discussion" }}
               />
               <Stack.Screen
-                name="profile"
-                options={{ presentation: "modal", title: "Profile" }}
+                name="profiles/[id]"
+                options={{ title: "Profile" }}
               />
             </Stack>
           </ThemeProvider>

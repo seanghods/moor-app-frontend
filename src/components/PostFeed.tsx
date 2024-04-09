@@ -10,6 +10,7 @@ import {
 import * as React from "react";
 import {
   AntDesign,
+  Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
@@ -17,6 +18,7 @@ import { Text, View } from "@/src/components/Themed";
 import Colors from "@/src/constants/Colors";
 import { router } from "expo-router";
 import { usePost } from "@/src/app/context/PostContext";
+import AuthorButton from "./AuthorButton";
 
 type Props = {
   posts: Array<PostType>;
@@ -98,16 +100,7 @@ const PostFeed: React.FC<Props> = ({ posts, showCommunity }) => {
                 }}
               >
                 <Text style={styles.postTitle}>{post.title}</Text>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: "700",
-                    color: Colors[colorScheme ?? "light"].info,
-                    paddingVertical: 3,
-                  }}
-                >
-                  {post.author.username}
-                </Text>
+                <AuthorButton author={post.author} type="feed" />
                 <Text
                   style={styles.body}
                   numberOfLines={3}
@@ -116,18 +109,22 @@ const PostFeed: React.FC<Props> = ({ posts, showCommunity }) => {
                   {post.body}
                 </Text>
                 <View style={styles.likeCommentContainer}>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 5,
-                    }}
-                  >
-                    <AntDesign
-                      name="hearto"
-                      size={16}
-                      color={Colors[colorScheme ?? "light"].text}
-                    />
-                    <Text style={{ fontSize: 14 }}>{post.likes}</Text>
+                  <View style={{ flexDirection: "row", gap: 7 }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        gap: 3,
+                        alignItems: "center",
+                      }}
+                    >
+                      <TouchableOpacity>
+                        <Ionicons name="chevron-up" size={15} color="black" />
+                      </TouchableOpacity>
+                      <Text> 1 </Text>
+                      <TouchableOpacity>
+                        <Ionicons name="chevron-down" size={15} color="black" />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                   <View
                     style={{

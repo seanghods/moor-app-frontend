@@ -5,6 +5,7 @@ import {
   AntDesign,
   Entypo,
   FontAwesome,
+  Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
@@ -18,6 +19,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Button, View, Text } from "tamagui";
+import AuthorButton from "@/src/components/AuthorButton";
 
 const postPage: React.FC = () => {
   const { id } = useLocalSearchParams();
@@ -65,15 +67,32 @@ const postPage: React.FC = () => {
         style={{ alignSelf: "flex-start", marginVertical: 2 }}
         onPress={() => router.push(`/communities/${currentPost?.community.id}`)}
       >
-        <View style={styles.communityContainer}>
-          <MaterialIcons
-            name="groups"
-            size={25}
-            color={Colors[colorScheme ?? "light"].text}
-          />
-          <Text style={styles.communityTitle}>
-            {currentPost?.community.title}
-          </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            width: "100%",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <View style={styles.communityContainer}>
+            <MaterialIcons
+              name="groups"
+              size={25}
+              color={Colors[colorScheme ?? "light"].text}
+            />
+            <Text style={styles.communityTitle}>
+              {currentPost?.community.title}
+            </Text>
+          </View>
+          <TouchableOpacity>
+            <Entypo
+              name="dots-three-vertical"
+              size={16}
+              color={Colors[colorScheme ?? "light"].text}
+              style={{ marginRight: 10 }}
+            />
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
       <View style={dynamicStyles.mainPostContainer}>
@@ -82,26 +101,12 @@ const postPage: React.FC = () => {
             flex: 1,
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginRight: 15,
-            }}
-          >
+          <View>
             <Text style={styles.postTitle}>{currentPost?.title}</Text>
-            <TouchableOpacity>
-              <Entypo
-                name="dots-three-vertical"
-                size={16}
-                color={Colors[colorScheme ?? "light"].text}
-              />
-            </TouchableOpacity>
           </View>
-          <Text style={dynamicStyles.author}>
-            {currentPost?.author.username}
-          </Text>
+          {currentPost?.author ? (
+            <AuthorButton author={currentPost?.author} type="post" />
+          ) : null}
           {currentPost?.link && (
             <View style={styles.linkContainer}>
               <TouchableOpacity
@@ -119,18 +124,18 @@ const postPage: React.FC = () => {
           )}
           <Text style={styles.body}>{currentPost?.body}</Text>
           <View style={styles.likeCommentContainer}>
-            <View
-              style={{
-                flexDirection: "row",
-                gap: 5,
-              }}
-            >
-              <AntDesign
-                name="hearto"
-                size={18}
-                color={Colors[colorScheme ?? "light"].text}
-              />
-              <Text style={{ fontSize: 16 }}>{currentPost?.likes}</Text>
+            <View style={{ flexDirection: "row", gap: 7 }}>
+              <View
+                style={{ flexDirection: "row", gap: 3, alignItems: "center" }}
+              >
+                <TouchableOpacity>
+                  <Ionicons name="chevron-up" size={15} color="black" />
+                </TouchableOpacity>
+                <Text> 1 </Text>
+                <TouchableOpacity>
+                  <Ionicons name="chevron-down" size={15} color="black" />
+                </TouchableOpacity>
+              </View>
             </View>
             <View
               style={{

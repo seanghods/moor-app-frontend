@@ -11,7 +11,7 @@ import {
   YStack,
   getTokenValue,
 } from "tamagui";
-import { useUser } from "./context/UserContext";
+import { useUser } from "../context/UserContext";
 
 export default function Profile() {
   const { user, setUser } = useUser();
