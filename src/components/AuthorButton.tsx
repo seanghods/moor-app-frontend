@@ -25,6 +25,7 @@ const AuthorButton: React.FC<Props> = ({ author, type }) => {
   });
   return (
     <TouchableOpacity
+      delayPressIn={50}
       style={{ alignSelf: "flex-start" }}
       onPress={() => {
         router.push(`/profiles/${author.id}`);

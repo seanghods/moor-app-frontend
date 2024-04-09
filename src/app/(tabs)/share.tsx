@@ -13,7 +13,7 @@ import {
   Entypo,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import { Text, View, Switch, Button, getTokenValue, Label } from "tamagui";
+import { Text, View, Switch, Button, getTokenValue } from "tamagui";
 
 export default function Share() {
   const colorScheme = useColorScheme();
@@ -67,7 +67,7 @@ export default function Share() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container} bg="$background">
-        <View style={{ padding: 15, paddingBottom: 0 }}>
+        <View style={{ padding: 15 }}>
           <Text
             style={{
               fontSize: 25,
@@ -105,7 +105,7 @@ export default function Share() {
         </View>
         <View>
           <View>
-            <Text p={4} fontWeight={"700"}>
+            <Text p={4} mb={6} fontWeight={"700"}>
               Community
             </Text>
           </View>
@@ -133,7 +133,7 @@ export default function Share() {
         </View>
         <View>
           <View>
-            <Text mt={6} p={4} fontWeight={"700"}>
+            <Text my={6} p={4} fontWeight={"700"}>
               Title
             </Text>
           </View>
@@ -162,7 +162,7 @@ export default function Share() {
         {postType == "link" && (
           <View>
             <View>
-              <Text mt={6} p={4} fontWeight={"700"}>
+              <Text my={6} p={4} fontWeight={"700"}>
                 Link
               </Text>
             </View>
@@ -191,7 +191,7 @@ export default function Share() {
         )}
         <View>
           <View>
-            <Text mt={6} p={4} fontWeight={"700"}>
+            <Text my={6} p={4} fontWeight={"700"}>
               Description
             </Text>
           </View>

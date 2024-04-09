@@ -1,10 +1,18 @@
-import { StyleSheet, TextInput, useColorScheme } from "react-native";
+import {
+  Keyboard,
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  useColorScheme,
+} from "react-native";
 import { Text, View } from "@/src/components/Themed";
 import Colors from "@/src/constants/Colors";
 import { FontAwesome } from "@expo/vector-icons";
+import { useState } from "react";
 
 export default function Search() {
   const colorScheme = useColorScheme();
+  const [searchValue, setSearchValue] = useState("");
   const dynamicStyles = StyleSheet.create({
     searchField: {
       flex: 1,
@@ -25,25 +33,33 @@ export default function Search() {
     },
   });
   return (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <View style={styles.searchSection}>
-          <View style={dynamicStyles.searchField}>
-            <FontAwesome
-              name="search"
-              size={20}
-              style={styles.searchIcon}
-              color={
-                colorScheme === "light"
-                  ? Colors.extraColors.darkGray
-                  : Colors.extraColors.lightGray
-              }
-            />
-            <TextInput style={dynamicStyles.input} placeholder="Search..." />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <View style={styles.searchContainer}>
+          <View style={styles.searchSection}>
+            <View style={dynamicStyles.searchField}>
+              <FontAwesome
+                name="search"
+                size={20}
+                style={styles.searchIcon}
+                color={
+                  colorScheme === "light"
+                    ? Colors.extraColors.darkGray
+                    : Colors.extraColors.lightGray
+                }
+              />
+              <TextInput
+                returnKeyType="done"
+                style={dynamicStyles.input}
+                value={searchValue}
+                onChangeText={(value) => setSearchValue(value)}
+                placeholder="Search..."
+              />
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 

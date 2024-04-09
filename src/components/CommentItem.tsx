@@ -33,7 +33,7 @@ const CommentItem: React.FC<Props> = ({ comment }) => {
           <TouchableOpacity>
             <Ionicons name="chevron-up" size={15} color="black" />
           </TouchableOpacity>
-          <Text> 1 </Text>
+          <Text> {comment.voteCount} </Text>
           <TouchableOpacity>
             <Ionicons name="chevron-down" size={15} color="black" />
           </TouchableOpacity>

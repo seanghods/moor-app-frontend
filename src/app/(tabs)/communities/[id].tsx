@@ -3,7 +3,7 @@ import { PostType, posts } from "@/assets/data/postsData";
 import PostFeed from "@/src/components/PostFeed";
 import { Text, View, Button } from "tamagui";
 import Colors from "@/src/constants/Colors";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, useColorScheme } from "react-native";
@@ -38,6 +38,7 @@ const communityPage = () => {
             flex: 1,
             gap: 3,
             padding: 8,
+            paddingBottom: 2,
             marginVertical: 2,
             borderBottomWidth: 2,
             borderBottomColor: colorScheme == "light" ? "#eee" : "#333333",
@@ -52,6 +53,21 @@ const communityPage = () => {
             <Text style={styles.communityTitle}>{community?.title}</Text>
           </View>
           <Text>{community?.description}</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 5,
+              alignItems: "flex-end",
+              padding: 6,
+            }}
+          >
+            <Ionicons
+              name="person"
+              size={16}
+              color={Colors[colorScheme ?? "light"].text}
+            />
+            <Text style={{ fontSize: 14 }}>{community?.followers.length}</Text>
+          </View>
         </View>
         <View
           style={{

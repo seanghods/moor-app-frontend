@@ -51,6 +51,7 @@ const PostFeed: React.FC<Props> = ({ posts, showCommunity }) => {
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item: post }) => (
         <TouchableOpacity
+          delayPressIn={50}
           onPress={() => {
             setCurrentPost(post);
             router.push(`/posts/${post.id}`);
@@ -59,6 +60,7 @@ const PostFeed: React.FC<Props> = ({ posts, showCommunity }) => {
           <View key={post.id} style={{ width: "100%" }}>
             {showCommunity && (
               <TouchableOpacity
+                delayPressIn={50}
                 style={{ alignSelf: "flex-start", marginVertical: 2 }}
                 onPress={() => router.push(`/communities/${post.community.id}`)}
               >
@@ -120,7 +122,7 @@ const PostFeed: React.FC<Props> = ({ posts, showCommunity }) => {
                       <TouchableOpacity>
                         <Ionicons name="chevron-up" size={15} color="black" />
                       </TouchableOpacity>
-                      <Text> 1 </Text>
+                      <Text> {post.voteCount} </Text>
                       <TouchableOpacity>
                         <Ionicons name="chevron-down" size={15} color="black" />
                       </TouchableOpacity>

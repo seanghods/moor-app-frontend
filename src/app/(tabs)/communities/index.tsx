@@ -9,6 +9,7 @@ import {
 import * as React from "react";
 import {
   AntDesign,
+  Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
@@ -95,8 +96,8 @@ export default function Communities() {
                     alignItems: "flex-end",
                   }}
                 >
-                  <AntDesign
-                    name="hearto"
+                  <Ionicons
+                    name="person"
                     size={16}
                     color={Colors[colorScheme ?? "light"].text}
                   />
@@ -118,18 +119,6 @@ export default function Communities() {
                   />
                   <Text style={{ fontSize: 14 }}>{community.posts.length}</Text>
                 </View>
-                {/* <TouchableOpacity
-                  style={{
-                    borderColor: "gray",
-                    borderWidth: 1,
-                    paddingHorizontal: 5,
-                    paddingVertical: 3,
-                    borderRadius: 10,
-                    backgroundColor: Colors[colorScheme ?? "light"].primary,
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Follow</Text>
-                </TouchableOpacity> */}
               </View>
             </View>
           </View>
