@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import * as React from "react";
 import {
-  AntDesign,
   Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
@@ -19,6 +18,7 @@ import Colors from "@/src/constants/Colors";
 import { router } from "expo-router";
 import { usePost } from "@/src/app/context/PostContext";
 import AuthorButton from "./AuthorButton";
+import { useTheme } from "tamagui";
 
 type Props = {
   posts: Array<PostType>;
@@ -27,6 +27,7 @@ type Props = {
 
 const PostFeed: React.FC<Props> = ({ posts, showCommunity }) => {
   const colorScheme = useColorScheme();
+  const theme = useTheme();
   const { setCurrentPost } = usePost();
   const dynamicStyles = StyleSheet.create({
     mainPostContainer: {
@@ -115,16 +116,23 @@ const PostFeed: React.FC<Props> = ({ posts, showCommunity }) => {
                     <View
                       style={{
                         flexDirection: "row",
-                        gap: 3,
                         alignItems: "center",
                       }}
                     >
                       <TouchableOpacity>
-                        <Ionicons name="chevron-up" size={15} color="black" />
+                        <Ionicons
+                          name="chevron-up"
+                          size={15}
+                          color={theme.color12.val}
+                        />
                       </TouchableOpacity>
                       <Text> {post.voteCount} </Text>
                       <TouchableOpacity>
-                        <Ionicons name="chevron-down" size={15} color="black" />
+                        <Ionicons
+                          name="chevron-down"
+                          size={15}
+                          color={theme.color12.val}
+                        />
                       </TouchableOpacity>
                     </View>
                   </View>

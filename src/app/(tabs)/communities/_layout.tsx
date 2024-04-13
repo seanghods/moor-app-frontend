@@ -1,11 +1,10 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { Link, Stack, router } from "expo-router";
-import { TouchableOpacity, useColorScheme } from "react-native";
-import { Avatar, View } from "tamagui";
+import { TouchableOpacity } from "react-native";
+import { Avatar, View, XStack } from "tamagui";
 import { useUser } from "../../context/UserContext";
 
 const StackLayout = () => {
-  const colorScheme = useColorScheme();
   const { user } = useUser();
   return (
     <Stack
@@ -29,9 +28,9 @@ const StackLayout = () => {
             <TouchableOpacity
               onPress={() => router.push("/communities/newCommunity")}
             >
-              <View style={{ flexDirection: "row", marginLeft: 10 }}>
+              <XStack ml={10}>
                 <FontAwesome name="pencil-square-o" size={23} color="black" />
-              </View>
+              </XStack>
             </TouchableOpacity>
           ),
         }}

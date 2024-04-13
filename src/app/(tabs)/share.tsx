@@ -3,10 +3,8 @@ import {
   StyleSheet,
   TextInput,
   TouchableWithoutFeedback,
-  useColorScheme,
 } from "react-native";
 import { useEffect, useState } from "react";
-import Colors from "@/src/constants/Colors";
 import {
   MaterialIcons,
   Entypo,
@@ -20,10 +18,13 @@ import {
   getTokenValue,
   Form,
   Spinner,
+  YStack,
+  XStack,
+  useTheme,
 } from "tamagui";
 
 export default function Share() {
-  const colorScheme = useColorScheme();
+  const theme = useTheme();
   const [postType, setPostType] = useState<"link" | "text">("link");
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
     "off"
@@ -75,19 +76,22 @@ export default function Share() {
   });
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.container} bg="$background">
-        <View style={{ padding: 15 }}>
-          <Text
-            style={{
-              fontSize: 25,
-              fontWeight: "700",
-            }}
-          >
+      <YStack
+        flex={1}
+        alignItems="center"
+        justifyContent="flex-start"
+        gap={5}
+        bg="$background"
+      >
+        <YStack p={15}>
+          <Text fontSize={25} fontWeight="700">
             Share an Insight
           </Text>
-        </View>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-          <Text style={{ fontSize: 16, fontWeight: "700" }}>Link</Text>
+        </YStack>
+        <XStack alignItems="center" gap={5}>
+          <Text fontSize={16} fontWeight="700">
+            Link
+          </Text>
           <Switch
             checked={postType == "text"}
             onCheckedChange={() =>
@@ -110,20 +114,29 @@ export default function Share() {
           >
             <Switch.Thumb bg={"$accentBackground"} animation="200ms" />
           </Switch>
-          <Text style={{ fontSize: 16, fontWeight: "700" }}>Text</Text>
-        </View>
+          <Text fontSize={16} fontWeight="700">
+            Text
+          </Text>
+        </XStack>
         <Form
+          gap={25}
+          mt={20}
           onSubmit={() => {
             setStatus("submitting");
           }}
         >
-          <View>
-            <View>
-              <Text p={4} mb={6} fontWeight={"700"}>
+          <YStack>
+            <YStack>
+              {/* <Text p={4} mb={6} fontWeight={"700"}>
                 Community
-              </Text>
-            </View>
-            <View style={dynamicStyles.inputContainer} bg="$blue4">
+              </Text> */}
+            </YStack>
+            <XStack
+              borderRadius={20}
+              alignItems="center"
+              justifyContent="center"
+              bg="$blue4"
+            >
               <MaterialIcons
                 name="groups"
                 style={{ padding: 10 }}
@@ -137,21 +150,22 @@ export default function Share() {
                 onChangeText={(value) => handleInputChange("community", value)}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
-                placeholderTextColor={
-                  colorScheme === "light"
-                    ? Colors.extraColors.mediumGray
-                    : Colors.extraColors.darkGray
-                }
+                placeholderTextColor={theme.color9.val}
               />
-            </View>
-          </View>
-          <View>
-            <View>
-              <Text my={6} p={4} fontWeight={"700"}>
+            </XStack>
+          </YStack>
+          <YStack>
+            <YStack>
+              {/* <Text my={6} p={4} fontWeight={"700"}>
                 Title
-              </Text>
-            </View>
-            <View style={dynamicStyles.inputContainer} bg="$blue4">
+              </Text> */}
+            </YStack>
+            <XStack
+              borderRadius={20}
+              alignItems="center"
+              justifyContent="center"
+              bg="$blue4"
+            >
               <MaterialIcons
                 name="title"
                 style={{ padding: 10 }}
@@ -165,22 +179,23 @@ export default function Share() {
                 onChangeText={(value) => handleInputChange("title", value)}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
-                placeholderTextColor={
-                  colorScheme === "light"
-                    ? Colors.extraColors.mediumGray
-                    : Colors.extraColors.darkGray
-                }
+                placeholderTextColor={theme.color9.val}
               />
-            </View>
-          </View>
+            </XStack>
+          </YStack>
           {postType == "link" && (
-            <View>
-              <View>
-                <Text my={6} p={4} fontWeight={"700"}>
+            <YStack>
+              <YStack>
+                {/* <Text my={6} p={4} fontWeight={"700"}>
                   Link
-                </Text>
-              </View>
-              <View style={dynamicStyles.inputContainer} bg="$blue4">
+                </Text> */}
+              </YStack>
+              <XStack
+                borderRadius={20}
+                alignItems="center"
+                justifyContent="center"
+                bg="$blue4"
+              >
                 <Entypo
                   name="link"
                   style={{ padding: 10 }}
@@ -194,25 +209,26 @@ export default function Share() {
                   onChangeText={(value) => handleInputChange("link", value)}
                   style={dynamicStyles.textInput}
                   autoCapitalize="none"
-                  placeholderTextColor={
-                    colorScheme === "light"
-                      ? Colors.extraColors.mediumGray
-                      : Colors.extraColors.darkGray
-                  }
+                  placeholderTextColor={theme.color9.val}
                 />
-              </View>
-            </View>
+              </XStack>
+            </YStack>
           )}
-          <View>
-            <View>
-              <Text my={6} p={4} fontWeight={"700"}>
+          <YStack>
+            <YStack>
+              {/* <Text my={6} p={4} fontWeight={"700"}>
                 Description
-              </Text>
-            </View>
-            <View style={dynamicStyles.areaContainer} bg="$blue4">
+              </Text> */}
+            </YStack>
+            <XStack
+              borderRadius={20}
+              alignItems="center"
+              justifyContent="center"
+              bg="$blue4"
+            >
               <MaterialCommunityIcons
                 name="subtitles-outline"
-                style={{ padding: 10 }}
+                style={{ padding: 10, alignSelf: "flex-start" }}
                 size={25}
                 color="black"
               />
@@ -224,14 +240,10 @@ export default function Share() {
                 autoCapitalize="none"
                 multiline={true}
                 numberOfLines={4}
-                placeholderTextColor={
-                  colorScheme === "light"
-                    ? Colors.extraColors.mediumGray
-                    : Colors.extraColors.darkGray
-                }
+                placeholderTextColor={theme.color9.val}
               />
-            </View>
-          </View>
+            </XStack>
+          </YStack>
           <Form.Trigger asChild disabled={status !== "off"}>
             <Button
               icon={
@@ -243,20 +255,11 @@ export default function Share() {
               fontWeight={"700"}
               bg={"$blue5"}
             >
-              Submit
+              Post
             </Button>
           </Form.Trigger>
         </Form>
-      </View>
+      </YStack>
     </TouchableWithoutFeedback>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-start",
-    gap: 5,
-  },
-});

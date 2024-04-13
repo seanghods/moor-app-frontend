@@ -8,12 +8,7 @@ import {
 } from "react-native";
 import { useEffect, useState } from "react";
 import Colors from "@/src/constants/Colors";
-import {
-  MaterialIcons,
-  Entypo,
-  MaterialCommunityIcons,
-  Ionicons,
-} from "@expo/vector-icons";
+import { MaterialIcons, Entypo, Ionicons } from "@expo/vector-icons";
 import { Text, View, Button, Form, Spinner, Image } from "tamagui";
 import { router } from "expo-router";
 
@@ -72,16 +67,6 @@ export default function Register() {
             uri: require("@/assets/images/moor-logo.jpg"),
           }}
         />
-        <View style={{ padding: 15, paddingTop: 0 }}>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "700",
-            }}
-          >
-            Register
-          </Text>
-        </View>
         <Form
           onSubmit={() => {
             setStatus("submitting");
@@ -108,11 +93,7 @@ export default function Register() {
                 onChangeText={(value) => handleInputChange("username", value)}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
-                placeholderTextColor={
-                  colorScheme === "light"
-                    ? Colors.extraColors.mediumGray
-                    : Colors.extraColors.darkGray
-                }
+                placeholderTextColor={Colors.extraColors.mediumGray}
               />
             </View>
           </View>
@@ -136,11 +117,7 @@ export default function Register() {
                 onChangeText={(value) => handleInputChange("email", value)}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
-                placeholderTextColor={
-                  colorScheme === "light"
-                    ? Colors.extraColors.mediumGray
-                    : Colors.extraColors.darkGray
-                }
+                placeholderTextColor={Colors.extraColors.mediumGray}
               />
             </View>
           </View>
@@ -164,11 +141,7 @@ export default function Register() {
                 onChangeText={(value) => handleInputChange("password", value)}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
-                placeholderTextColor={
-                  colorScheme === "light"
-                    ? Colors.extraColors.mediumGray
-                    : Colors.extraColors.darkGray
-                }
+                placeholderTextColor={Colors.extraColors.mediumGray}
               />
             </View>
           </View>
@@ -188,17 +161,13 @@ export default function Register() {
               <TextInput
                 returnKeyType="done"
                 placeholder="confirm password"
-                value={postData.username}
+                value={postData.confirmPassword}
                 onChangeText={(value) =>
                   handleInputChange("confirmPassword", value)
                 }
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
-                placeholderTextColor={
-                  colorScheme === "light"
-                    ? Colors.extraColors.mediumGray
-                    : Colors.extraColors.darkGray
-                }
+                placeholderTextColor={Colors.extraColors.mediumGray}
               />
             </View>
           </View>
@@ -213,7 +182,7 @@ export default function Register() {
               fontWeight={"700"}
               bg={"$blue5"}
             >
-              Submit
+              Register
             </Button>
           </Form.Trigger>
         </Form>

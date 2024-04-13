@@ -10,12 +10,12 @@ import { Link, Tabs } from "expo-router";
 import { Pressable, TouchableOpacity } from "react-native";
 import Colors from "@/src/constants/Colors";
 import { useColorScheme } from "react-native";
-import { View, Text } from "@/src/components/Themed";
 import { useUser } from "../context/UserContext";
-import { Avatar } from "tamagui";
+import { Avatar, useTheme, View, Text, XStack, YStack } from "tamagui";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const theme = useTheme();
   const { user } = useUser();
 
   return (
@@ -24,7 +24,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: "white",
         tabBarStyle: {
           height: 85,
-          backgroundColor: Colors[colorScheme ?? "light"].primary,
+          backgroundColor: theme.blue9.val,
         },
         tabBarInactiveTintColor: "black",
         headerRight: () => (
@@ -48,7 +48,7 @@ export default function TabLayout() {
                     name="person-sharp"
                     style={{ marginRight: 25, opacity: pressed ? 0.5 : 1 }}
                     size={24}
-                    color="black"
+                    color={theme.color12.val}
                   />
                 )
               }
@@ -63,14 +63,16 @@ export default function TabLayout() {
           title: "Trending",
           headerLeft: () => (
             <TouchableOpacity>
-              <View style={{ flexDirection: "row", marginLeft: 25 }}>
-                <Text style={{ fontSize: 16, fontWeight: "700" }}>Filter</Text>
+              <XStack ml={25}>
+                <Text fontSize={16} fontWeight={"700"}>
+                  Filter
+                </Text>
                 <Ionicons
                   name="chevron-down"
                   size={20}
-                  color={Colors.light.info}
+                  color={theme.blue9.val}
                 />
-              </View>
+              </XStack>
             </TouchableOpacity>
           ),
           tabBarIcon: ({ color }) => (
@@ -92,20 +94,18 @@ export default function TabLayout() {
         name="search"
         options={{
           title: "Search",
-          tabBarActiveTintColor: colorScheme === "light" ? "#5C5C5C" : "white",
+          tabBarActiveTintColor: theme.color12.val,
           tabBarItemStyle: {
             maxWidth: 70,
             padding: 5,
             marginTop: 5,
-            backgroundColor: colorScheme === "light" ? "white" : "black",
+            backgroundColor: theme.background.val,
             borderRadius: 10,
           },
           tabBarLabel: ({ focused, color }) => (
             <Text
-              style={{
-                color: !focused && colorScheme === "dark" ? "#A9A9A9" : color,
-                fontSize: 10,
-              }}
+              fontSize={10}
+              color={!focused && colorScheme === "dark" ? "#A9A9A9" : color}
             >
               Search
             </Text>

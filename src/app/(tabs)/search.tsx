@@ -1,84 +1,39 @@
-import {
-  Keyboard,
-  StyleSheet,
-  TextInput,
-  TouchableWithoutFeedback,
-  useColorScheme,
-} from "react-native";
-import { Text, View } from "@/src/components/Themed";
-import Colors from "@/src/constants/Colors";
+import { Keyboard, TextInput, TouchableWithoutFeedback } from "react-native";
+import { XStack, YStack, useTheme } from "tamagui";
 import { FontAwesome } from "@expo/vector-icons";
 import { useState } from "react";
 
 export default function Search() {
-  const colorScheme = useColorScheme();
+  const theme = useTheme();
   const [searchValue, setSearchValue] = useState("");
-  const dynamicStyles = StyleSheet.create({
-    searchField: {
-      flex: 1,
-      backgroundColor:
-        colorScheme === "light"
-          ? Colors.extraColors.lightGray
-          : Colors.extraColors.darkGray,
-      borderRadius: 8,
-      flexDirection: "row",
-      alignItems: "center",
-    },
-    input: {
-      padding: 10,
-      color:
-        colorScheme === "light"
-          ? Colors.extraColors.darkGray
-          : Colors.extraColors.lightGray,
-    },
-  });
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.container}>
-        <View style={styles.searchContainer}>
-          <View style={styles.searchSection}>
-            <View style={dynamicStyles.searchField}>
+      <YStack bg={theme.background.val} flex={1}>
+        <YStack h={60}>
+          <XStack flex={1} gap={10} px={20} alignItems="center">
+            <XStack
+              flex={1}
+              borderRadius={8}
+              alignItems="center"
+              bg={theme.color7.val}
+            >
               <FontAwesome
                 name="search"
                 size={20}
-                style={styles.searchIcon}
-                color={
-                  colorScheme === "light"
-                    ? Colors.extraColors.darkGray
-                    : Colors.extraColors.lightGray
-                }
+                style={{ paddingLeft: 10 }}
+                color={theme.color11.val}
               />
               <TextInput
                 returnKeyType="done"
-                style={dynamicStyles.input}
+                style={{ padding: 10, color: theme.color7.val }}
                 value={searchValue}
                 onChangeText={(value) => setSearchValue(value)}
                 placeholder="Search..."
               />
-            </View>
-          </View>
-        </View>
-      </View>
+            </XStack>
+          </XStack>
+        </YStack>
+      </YStack>
     </TouchableWithoutFeedback>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  searchContainer: { height: 60, backgroundColor: "#fff" },
-  searchSection: {
-    flexDirection: "row",
-    gap: 10,
-    flex: 1,
-    paddingHorizontal: 20,
-    alignItems: "center",
-  },
-  searchIcon: { paddingLeft: 10 },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});

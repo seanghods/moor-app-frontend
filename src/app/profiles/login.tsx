@@ -65,7 +65,7 @@ export default function Login() {
             uri: require("@/assets/images/moor-logo.jpg"),
           }}
         />
-        <View style={{ padding: 15, paddingTop: 0 }}>
+        {/* <View style={{ padding: 15, paddingTop: 0 }}>
           <Text
             style={{
               fontSize: 20,
@@ -74,7 +74,7 @@ export default function Login() {
           >
             Login
           </Text>
-        </View>
+        </View> */}
         <Form
           onSubmit={() => {
             setStatus("submitting");
@@ -147,7 +147,7 @@ export default function Login() {
               fontWeight={"700"}
               bg={"$blue5"}
             >
-              Submit
+              Log In
             </Button>
           </Form.Trigger>
         </Form>
