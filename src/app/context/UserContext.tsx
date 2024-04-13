@@ -25,7 +25,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserType | null>(null);
   useEffect(() => {
     const initializeUserSession = async () => {
-      setUser(users[0]);
+      // setUser(users[0]);
       // const sessionUser = await fetchUserSession(); // Fetch user session from storage or API
       // setUser(sessionUser); // Set the user state with the retrieved session data
     };

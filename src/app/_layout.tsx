@@ -70,7 +70,17 @@ function RootLayoutNav() {
               />
               <Stack.Screen
                 name="profiles/[id]"
-                options={{ title: "Profile" }}
+                options={{
+                  title: "Profile",
+                }}
+              />
+              <Stack.Screen
+                name="profiles/login"
+                options={{ title: "Log In" }}
+              />
+              <Stack.Screen
+                name="profiles/register"
+                options={{ title: "Register" }}
               />
             </Stack>
           </ThemeProvider>

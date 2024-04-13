@@ -28,18 +28,30 @@ export default function TabLayout() {
         },
         tabBarInactiveTintColor: "black",
         headerRight: () => (
-          <Link href={`/profiles/${user?.id}`} asChild>
+          <Link
+            href={user ? `/profiles/${user?.id}` : "/profiles/login"}
+            asChild
+          >
             <Pressable>
-              {({ pressed }) => (
-                <Avatar
-                  size={"$3"}
-                  mr={25}
-                  circular
-                  style={{ opacity: pressed ? 0.5 : 1 }}
-                >
-                  <Avatar.Image src={user?.profileImage} />
-                </Avatar>
-              )}
+              {({ pressed }) =>
+                user && user?.profileImage ? (
+                  <Avatar
+                    size={"$3"}
+                    mr={25}
+                    circular
+                    style={{ opacity: pressed ? 0.5 : 1 }}
+                  >
+                    <Avatar.Image src={user.profileImage} />
+                  </Avatar>
+                ) : (
+                  <Ionicons
+                    name="person-sharp"
+                    style={{ marginRight: 25, opacity: pressed ? 0.5 : 1 }}
+                    size={24}
+                    color="black"
+                  />
+                )
+              }
             </Pressable>
           </Link>
         ),

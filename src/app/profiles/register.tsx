@@ -2,6 +2,7 @@ import {
   Keyboard,
   StyleSheet,
   TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   useColorScheme,
 } from "react-native";
@@ -12,27 +13,20 @@ import {
   Entypo,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import {
-  Text,
-  View,
-  Switch,
-  Button,
-  getTokenValue,
-  Form,
-  Spinner,
-} from "tamagui";
+import { Text, View, Button, Form, Spinner } from "tamagui";
+import { router } from "expo-router";
 
-export default function Share() {
+export default function Register() {
   const colorScheme = useColorScheme();
   const [postType, setPostType] = useState<"link" | "text">("link");
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
     "off"
   );
   const [postData, setPostData] = useState({
-    community: "",
-    title: "",
-    link: "",
-    body: "",
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
   const handleInputChange = (name: string, value: string) => {
     setPostData((prevState) => ({
@@ -64,12 +58,20 @@ export default function Share() {
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.extraColors.lightGray
+          : Colors.extraColors.mediumGray,
       borderRadius: 20,
     },
     areaContainer: {
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "flex-start",
+      backgroundColor:
+        colorScheme === "light"
+          ? Colors.extraColors.lightGray
+          : Colors.extraColors.mediumGray,
       borderRadius: 20,
     },
   });
@@ -83,34 +85,8 @@ export default function Share() {
               fontWeight: "700",
             }}
           >
-            Share an Insight
+            Register
           </Text>
-        </View>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-          <Text style={{ fontSize: 16, fontWeight: "700" }}>Link</Text>
-          <Switch
-            checked={postType == "text"}
-            onCheckedChange={() =>
-              setPostType((prev) => (prev == "text" ? "link" : "text"))
-            }
-            bg={postType == "text" ? "$blue3Dark" : "$accentBackground"}
-            native
-            size="$4"
-            nativeProps={{
-              ios_backgroundColor: getTokenValue("$blue10Dark"),
-              trackColor: {
-                false: getTokenValue("$blue10Dark"),
-                true: getTokenValue("$blue3Dark"),
-              },
-              thumbColor:
-                postType == "text"
-                  ? getTokenValue("$blue10Dark")
-                  : getTokenValue("$blue3Dark"),
-            }}
-          >
-            <Switch.Thumb bg={"$accentBackground"} animation="200ms" />
-          </Switch>
-          <Text style={{ fontSize: 16, fontWeight: "700" }}>Text</Text>
         </View>
         <Form
           onSubmit={() => {
@@ -120,10 +96,10 @@ export default function Share() {
           <View>
             <View>
               <Text p={4} mb={6} fontWeight={"700"}>
-                Community
+                Username
               </Text>
             </View>
-            <View style={dynamicStyles.inputContainer} bg="$blue4">
+            <View style={dynamicStyles.inputContainer}>
               <MaterialIcons
                 name="groups"
                 style={{ padding: 10 }}
@@ -132,9 +108,37 @@ export default function Share() {
               />
               <TextInput
                 returnKeyType="done"
-                placeholder="community"
-                value={postData.community}
-                onChangeText={(value) => handleInputChange("community", value)}
+                placeholder="username"
+                value={postData.username}
+                onChangeText={(value) => handleInputChange("username", value)}
+                style={dynamicStyles.textInput}
+                autoCapitalize="none"
+                placeholderTextColor={
+                  colorScheme === "light"
+                    ? Colors.extraColors.mediumGray
+                    : Colors.extraColors.darkGray
+                }
+              />
+            </View>
+          </View>
+          <View>
+            <View>
+              <Text p={4} mb={6} fontWeight={"700"}>
+                Email
+              </Text>
+            </View>
+            <View style={dynamicStyles.inputContainer}>
+              <MaterialIcons
+                name="groups"
+                style={{ padding: 10 }}
+                size={25}
+                color="black"
+              />
+              <TextInput
+                returnKeyType="done"
+                placeholder="email"
+                value={postData.email}
+                onChangeText={(value) => handleInputChange("email", value)}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
                 placeholderTextColor={
@@ -148,10 +152,10 @@ export default function Share() {
           <View>
             <View>
               <Text my={6} p={4} fontWeight={"700"}>
-                Title
+                Password
               </Text>
             </View>
-            <View style={dynamicStyles.inputContainer} bg="$blue4">
+            <View style={dynamicStyles.inputContainer}>
               <MaterialIcons
                 name="title"
                 style={{ padding: 10 }}
@@ -160,9 +164,9 @@ export default function Share() {
               />
               <TextInput
                 returnKeyType="done"
-                placeholder="title"
-                value={postData.title}
-                onChangeText={(value) => handleInputChange("title", value)}
+                placeholder="password"
+                value={postData.password}
+                onChangeText={(value) => handleInputChange("password", value)}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
                 placeholderTextColor={
@@ -173,57 +177,28 @@ export default function Share() {
               />
             </View>
           </View>
-          {postType == "link" && (
-            <View>
-              <View>
-                <Text my={6} p={4} fontWeight={"700"}>
-                  Link
-                </Text>
-              </View>
-              <View style={dynamicStyles.inputContainer} bg="$blue4">
-                <Entypo
-                  name="link"
-                  style={{ padding: 10 }}
-                  size={25}
-                  color="black"
-                />
-                <TextInput
-                  returnKeyType="done"
-                  placeholder="link"
-                  value={postData.link}
-                  onChangeText={(value) => handleInputChange("link", value)}
-                  style={dynamicStyles.textInput}
-                  autoCapitalize="none"
-                  placeholderTextColor={
-                    colorScheme === "light"
-                      ? Colors.extraColors.mediumGray
-                      : Colors.extraColors.darkGray
-                  }
-                />
-              </View>
-            </View>
-          )}
           <View>
             <View>
-              <Text my={6} p={4} fontWeight={"700"}>
-                Description
+              <Text p={4} mb={6} fontWeight={"700"}>
+                Confirm Password
               </Text>
             </View>
-            <View style={dynamicStyles.areaContainer} bg="$blue4">
-              <MaterialCommunityIcons
-                name="subtitles-outline"
+            <View style={dynamicStyles.inputContainer}>
+              <MaterialIcons
+                name="groups"
                 style={{ padding: 10 }}
                 size={25}
                 color="black"
               />
               <TextInput
-                placeholder="description"
-                value={postData.body}
-                onChangeText={(value) => handleInputChange("body", value)}
-                style={dynamicStyles.textArea}
+                returnKeyType="done"
+                placeholder="confirm password"
+                value={postData.username}
+                onChangeText={(value) =>
+                  handleInputChange("confirmPassword", value)
+                }
+                style={dynamicStyles.textInput}
                 autoCapitalize="none"
-                multiline={true}
-                numberOfLines={4}
                 placeholderTextColor={
                   colorScheme === "light"
                     ? Colors.extraColors.mediumGray
@@ -247,6 +222,17 @@ export default function Share() {
             </Button>
           </Form.Trigger>
         </Form>
+        <View
+          mt={8}
+          flexDirection="row"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Text>Already have an account? </Text>
+          <TouchableOpacity onPress={() => router.push("/profiles/login")}>
+            <Text col="$blue10">Login here</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );

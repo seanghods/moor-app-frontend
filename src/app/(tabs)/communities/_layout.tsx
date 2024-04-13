@@ -1,8 +1,7 @@
-import Colors from "@/src/constants/Colors";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Link, Stack } from "expo-router";
-import { Pressable, TouchableOpacity, useColorScheme } from "react-native";
-import { Avatar } from "tamagui";
+import { FontAwesome } from "@expo/vector-icons";
+import { Link, Stack, router } from "expo-router";
+import { TouchableOpacity, useColorScheme } from "react-native";
+import { Avatar, View } from "tamagui";
 import { useUser } from "../../context/UserContext";
 
 const StackLayout = () => {
@@ -26,9 +25,19 @@ const StackLayout = () => {
         name="index"
         options={{
           title: "Communities",
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.push("/communities/newCommunity")}
+            >
+              <View style={{ flexDirection: "row", marginLeft: 10 }}>
+                <FontAwesome name="pencil-square-o" size={23} color="black" />
+              </View>
+            </TouchableOpacity>
+          ),
         }}
       />
       <Stack.Screen name="[id]" options={{ title: "Community" }} />
+      <Stack.Screen name="newCommunity" options={{ title: "New Community" }} />
     </Stack>
   );
 };

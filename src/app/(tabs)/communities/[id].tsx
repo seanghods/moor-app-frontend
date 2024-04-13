@@ -3,7 +3,11 @@ import { PostType, posts } from "@/assets/data/postsData";
 import PostFeed from "@/src/components/PostFeed";
 import { Text, View, Button } from "tamagui";
 import Colors from "@/src/constants/Colors";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, useColorScheme } from "react-native";
@@ -34,51 +38,88 @@ const communityPage = () => {
     >
       <View style={{ flexDirection: "row" }}>
         <View
+          bg="$blue3"
           style={{
             flex: 1,
             gap: 3,
             padding: 8,
             paddingBottom: 2,
             marginVertical: 2,
-            borderBottomWidth: 2,
-            borderBottomColor: colorScheme == "light" ? "#eee" : "#333333",
+            borderWidth: 2,
+            borderColor: colorScheme == "light" ? "#eee" : "#333333",
+            borderTopWidth: 0,
+            borderBottomLeftRadius: 30,
+            borderBottomRightRadius: 30,
+            width: "90%",
+            overflow: "hidden",
           }}
         >
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-            <MaterialIcons
-              name="groups"
-              size={25}
-              color={Colors[colorScheme ?? "light"].text}
-            />
-            <Text style={styles.communityTitle}>{community?.title}</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+            >
+              <MaterialIcons
+                name="groups"
+                size={25}
+                color={Colors[colorScheme ?? "light"].text}
+              />
+              <Text style={styles.communityTitle}>{community?.title}</Text>
+            </View>
+            <Button size={"$2"} theme="blue" mr={6}>
+              <Ionicons name="person-add-outline" size={20} color="black" />
+            </Button>
           </View>
           <Text>{community?.description}</Text>
           <View
             style={{
+              borderWidth: 1,
+              borderColor: Colors.extraColors.lightGray,
+              borderRadius: 15,
+              marginVertical: 10,
+              padding: 5,
+              paddingHorizontal: 8,
               flexDirection: "row",
-              gap: 5,
-              alignItems: "flex-end",
-              padding: 6,
+              gap: 12,
+              alignSelf: "flex-start",
             }}
           >
-            <Ionicons
-              name="person"
-              size={16}
-              color={Colors[colorScheme ?? "light"].text}
-            />
-            <Text style={{ fontSize: 14 }}>{community?.followers.length}</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 5,
+                alignItems: "flex-end",
+              }}
+            >
+              <Ionicons
+                name="person"
+                size={16}
+                color={Colors[colorScheme ?? "light"].text}
+              />
+              <Text style={{ fontSize: 14 }}>
+                {community?.followers.length}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 5,
+                alignItems: "flex-end",
+              }}
+            >
+              <MaterialCommunityIcons
+                name="comment-outline"
+                size={16}
+                color={Colors[colorScheme ?? "light"].text}
+              />
+              <Text style={{ fontSize: 14 }}>{community?.posts.length}</Text>
+            </View>
           </View>
-        </View>
-        <View
-          style={{
-            alignItems: "flex-start",
-            justifyContent: "center",
-            padding: 5,
-          }}
-        >
-          <Button theme="blue" size="$4">
-            <Text style={{ fontWeight: "700", fontSize: 13 }}>Follow</Text>
-          </Button>
         </View>
       </View>
       <PostFeed posts={communityPosts} showCommunity={false} />

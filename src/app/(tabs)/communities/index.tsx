@@ -8,12 +8,11 @@ import {
 } from "react-native";
 import * as React from "react";
 import {
-  AntDesign,
   Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { Text, View } from "tamagui";
+import { Button, Text, View } from "tamagui";
 import Colors from "@/src/constants/Colors";
 import communities from "@/assets/data/communityData";
 import { router } from "expo-router";
@@ -34,6 +33,7 @@ export default function Communities() {
       renderItem={({ item: community }) => (
         <TouchableOpacity
           key={community.id}
+          delayPressIn={50}
           onPress={() => {
             router.push(`/communities/${community.id}`);
           }}
@@ -58,7 +58,13 @@ export default function Communities() {
                 alignItems: "center",
               }}
             >
-              <TouchableOpacity style={{ width: "100%", height: "100%" }}>
+              <TouchableOpacity
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  justifyContent: "center",
+                }}
+              >
                 <Image
                   style={{
                     width: "90%",
@@ -66,7 +72,13 @@ export default function Communities() {
                     borderRadius: 15,
                   }}
                   resizeMode="cover"
-                  source={require("@/assets/images/moor-logo-grey.jpg")}
+                  source={
+                    community.profilePic
+                      ? {
+                          uri: community.profilePic,
+                        }
+                      : require("@/assets/images/moor-logo-grey.jpg")
+                  }
                 />
               </TouchableOpacity>
             </View>
@@ -80,7 +92,18 @@ export default function Communities() {
                 size={25}
                 color={Colors[colorScheme ?? "light"].text}
               />
-              <Text style={styles.postTitle}>{community.title}</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={styles.postTitle}>{community.title}</Text>
+                <Button size={"$2"} theme="blue" mr={6}>
+                  <Ionicons name="person-add-outline" size={20} color="black" />
+                </Button>
+              </View>
               <Text
                 style={{ fontSize: 14, flexGrow: 1, paddingVertical: 3 }}
                 numberOfLines={3}
@@ -88,7 +111,19 @@ export default function Communities() {
               >
                 {community.description}
               </Text>
-              <View style={{ flexDirection: "row", gap: 12 }}>
+              <View
+                style={{
+                  borderWidth: 1,
+                  borderColor: Colors.extraColors.lightGray,
+                  borderRadius: 15,
+                  marginVertical: 5,
+                  padding: 5,
+                  paddingHorizontal: 8,
+                  flexDirection: "row",
+                  gap: 12,
+                  alignSelf: "flex-start",
+                }}
+              >
                 <View
                   style={{
                     flexDirection: "row",
