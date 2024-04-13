@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import { useEffect, useState } from "react";
 import Colors from "@/src/constants/Colors";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Text, View, Button, Form, Spinner } from "tamagui";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Text, View, Button, Form, Spinner, Image } from "tamagui";
 import { router } from "expo-router";
 
 export default function Login() {
@@ -52,30 +52,23 @@ export default function Login() {
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor:
-        colorScheme === "light"
-          ? Colors.extraColors.lightGray
-          : Colors.extraColors.mediumGray,
-      borderRadius: 20,
-    },
-    areaContainer: {
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "flex-start",
-      backgroundColor:
-        colorScheme === "light"
-          ? Colors.extraColors.lightGray
-          : Colors.extraColors.mediumGray,
       borderRadius: 20,
     },
   });
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container} bg="$background">
-        <View style={{ padding: 15 }}>
+        <Image
+          source={{
+            width: 200,
+            height: 200,
+            uri: require("@/assets/images/moor-logo.jpg"),
+          }}
+        />
+        <View style={{ padding: 15, paddingTop: 0 }}>
           <Text
             style={{
-              fontSize: 25,
+              fontSize: 20,
               fontWeight: "700",
             }}
           >
@@ -93,11 +86,11 @@ export default function Login() {
                 Username
               </Text>
             </View>
-            <View style={dynamicStyles.inputContainer}>
-              <MaterialIcons
-                name="groups"
+            <View style={dynamicStyles.inputContainer} bg="$blue4">
+              <Ionicons
+                name="person-sharp"
                 style={{ padding: 10 }}
-                size={25}
+                size={18}
                 color="black"
               />
               <TextInput
@@ -121,11 +114,11 @@ export default function Login() {
                 Password
               </Text>
             </View>
-            <View style={dynamicStyles.inputContainer}>
+            <View style={dynamicStyles.inputContainer} bg="$blue4">
               <MaterialIcons
-                name="title"
+                name="password"
                 style={{ padding: 10 }}
-                size={25}
+                size={18}
                 color="black"
               />
               <TextInput
@@ -148,7 +141,7 @@ export default function Login() {
               icon={
                 status === "submitting" ? () => <Spinner theme="blue" /> : null
               }
-              mt={8}
+              mt={24}
               alignSelf="center"
               textAlign="center"
               fontWeight={"700"}
@@ -159,7 +152,7 @@ export default function Login() {
           </Form.Trigger>
         </Form>
         <View
-          mt={8}
+          mt={24}
           flexDirection="row"
           justifyContent="center"
           alignItems="center"

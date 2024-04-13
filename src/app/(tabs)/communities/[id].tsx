@@ -45,13 +45,6 @@ const communityPage = () => {
             padding: 8,
             paddingBottom: 2,
             marginVertical: 2,
-            borderWidth: 2,
-            borderColor: colorScheme == "light" ? "#eee" : "#333333",
-            borderTopWidth: 0,
-            borderBottomLeftRadius: 30,
-            borderBottomRightRadius: 30,
-            width: "90%",
-            overflow: "hidden",
           }}
         >
           <View
