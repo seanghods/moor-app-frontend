@@ -10,18 +10,7 @@ import {
   Entypo,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import {
-  Text,
-  View,
-  Switch,
-  Button,
-  getTokenValue,
-  Form,
-  Spinner,
-  YStack,
-  XStack,
-  useTheme,
-} from "tamagui";
+import { Text, Button, Form, Spinner, YStack, XStack, useTheme } from "tamagui";
 
 export default function Share() {
   const theme = useTheme();
@@ -54,24 +43,14 @@ export default function Share() {
       height: 40,
       paddingLeft: 5,
       width: "80%",
+      color: theme.color12.val,
     },
     textArea: {
       height: 140,
       paddingLeft: 5,
       width: "80%",
       marginTop: 8,
-    },
-    inputContainer: {
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: 20,
-    },
-    areaContainer: {
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "flex-start",
-      borderRadius: 20,
+      color: theme.color12.val,
     },
   });
   return (
@@ -88,38 +67,48 @@ export default function Share() {
             Share an Insight
           </Text>
         </YStack>
-        <XStack alignItems="center" gap={5}>
-          <Text fontSize={16} fontWeight="700">
-            Link
-          </Text>
-          <Switch
-            checked={postType == "text"}
-            onCheckedChange={() =>
-              setPostType((prev) => (prev == "text" ? "link" : "text"))
-            }
-            bg={postType == "text" ? "$blue3Dark" : "$accentBackground"}
-            native
-            size="$4"
-            nativeProps={{
-              ios_backgroundColor: getTokenValue("$blue10Dark"),
-              trackColor: {
-                false: getTokenValue("$blue10Dark"),
-                true: getTokenValue("$blue3Dark"),
-              },
-              thumbColor:
-                postType == "text"
-                  ? getTokenValue("$blue10Dark")
-                  : getTokenValue("$blue3Dark"),
-            }}
+        <XStack>
+          <YStack
+            btlr={5}
+            bblr={5}
+            bw={1}
+            bc={postType == "link" ? "$blue11" : theme.color12.val}
+            p={6}
+            w="30%"
+            justifyContent="center"
+            alignItems="center"
+            bg={postType == "link" ? "$blue6" : null}
+            onPress={() => setPostType("link")}
           >
-            <Switch.Thumb bg={"$accentBackground"} animation="200ms" />
-          </Switch>
-          <Text fontSize={16} fontWeight="700">
-            Text
-          </Text>
+            <XStack alignItems="center" justifyContent="center" gap={3}>
+              <Entypo name="link" size={16} color="black" />
+              <Text>Link</Text>
+            </XStack>
+          </YStack>
+          <YStack
+            btrr={5}
+            bbrr={5}
+            bw={1}
+            bc={postType == "text" ? "$blue11" : theme.color12.val}
+            p={6}
+            w="30%"
+            justifyContent="center"
+            alignItems="center"
+            bg={postType == "text" ? "$blue6" : null}
+            onPress={() => setPostType("text")}
+          >
+            <XStack alignItems="center" justifyContent="center" gap={3}>
+              <MaterialCommunityIcons
+                name="subtitles-outline"
+                size={16}
+                color="black"
+              />
+              <Text>Text</Text>
+            </XStack>
+          </YStack>
         </XStack>
         <Form
-          gap={25}
+          gap={30}
           mt={20}
           onSubmit={() => {
             setStatus("submitting");
@@ -132,10 +121,13 @@ export default function Share() {
               </Text> */}
             </YStack>
             <XStack
+              width={"92%"}
+              alignSelf="center"
               borderRadius={20}
               alignItems="center"
               justifyContent="center"
               bg="$blue4"
+              mt={10}
             >
               <MaterialIcons
                 name="groups"
@@ -150,7 +142,7 @@ export default function Share() {
                 onChangeText={(value) => handleInputChange("community", value)}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
-                placeholderTextColor={theme.color9.val}
+                placeholderTextColor={theme.color11.val}
               />
             </XStack>
           </YStack>
@@ -161,6 +153,8 @@ export default function Share() {
               </Text> */}
             </YStack>
             <XStack
+              width={"92%"}
+              alignSelf="center"
               borderRadius={20}
               alignItems="center"
               justifyContent="center"
@@ -179,7 +173,7 @@ export default function Share() {
                 onChangeText={(value) => handleInputChange("title", value)}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
-                placeholderTextColor={theme.color9.val}
+                placeholderTextColor={theme.color11.val}
               />
             </XStack>
           </YStack>
@@ -191,6 +185,8 @@ export default function Share() {
                 </Text> */}
               </YStack>
               <XStack
+                width={"92%"}
+                alignSelf="center"
                 borderRadius={20}
                 alignItems="center"
                 justifyContent="center"
@@ -209,7 +205,7 @@ export default function Share() {
                   onChangeText={(value) => handleInputChange("link", value)}
                   style={dynamicStyles.textInput}
                   autoCapitalize="none"
-                  placeholderTextColor={theme.color9.val}
+                  placeholderTextColor={theme.color11.val}
                 />
               </XStack>
             </YStack>
@@ -221,6 +217,8 @@ export default function Share() {
               </Text> */}
             </YStack>
             <XStack
+              width={"92%"}
+              alignSelf="center"
               borderRadius={20}
               alignItems="center"
               justifyContent="center"
@@ -240,7 +238,7 @@ export default function Share() {
                 autoCapitalize="none"
                 multiline={true}
                 numberOfLines={4}
-                placeholderTextColor={theme.color9.val}
+                placeholderTextColor={theme.color11.val}
               />
             </XStack>
           </YStack>
@@ -250,10 +248,12 @@ export default function Share() {
                 status === "submitting" ? () => <Spinner theme="blue" /> : null
               }
               mt={8}
+              pl={30}
+              pr={30}
               alignSelf="center"
               textAlign="center"
               fontWeight={"700"}
-              bg={"$blue5"}
+              bg={"$blue8"}
             >
               Post
             </Button>

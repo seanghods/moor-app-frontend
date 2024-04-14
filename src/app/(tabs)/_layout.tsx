@@ -8,10 +8,19 @@ import {
 } from "@expo/vector-icons";
 import { Link, Tabs } from "expo-router";
 import { Pressable, TouchableOpacity } from "react-native";
-import Colors from "@/src/constants/Colors";
 import { useColorScheme } from "react-native";
 import { useUser } from "../context/UserContext";
-import { Avatar, useTheme, View, Text, XStack, YStack } from "tamagui";
+import {
+  Avatar,
+  useTheme,
+  Text,
+  XStack,
+  Popover,
+  Adapt,
+  YStack,
+  Button,
+} from "tamagui";
+import Dropdown from "@/src/components/FilterDropdown";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -61,20 +70,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Trending",
-          headerLeft: () => (
-            <TouchableOpacity>
-              <XStack ml={25}>
-                <Text fontSize={16} fontWeight={"700"}>
-                  Filter
-                </Text>
-                <Ionicons
-                  name="chevron-down"
-                  size={20}
-                  color={theme.blue9.val}
-                />
-              </XStack>
-            </TouchableOpacity>
-          ),
+          headerLeft: () => <Dropdown />,
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="fire" size={32} color={color} />
           ),
