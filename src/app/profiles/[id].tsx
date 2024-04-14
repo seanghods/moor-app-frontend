@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Avatar,
   Separator,
@@ -9,24 +9,33 @@ import {
   YStack,
   getTokenValue,
 } from "tamagui";
+import { users } from "@/assets/data/userData";
 import { useUser } from "../context/UserContext";
+import { ImageBackground } from "react-native";
 
 export default function Profile() {
   const { user, setUser } = useUser();
-  const [viewType, setViewType] = useState<"personal" | "history">("personal");
+  useEffect(() => setUser(users[0]), []);
+  const [viewType, setViewType] = useState<"Personal" | "History">("Personal");
   return (
     // <ScrollView bg="$background" flex={1}>
     <YStack bg="$background" flex={1}>
-      <View bg="$blue8" width={"100%"} height={"30%"}>
-        <YStack p={25} width="36%" gap={10}>
-          <Avatar circular size="$10">
-            <Avatar.Image src={user?.profileImage} />
-          </Avatar>
-          <Text alignSelf="center" fontSize={20} fontWeight={"700"}>
-            {user?.username}
-          </Text>
-        </YStack>
-      </View>
+      <ImageBackground
+        source={{ uri: user?.coverImage }}
+        resizeMode="cover"
+        // style={styles.image}
+      >
+        <View width={"100%"} height={"30%"}>
+          <YStack p={25} width="36%" gap={10}>
+            <Avatar circular size="$10">
+              <Avatar.Image src={user?.profileImage} />
+            </Avatar>
+            <Text alignSelf="center" fontSize={20} fontWeight={"700"}>
+              {user?.username}
+            </Text>
+          </YStack>
+        </View>
+      </ImageBackground>
       <XStack width={"100%"} height={"10%"} justifyContent="space-between">
         <XStack p={25} gap={10}>
           <YStack alignItems="center" gap={3}>
@@ -66,7 +75,7 @@ export default function Profile() {
               // checked={postType == "text"}
               onCheckedChange={() =>
                 setViewType((prev) =>
-                  prev == "personal" ? "history" : "personal"
+                  prev == "Personal" ? "History" : "Personal"
                 )
               }
               // bg={postType == "text" ? "$blue3Dark" : "$accentBackground"}
@@ -95,6 +104,17 @@ export default function Profile() {
       <XStack justifyContent="center">
         <Text fontWeight={"700"}>{viewType}</Text>
       </XStack>
+      <YStack mt={12}>
+        <Text p={40} alignSelf="center">
+          {viewType} posts go here.
+        </Text>
+        <Text p={40} alignSelf="center">
+          Another post goes here.
+        </Text>
+        <Text p={40} alignSelf="center">
+          More will populate similar to a feed.
+        </Text>
+      </YStack>
     </YStack>
     // </ScrollView>
   );

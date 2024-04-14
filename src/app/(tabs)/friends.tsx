@@ -26,7 +26,7 @@ export default function Friends() {
             </Text>
           </>
         ) : (
-          <Text py={24} width="80%" fontSize={16} alignSelf="center">
+          <Text fontSize={16}>
             You aren't following anyone yet! Follow users to see their personal
             posts appear here.
           </Text>

@@ -52,7 +52,7 @@ const communityPage = () => {
             </Button>
           </XStack>
           <Text>{community?.description}</Text>
-          <YStack
+          <XStack
             bw={1}
             bc={"#E0E0E0"}
             br={15}
@@ -75,7 +75,7 @@ const communityPage = () => {
               />
               <Text style={{ fontSize: 14 }}>{community?.posts.length}</Text>
             </XStack>
-          </YStack>
+          </XStack>
         </YStack>
       </XStack>
       <PostFeed posts={communityPosts} showCommunity={false} />
