@@ -1,7 +1,6 @@
 import { PostType } from "@/assets/data/postsData";
 import {
   Image,
-  StyleSheet,
   useColorScheme,
   FlatList,
   TouchableOpacity,
@@ -13,7 +12,7 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { Text, View } from "@/src/components/Themed";
+import { Text, View, XStack, YStack } from "tamagui";
 import Colors from "@/src/constants/Colors";
 import { router } from "expo-router";
 import { usePost } from "@/src/app/context/PostContext";
@@ -29,16 +28,6 @@ const PostFeed: React.FC<Props> = ({ posts, showCommunity }) => {
   const colorScheme = useColorScheme();
   const theme = useTheme();
   const { setCurrentPost } = usePost();
-  const dynamicStyles = StyleSheet.create({
-    mainPostContainer: {
-      flexDirection: "row",
-      gap: 8,
-      padding: 8,
-      paddingTop: 2,
-      borderBottomWidth: 2,
-      borderBottomColor: colorScheme == "light" ? "#eee" : "#333333",
-    },
-  });
   const handleLinkPress = (linkUrl: string) => {
     Linking.openURL(linkUrl).catch((err) =>
       console.error("Couldn't load page", err)
@@ -48,7 +37,7 @@ const PostFeed: React.FC<Props> = ({ posts, showCommunity }) => {
     <FlatList
       data={posts}
       style={{ backgroundColor: Colors[colorScheme ?? "light"].background }}
-      contentContainerStyle={styles.container}
+      contentContainerStyle={{ gap: 5 }}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item: post }) => (
         <TouchableOpacity
@@ -65,21 +54,33 @@ const PostFeed: React.FC<Props> = ({ posts, showCommunity }) => {
                 style={{ alignSelf: "flex-start", marginVertical: 2 }}
                 onPress={() => router.push(`/communities/${post.community.id}`)}
               >
-                <View style={styles.communityContainer}>
+                <XStack pl={14} gap={8} alignItems="center">
                   <MaterialIcons
                     name="groups"
                     size={25}
                     color={Colors[colorScheme ?? "light"].text}
                   />
-                  <Text style={styles.communityTitle}>
+                  <Text fontSize={16} fontWeight={"700"}>
                     {post.community.title}
                   </Text>
-                </View>
+                </XStack>
               </TouchableOpacity>
             )}
-            <View style={dynamicStyles.mainPostContainer}>
+            <XStack
+              gap={8}
+              p={8}
+              pt={2}
+              bbw={2}
+              bbc={colorScheme == "light" ? "#eee" : "#333333"}
+            >
               {post.link && (
-                <View style={styles.linkContainer}>
+                <YStack
+                  w="30%"
+                  h="auto"
+                  aspectRatio={1}
+                  justifyContent="center"
+                  alignContent="center"
+                >
                   <TouchableOpacity
                     style={{
                       width: "100%",
@@ -89,36 +90,58 @@ const PostFeed: React.FC<Props> = ({ posts, showCommunity }) => {
                     onPress={() => handleLinkPress(post.link as string)}
                   >
                     <Image
-                      style={styles.linkPreview}
+                      style={{ width: "90%", height: "90%", borderRadius: 15 }}
                       resizeMode="cover"
                       source={{ uri: post.thumbnail }}
                     />
-                    <Text style={styles.domain}>{post.domain}</Text>
+                    <YStack
+                      pos="absolute"
+                      bottom={11}
+                      right={16}
+                      bg={"rgba(0, 0, 0, 0.5)"}
+                      width="85%"
+                      p={3}
+                      br={12}
+                      overflow="hidden"
+                    >
+                      <Text color="white" fontSize={10} textAlign="center">
+                        {post.domain}
+                      </Text>
+                    </YStack>
                   </TouchableOpacity>
-                </View>
+                </YStack>
               )}
               <View
                 style={{
                   flex: 1,
                 }}
               >
-                <Text style={styles.postTitle}>{post.title}</Text>
+                <Text fontSize={20} fontWeight={"700"} letterSpacing={-0.3}>
+                  {post.title}
+                </Text>
                 <AuthorButton author={post.author} type="feed" />
                 <Text
-                  style={styles.body}
+                  fontSize={14}
+                  flexGrow={1}
+                  py={5}
+                  letterSpacing={-0.3}
                   numberOfLines={3}
                   ellipsizeMode="tail"
                 >
                   {post.body}
                 </Text>
-                <View style={styles.likeCommentContainer}>
-                  <View style={{ flexDirection: "row", gap: 7 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
+                <XStack
+                  gap={12}
+                  p={5}
+                  px={8}
+                  my={5}
+                  br={15}
+                  alignSelf="flex-start"
+                  bw={1}
+                  bc={Colors.extraColors.lightGray}
+                >
+                  <XStack gap={7}>
+                    <XStack alignItems="center">
                       <TouchableOpacity>
                         <Ionicons
                           name="chevron-up"
@@ -134,98 +157,30 @@ const PostFeed: React.FC<Props> = ({ posts, showCommunity }) => {
                           color={theme.color12.val}
                         />
                       </TouchableOpacity>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 5,
-                      alignItems: "flex-end",
-                    }}
-                  >
+                    </XStack>
+                  </XStack>
+                  <XStack gap={5} alignItems="flex-end">
                     <MaterialCommunityIcons
                       name="comment-outline"
                       size={16}
-                      color={Colors[colorScheme ?? "light"].text}
+                      color={theme.color12.val}
                     />
-                    <Text style={{ fontSize: 14 }}>
+                    <Text fontSize={14}>
                       {" "}
                       {post?.discussions.reduce(
                         (acc, currArray) => acc + currArray.comments.length,
                         0
                       )}
                     </Text>
-                  </View>
-                </View>
+                  </XStack>
+                </XStack>
               </View>
-            </View>
+            </XStack>
           </View>
         </TouchableOpacity>
       )}
     />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    gap: 5,
-  },
-  communityTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  communityContainer: {
-    flexDirection: "row",
-    paddingLeft: 14,
-    gap: 8,
-    alignItems: "center",
-  },
-  postTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  buttons: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  linkContainer: {
-    width: "30%",
-    height: "auto",
-    aspectRatio: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  linkPreview: {
-    width: "90%",
-    height: "90%",
-    borderRadius: 15,
-  },
-  domain: {
-    position: "absolute",
-    bottom: 11,
-    right: 16,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    color: "white",
-    width: "85%",
-    padding: 3,
-    fontSize: 10,
-    textAlign: "center",
-    overflow: "hidden",
-    borderRadius: 12,
-  },
-  body: { fontSize: 14, flexGrow: 1, paddingVertical: 5 },
-  likeCommentContainer: {
-    borderWidth: 1,
-    borderColor: Colors.extraColors.lightGray,
-    borderRadius: 15,
-    marginVertical: 5,
-    padding: 5,
-    paddingHorizontal: 8,
-    flexDirection: "row",
-    gap: 12,
-    alignSelf: "flex-start",
-  },
-});
 
 export default PostFeed;

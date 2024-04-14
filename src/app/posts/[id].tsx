@@ -2,7 +2,6 @@ import { router, useLocalSearchParams } from "expo-router";
 import { usePost } from "@/src/app/context/PostContext";
 import { useEffect } from "react";
 import {
-  AntDesign,
   Entypo,
   FontAwesome,
   Ionicons,
@@ -13,12 +12,11 @@ import Colors from "@/src/constants/Colors";
 import {
   useColorScheme,
   TouchableOpacity,
-  StyleSheet,
   Linking,
   Image,
   ScrollView,
 } from "react-native";
-import { Button, View, Text, useTheme, XStack, YStack } from "tamagui";
+import { Button, Text, useTheme, XStack, YStack } from "tamagui";
 import AuthorButton from "@/src/components/AuthorButton";
 
 const postPage: React.FC = () => {
@@ -158,38 +156,25 @@ const postPage: React.FC = () => {
                 </TouchableOpacity>
               </XStack>
             </XStack>
-            <View
-              style={{
-                flexDirection: "row",
-                gap: 5,
-                alignItems: "flex-end",
-              }}
-            >
+            <XStack gap={5} alignItems="flex-end">
               <MaterialCommunityIcons
                 name="comment-outline"
                 size={18}
-                color={Colors[colorScheme ?? "light"].text}
+                color={theme.color12.val}
               />
-              <Text style={{ fontSize: 16 }}>
+              <Text fontSize={16}>
                 {currentPost?.discussions.reduce(
                   (acc, currArray) => acc + currArray.comments.length,
                   0
                 )}
               </Text>
-            </View>
+            </XStack>
           </XStack>
         </YStack>
       </XStack>
-      <View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            padding: 20,
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ fontSize: 20, fontWeight: "700" }}>
+      <YStack>
+        <XStack p={20} justifyContent="space-between" alignItems="center">
+          <Text fontSize={20} fontWeight={"700"}>
             Discussion Board:
           </Text>
           <TouchableOpacity>
@@ -200,8 +185,8 @@ const postPage: React.FC = () => {
               color="black"
             />
           </TouchableOpacity>
-        </View>
-        <View style={{ gap: 20 }}>
+        </XStack>
+        <YStack gap={20}>
           {currentPost?.discussions.map((discussion, index) => {
             return (
               <Button
@@ -215,33 +200,18 @@ const postPage: React.FC = () => {
                     ? "green"
                     : "blue"
                 }
-                style={{
-                  alignItems: "center",
-                  width: "90%",
-                  alignSelf: "center",
-                  height: 100,
-                }}
+                alignItems="center"
+                w="90%"
+                h={100}
+                alignSelf="center"
                 onPress={() => router.push(`/discussions/${discussion.id}`)}
                 key={index}
               >
-                <View
-                  style={{
-                    gap: 10,
-                  }}
-                >
-                  <View style={{ alignItems: "center" }}>
-                    <Text style={{ fontWeight: "700" }}>
-                      {discussion.title}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 2,
-                      justifyContent: "center",
-                    }}
-                  >
+                <YStack gap={10}>
+                  <YStack alignItems="center">
+                    <Text fontWeight={"700"}>{discussion.title}</Text>
+                  </YStack>
+                  <XStack gap={2} alignItems="center" justifyContent="center">
                     <Text style={{ fontSize: 14 }}>
                       {discussion.comments.length}
                     </Text>
@@ -250,14 +220,14 @@ const postPage: React.FC = () => {
                       size={18}
                       color={Colors[colorScheme ?? "light"].text}
                     />
-                  </View>
-                </View>
+                  </XStack>
+                </YStack>
               </Button>
             );
           })}
-        </View>
-      </View>
-      <View style={{ height: 40 }} />
+        </YStack>
+      </YStack>
+      <YStack h={40} />
     </ScrollView>
   );
 };

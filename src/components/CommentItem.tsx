@@ -1,7 +1,7 @@
 import { CommentType } from "@/assets/data/postsData";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { TouchableOpacity, StyleSheet, useColorScheme } from "react-native";
-import { View, Text } from "tamagui";
+import { TouchableOpacity, useColorScheme } from "react-native";
+import { Text, YStack, XStack, useTheme } from "tamagui";
 import Colors from "../constants/Colors";
 import { router } from "expo-router";
 
@@ -11,71 +11,57 @@ type Props = {
 
 const CommentItem: React.FC<Props> = ({ comment }) => {
   const colorScheme = useColorScheme();
+  const theme = useTheme();
   return (
-    <View style={styles.commentItem}>
+    <YStack gap={5}>
       <TouchableOpacity
         onPress={() => router.push(`/profiles/${comment.author.id}`)}
       >
-        <View style={styles.commentHeader}>
+        <XStack gap={5} alignItems="center">
           <MaterialCommunityIcons
             name="face-man-profile"
             size={25}
             color={Colors[colorScheme ?? "light"].text}
           />
-          <Text style={{ color: Colors[colorScheme ?? "light"].info }}>
+          <Text color={Colors[colorScheme ?? "light"].info}>
             {comment.author.username}
           </Text>
-        </View>
+        </XStack>
       </TouchableOpacity>
-      <Text style={{ fontSize: 16, marginBottom: 3 }}>{comment.body}</Text>
-      <View style={{ flexDirection: "row", gap: 7 }}>
-        <View style={{ flexDirection: "row", gap: 3, alignItems: "center" }}>
+      <Text fontSize={16} mb={3}>
+        {comment.body}
+      </Text>
+      <XStack gap={7}>
+        <XStack gap={3} alignItems="center">
           <TouchableOpacity>
-            <Ionicons name="chevron-up" size={15} color="black" />
+            <Ionicons name="chevron-up" size={15} color={theme.color12.val} />
           </TouchableOpacity>
-          <Text> {comment.voteCount} </Text>
+          <Text> 1 </Text>
           <TouchableOpacity>
-            <Ionicons name="chevron-down" size={15} color="black" />
+            <Ionicons name="chevron-down" size={15} color={theme.color12.val} />
           </TouchableOpacity>
-        </View>
+        </XStack>
         <TouchableOpacity>
-          <View style={{ flexDirection: "row", gap: 5 }}>
+          <XStack gap={5}>
             <MaterialCommunityIcons
               name="comment-outline"
               size={16}
               color={Colors[colorScheme ?? "light"].info}
             />
-            <Text
-              style={{
-                color: Colors[colorScheme ?? "light"].info,
-                fontSize: 12,
-              }}
-            >
+            <Text fontSize={12} color={Colors[colorScheme ?? "light"].info}>
               Reply
             </Text>
-          </View>
+          </XStack>
         </TouchableOpacity>
-      </View>
+      </XStack>
       {comment.children && comment.children.length > 0 && (
-        <View style={{ paddingLeft: 20, padding: 15 }}>
+        <YStack pl={20} p={15}>
           {comment.children.map((childComment, index) => (
             <CommentItem key={index} comment={childComment} />
           ))}
-        </View>
+        </YStack>
       )}
-    </View>
+    </YStack>
   );
 };
-
-const styles = StyleSheet.create({
-  commentItem: {
-    gap: 5,
-  },
-  commentHeader: {
-    gap: 5,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-});
-
 export default CommentItem;

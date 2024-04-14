@@ -9,7 +9,16 @@ import {
 import { useEffect, useState } from "react";
 import Colors from "@/src/constants/Colors";
 import { MaterialIcons, Entypo, Ionicons } from "@expo/vector-icons";
-import { Text, View, Button, Form, Spinner, Image } from "tamagui";
+import {
+  Text,
+  View,
+  Button,
+  Form,
+  Spinner,
+  Image,
+  YStack,
+  XStack,
+} from "tamagui";
 import { router } from "expo-router";
 
 export default function Register() {
@@ -50,16 +59,16 @@ export default function Register() {
       width: "80%",
       marginTop: 8,
     },
-    inputContainer: {
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: 20,
-    },
   });
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.container} bg="$background">
+      <YStack
+        flex={1}
+        alignItems="center"
+        justifyContent="flex-start"
+        gap={5}
+        bg="$background"
+      >
         <Image
           source={{
             width: 200,
@@ -73,13 +82,18 @@ export default function Register() {
           }}
           gap={10}
         >
-          <View>
-            <View>
+          <YStack>
+            <YStack>
               <Text p={4} mb={6} fontWeight={"700"}>
                 Username
               </Text>
-            </View>
-            <View style={dynamicStyles.inputContainer} bg="$blue4">
+            </YStack>
+            <XStack
+              justifyContent="center"
+              alignItems="center"
+              br={20}
+              bg="$blue4"
+            >
               <Ionicons
                 name="person-sharp"
                 style={{ padding: 10 }}
@@ -95,15 +109,20 @@ export default function Register() {
                 autoCapitalize="none"
                 placeholderTextColor={Colors.extraColors.mediumGray}
               />
-            </View>
-          </View>
-          <View>
-            <View>
+            </XStack>
+          </YStack>
+          <YStack>
+            <YStack>
               <Text p={4} mb={6} fontWeight={"700"}>
                 Email
               </Text>
-            </View>
-            <View style={dynamicStyles.inputContainer} bg="$blue4">
+            </YStack>
+            <XStack
+              justifyContent="center"
+              alignItems="center"
+              br={20}
+              bg="$blue4"
+            >
               <Entypo
                 name="email"
                 style={{ padding: 10 }}
@@ -119,15 +138,20 @@ export default function Register() {
                 autoCapitalize="none"
                 placeholderTextColor={Colors.extraColors.mediumGray}
               />
-            </View>
-          </View>
-          <View>
-            <View>
+            </XStack>
+          </YStack>
+          <YStack>
+            <YStack>
               <Text my={6} p={4} fontWeight={"700"}>
                 Password
               </Text>
-            </View>
-            <View style={dynamicStyles.inputContainer} bg="$blue4">
+            </YStack>
+            <XStack
+              justifyContent="center"
+              alignItems="center"
+              br={20}
+              bg="$blue4"
+            >
               <MaterialIcons
                 name="password"
                 style={{ padding: 10 }}
@@ -143,15 +167,20 @@ export default function Register() {
                 autoCapitalize="none"
                 placeholderTextColor={Colors.extraColors.mediumGray}
               />
-            </View>
-          </View>
-          <View>
-            <View>
+            </XStack>
+          </YStack>
+          <YStack>
+            <YStack>
               <Text p={4} mb={6} fontWeight={"700"}>
                 Confirm Password
               </Text>
-            </View>
-            <View style={dynamicStyles.inputContainer} bg="$blue4">
+            </YStack>
+            <XStack
+              justifyContent="center"
+              alignItems="center"
+              br={20}
+              bg="$blue4"
+            >
               <MaterialIcons
                 name="password"
                 style={{ padding: 10 }}
@@ -169,8 +198,8 @@ export default function Register() {
                 autoCapitalize="none"
                 placeholderTextColor={Colors.extraColors.mediumGray}
               />
-            </View>
-          </View>
+            </XStack>
+          </YStack>
           <Form.Trigger asChild disabled={status !== "off"}>
             <Button
               icon={
@@ -186,27 +215,13 @@ export default function Register() {
             </Button>
           </Form.Trigger>
         </Form>
-        <View
-          mt={24}
-          flexDirection="row"
-          justifyContent="center"
-          alignItems="center"
-        >
+        <XStack mt={24} justifyContent="center" alignItems="center">
           <Text>Already have an account? </Text>
           <TouchableOpacity onPress={() => router.push("/profiles/login")}>
             <Text col="$blue10">Login here</Text>
           </TouchableOpacity>
-        </View>
-      </View>
+        </XStack>
+      </YStack>
     </TouchableWithoutFeedback>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-start",
-    gap: 5,
-  },
-});

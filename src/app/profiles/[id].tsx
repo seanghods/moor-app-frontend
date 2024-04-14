@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { StyleSheet } from "react-native";
 import {
   Avatar,
-  ScrollView,
   Separator,
   Switch,
   Text,
@@ -60,15 +58,10 @@ export default function Profile() {
           </YStack>
         </XStack>
         <XStack>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-              marginRight: 15,
-            }}
-          >
-            <Text style={{ fontSize: 12, fontWeight: "700" }}>P</Text>
+          <XStack alignItems="center" gap={5} mr={15}>
+            <Text fontSize={12} fontWeight={"700"}>
+              P
+            </Text>
             <Switch
               // checked={postType == "text"}
               onCheckedChange={() =>
@@ -93,8 +86,10 @@ export default function Profile() {
             >
               <Switch.Thumb bg={"$accentBackground"} animation="200ms" />
             </Switch>
-            <Text style={{ fontSize: 12, fontWeight: "700" }}>H</Text>
-          </View>
+            <Text fontSize={12} fontWeight={"700"}>
+              H
+            </Text>
+          </XStack>
         </XStack>
       </XStack>
       <XStack justifyContent="center">
@@ -104,19 +99,3 @@ export default function Profile() {
     // </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});

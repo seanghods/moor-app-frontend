@@ -1,5 +1,4 @@
-import { StyleSheet, useColorScheme } from "react-native";
-import { Text, View } from "tamagui";
+import { Text, YStack } from "tamagui";
 import { CommentType } from "@/assets/data/postsData";
 import { useState, useEffect } from "react";
 import CommentItem from "./CommentItem";
@@ -9,7 +8,6 @@ type Props = {
 };
 
 const CommentFeed: React.FC<Props> = ({ comments }) => {
-  const colorScheme = useColorScheme();
   const [processedComments, setProcessedComments] = useState<
     Array<CommentType>
   >([]);
@@ -26,12 +24,10 @@ const CommentFeed: React.FC<Props> = ({ comments }) => {
         [key: string]: CommentType & { children: CommentType[] };
       } = {};
 
-      // First, create a map of all comments by their IDs
       comments.forEach((comment) => {
         commentMap[comment.id] = { ...comment, children: [] };
       });
 
-      // Then, iterate through the comments to assign child comments
       comments.forEach((comment) => {
         if (comment.parentComment) {
           commentMap[comment.parentComment].children.push(
@@ -40,7 +36,6 @@ const CommentFeed: React.FC<Props> = ({ comments }) => {
         }
       });
 
-      // Finally, filter out only top-level comments (those without a parentComment)
       const finalComments = Object.values(commentMap).filter(
         (comment) => !comment.parentComment
       );
@@ -53,33 +48,25 @@ const CommentFeed: React.FC<Props> = ({ comments }) => {
 
   return (
     <>
-      <View style={styles.container}>
+      <YStack flex={1} gap={10} p={10}>
         {!processedComments || processedComments.length == 0 ? (
-          <View p={25}>
+          <YStack p={25}>
             <Text>
               There are no comments yet in this discussion board. Post one to
               get the conversation started!
             </Text>
-          </View>
+          </YStack>
         ) : (
           processedComments.map((comment, index) => (
-            <View key={index}>
+            <YStack key={index}>
               <CommentItem comment={comment} />
-            </View>
+            </YStack>
           ))
         )}
-        <View style={{ height: 40 }} />
-      </View>
+        <YStack h={40} />
+      </YStack>
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    gap: 10,
-    padding: 10,
-  },
-});
 
 export default CommentFeed;

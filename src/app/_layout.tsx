@@ -24,6 +24,9 @@ export default function RootLayout() {
     Inter: require("@tamagui/font-inter/otf/Inter-Medium.otf"),
     InterBold: require("@tamagui/font-inter/otf/Inter-Bold.otf"),
     SpaceMono: require("../../assets/fonts/SpaceMono-Regular.ttf"),
+    DMSans: require("../../assets/fonts/DMSans.ttf"),
+    DMSansSemiBold: require("../../assets/fonts/DMSans-SemiBold.ttf"),
+    DMSansBold: require("../../assets/fonts/DMSans-Bold.ttf"),
     ...FontAwesome.font,
   });
 
