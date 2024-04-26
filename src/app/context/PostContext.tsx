@@ -1,5 +1,5 @@
+import { PostType } from "@/src/api-types/api-types";
 import React, { createContext, ReactNode, useContext, useState } from "react";
-import { PostType } from "@/assets/data/postsData";
 
 interface PostState {
   currentPost: PostType | null;

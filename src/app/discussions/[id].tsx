@@ -11,8 +11,8 @@ import {
 } from "react-native";
 import { Button } from "tamagui";
 import { useLocalSearchParams } from "expo-router";
-import { DiscussionType } from "@/assets/data/postsData";
 import { useState } from "react";
+import { DiscussionType } from "@/src/api-types/api-types";
 
 const Discussion = () => {
   const theme = useTheme();
@@ -20,7 +20,7 @@ const Discussion = () => {
   const { currentPost } = usePost();
   const [currentDiscussion, setCurrentDiscussion] = useState<
     DiscussionType | undefined
-  >(currentPost?.discussions.find((discussion) => discussion.id == id));
+  >(currentPost?.discussions.find((discussion) => discussion._id == id));
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <ScrollView

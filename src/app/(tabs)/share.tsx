@@ -1,7 +1,9 @@
 import {
+  FlatList,
   Keyboard,
   StyleSheet,
   TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
 import { useEffect, useState } from "react";
@@ -11,33 +13,112 @@ import {
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { Text, Button, Form, Spinner, YStack, XStack, useTheme } from "tamagui";
+import { API_ROUTES } from "@/src/utils/helpers";
+import { CommunityType } from "@/src/api-types/api-types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Share() {
   const theme = useTheme();
-  const [postType, setPostType] = useState<"link" | "text">("link");
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
     "off"
   );
+  const [search, setSearch] = useState("");
+  const [communities, setCommunities] = useState<CommunityType[]>([]);
   const [postData, setPostData] = useState({
     community: "",
+    postType: "link",
     title: "",
     link: "",
-    body: "",
+    description: "",
   });
+  useEffect(() => {
+    const fetchCommunities = async () => {
+      if (search.length > 2 && !postData.community) {
+        const response = await fetch(
+          `${API_ROUTES.community}/search?query=${search}`
+        );
+        const data = await response.json();
+        setCommunities(data);
+      }
+    };
+    if (search.length < 3) setCommunities([]);
+    const timeoutId = setTimeout(() => {
+      fetchCommunities();
+    }, 500); // Debounce the API call
+
+    return () => clearTimeout(timeoutId);
+  }, [search]);
+
+  const handleSelectCommunity = (community: CommunityType) => {
+    setPostData((prevData) => ({ ...prevData, community: community.name }));
+    setSearch(community.name);
+    setCommunities([]); // Clear search results after selection
+  };
   const handleInputChange = (name: string, value: string) => {
     setPostData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
-  useEffect(() => {
-    if (status === "submitting") {
-      const timer = setTimeout(() => setStatus("off"), 2000);
-      return () => {
-        clearTimeout(timer);
-      };
+  const createPost = async () => {
+    if (!postData.community) {
+      alert("Please select a community");
+      return;
     }
-  }, [status]);
+    if (!postData.title) {
+      alert("Please enter a title");
+      return;
+    }
+    if (postData.postType == "link" && !postData.link) {
+      alert("Please enter a link");
+      return;
+    } else {
+      if (postData.postType == "link" && !isValidUrl(postData.link)) {
+        alert("Please enter a valid link");
+        return;
+      }
+    }
+    if (!postData.description) {
+      alert("Please enter a description");
+      return;
+    }
+    setStatus("submitting");
+    const token = await AsyncStorage.getItem("userToken");
+    const response = await fetch(API_ROUTES.post, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(postData),
+    });
+    if (!response.ok) {
+      setStatus("off");
+      const error = await response.json();
+      if (error.message) {
+        alert(error.message);
+        return;
+      } else {
+        throw new Error("Failed to create post");
+      }
+    }
+    setStatus("submitted");
+    const data = await response.json();
+    alert("Post created successfully");
+  };
+  function isValidUrl(url: string) {
+    const pattern = new RegExp(
+      "^(https?:\\/\\/)?" + // protocol
+        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name and extension
+        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+        "(\\:\\d+)?" + // port
+        "(\\/[-a-z\\d%_.~+]*)*" + // path
+        "(\\?[;&amp;a-z\\d%_.~+=-]*)?" + // query string
+        "(\\#[-a-z\\d_]*)?$",
+      "i"
+    ); // fragment locator
+    return !!pattern.test(url);
+  }
   const dynamicStyles = StyleSheet.create({
     textInput: {
       height: 40,
@@ -72,13 +153,15 @@ export default function Share() {
             btlr={5}
             bblr={5}
             bw={1}
-            bc={postType == "link" ? "$blue11" : theme.color12.val}
+            bc={postData.postType == "link" ? "$blue11" : theme.color12.val}
             p={6}
             w="30%"
             justifyContent="center"
             alignItems="center"
-            bg={postType == "link" ? "$blue6" : null}
-            onPress={() => setPostType("link")}
+            bg={postData.postType == "link" ? "$blue6" : null}
+            onPress={() =>
+              setPostData((prevData) => ({ ...prevData, postType: "link" }))
+            }
           >
             <XStack alignItems="center" justifyContent="center" gap={3}>
               <Entypo name="link" size={16} color="black" />
@@ -89,13 +172,15 @@ export default function Share() {
             btrr={5}
             bbrr={5}
             bw={1}
-            bc={postType == "text" ? "$blue11" : theme.color12.val}
+            bc={postData.postType == "text" ? "$blue11" : theme.color12.val}
             p={6}
             w="30%"
             justifyContent="center"
             alignItems="center"
-            bg={postType == "text" ? "$blue6" : null}
-            onPress={() => setPostType("text")}
+            bg={postData.postType == "text" ? "$blue6" : null}
+            onPress={() =>
+              setPostData((prevData) => ({ ...prevData, postType: "text" }))
+            }
           >
             <XStack alignItems="center" justifyContent="center" gap={3}>
               <MaterialCommunityIcons
@@ -111,10 +196,10 @@ export default function Share() {
           gap={30}
           mt={20}
           onSubmit={() => {
-            setStatus("submitting");
+            createPost();
           }}
         >
-          <YStack>
+          <YStack zIndex={10}>
             <YStack>
               {/* <Text p={4} mb={6} fontWeight={"700"}>
                 Community
@@ -138,13 +223,68 @@ export default function Share() {
               <TextInput
                 returnKeyType="done"
                 placeholder="community"
-                value={postData.community}
-                onChangeText={(value) => handleInputChange("community", value)}
+                value={search}
+                onChangeText={(value) => {
+                  setSearch(value);
+                  if (postData.community)
+                    setPostData((prevData) => ({
+                      ...prevData,
+                      community: "",
+                    }));
+                }}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
                 placeholderTextColor={theme.color11.val}
               />
             </XStack>
+            {search.length > 2 && !postData.community && (
+              <>
+                <FlatList
+                  data={communities}
+                  style={{
+                    position: "absolute",
+                    borderRadius: 7,
+                    height: 200,
+                    top: 60,
+                    left: 40,
+                    width: 200,
+                    backgroundColor: theme.background.val,
+                    shadowColor: "#000",
+                    shadowOpacity: 0.2,
+                    shadowRadius: 3,
+                    shadowOffset: { width: 0, height: 2 },
+                    elevation: 5, // for Android
+                  }}
+                  ListHeaderComponent={() => (
+                    <YStack>
+                      <YStack bbw={1} bbc={"#eaeaea"} p={10}>
+                        <Text fontWeight={"700"}>Communities:</Text>
+                      </YStack>
+                      {communities.length == 0 && (
+                        <YStack p={10}>
+                          <Spinner />
+                        </YStack>
+                      )}
+                    </YStack>
+                  )}
+                  keyExtractor={(item) => item._id}
+                  renderItem={({ item }) => (
+                    <>
+                      <TouchableOpacity
+                        style={{
+                          padding: 10,
+                          borderBottomWidth: 1,
+                          borderBottomColor: "#ccc",
+                        }}
+                        onPress={() => handleSelectCommunity(item)}
+                      >
+                        <Text>{item.name}</Text>
+                      </TouchableOpacity>
+                    </>
+                  )}
+                />
+              </>
+            )}
           </YStack>
           <YStack>
             <YStack>
@@ -177,7 +317,7 @@ export default function Share() {
               />
             </XStack>
           </YStack>
-          {postType == "link" && (
+          {postData.postType == "link" && (
             <YStack>
               <YStack>
                 {/* <Text my={6} p={4} fontWeight={"700"}>
@@ -232,7 +372,7 @@ export default function Share() {
               />
               <TextInput
                 placeholder="description"
-                value={postData.body}
+                value={postData.description}
                 onChangeText={(value) => handleInputChange("body", value)}
                 style={dynamicStyles.textArea}
                 autoCapitalize="none"
@@ -255,7 +395,7 @@ export default function Share() {
               fontWeight={"700"}
               bg={"$blue8"}
             >
-              Post
+              Create Post
             </Button>
           </Form.Trigger>
         </Form>

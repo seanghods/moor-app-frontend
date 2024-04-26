@@ -5,14 +5,15 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { useColorScheme } from "react-native";
-import { PostProvider, usePost } from "./context/PostContext";
+import { TouchableOpacity, useColorScheme } from "react-native";
+import { PostProvider } from "./context/PostContext";
 import { TamaguiProvider, createTamagui } from "tamagui";
 import config from "@/tamagui.config";
 import { UserProvider } from "./context/UserContext";
+import { Feather } from "@expo/vector-icons";
 
 const tamaguiConfig = createTamagui(config);
 
@@ -75,14 +76,31 @@ function RootLayoutNav() {
                 name="profiles/[id]"
                 options={{
                   title: "Profile",
+                  headerRight: () => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        router.push("/profiles/settings");
+                      }}
+                    >
+                      <Feather
+                        name="settings"
+                        size={24}
+                        color={colorScheme === "dark" ? "#eee" : "black"}
+                      />
+                    </TouchableOpacity>
+                  ),
                 }}
               />
               <Stack.Screen
-                name="profiles/login"
+                name="profiles/settings"
+                options={{ title: "Settings" }}
+              />
+              <Stack.Screen
+                name="authentication/login"
                 options={{ title: "Log In" }}
               />
               <Stack.Screen
-                name="profiles/register"
+                name="authentication/register"
                 options={{ title: "Register" }}
               />
             </Stack>

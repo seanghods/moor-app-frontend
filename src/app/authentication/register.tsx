@@ -6,47 +6,118 @@ import {
   TouchableWithoutFeedback,
   useColorScheme,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Colors from "@/src/constants/Colors";
 import { MaterialIcons, Entypo, Ionicons } from "@expo/vector-icons";
-import {
-  Text,
-  View,
-  Button,
-  Form,
-  Spinner,
-  Image,
-  YStack,
-  XStack,
-} from "tamagui";
+import { Text, Button, Form, Spinner, Image, YStack, XStack } from "tamagui";
 import { router } from "expo-router";
+import { useUser } from "../context/UserContext";
+import { API_ROUTES } from "@/src/utils/helpers";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Register() {
   const colorScheme = useColorScheme();
-  const [postType, setPostType] = useState<"link" | "text">("link");
+  const { user, setUser } = useUser();
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
     "off"
   );
-  const [postData, setPostData] = useState({
+  const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+  const [formError, setFormError] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    message: "",
+  });
   const handleInputChange = (name: string, value: string) => {
-    setPostData((prevState) => ({
+    setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
-  useEffect(() => {
-    if (status === "submitting") {
-      const timer = setTimeout(() => setStatus("off"), 2000);
-      return () => {
-        clearTimeout(timer);
-      };
+  const handleSubmit = async () => {
+    setFormError({
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      message: "",
+    });
+    if (!formData.email.includes("@")) {
+      setFormError((prevState) => ({
+        ...prevState,
+        email: "Please enter a valid email address.",
+      }));
+      return;
     }
-  }, [status]);
+    if (formData.password.length < 6) {
+      setFormError((prevState) => ({
+        ...prevState,
+        password: "Password must be greater than 6 characters.",
+      }));
+      return;
+    }
+    if (formData.username.length < 3) {
+      setFormError((prevState) => ({
+        ...prevState,
+        username: "Username must be greater than 3 characters.",
+      }));
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      setFormError((prevState) => ({
+        ...prevState,
+        password: "Passwords do not match.",
+      }));
+      return;
+    }
+    try {
+      setStatus("submitting");
+      const response = await fetch(API_ROUTES.register, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          username: formData.username,
+          password: formData.password,
+        }),
+      });
+
+      if (!response.ok) {
+        setStatus("off");
+        const error = await response.json();
+        if (error.message) {
+          setFormError((prevState) => ({
+            ...prevState,
+            message: error.message,
+          }));
+          return;
+        } else {
+          throw new Error("Failed to register");
+        }
+      }
+      const data = await response.json();
+      setStatus("off");
+      await AsyncStorage.setItem("userToken", data.token);
+      setUser(data.user);
+      router.push("/");
+    } catch (error) {
+      setStatus("off");
+      console.error("Registration failed:", error);
+      setFormError((prevState) => ({
+        ...prevState,
+        message: "Registration failed. Please try again.",
+      }));
+    }
+  };
   const dynamicStyles = StyleSheet.create({
     textInput: {
       height: 40,
@@ -78,7 +149,7 @@ export default function Register() {
         />
         <Form
           onSubmit={() => {
-            setStatus("submitting");
+            handleSubmit();
           }}
           gap={10}
         >
@@ -103,13 +174,14 @@ export default function Register() {
               <TextInput
                 returnKeyType="done"
                 placeholder="username"
-                value={postData.username}
+                value={formData.username}
                 onChangeText={(value) => handleInputChange("username", value)}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
                 placeholderTextColor={Colors.extraColors.mediumGray}
               />
             </XStack>
+            <Text mt={5}>{formError.username}</Text>
           </YStack>
           <YStack>
             <YStack>
@@ -132,13 +204,14 @@ export default function Register() {
               <TextInput
                 returnKeyType="done"
                 placeholder="email"
-                value={postData.email}
+                value={formData.email}
                 onChangeText={(value) => handleInputChange("email", value)}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
                 placeholderTextColor={Colors.extraColors.mediumGray}
               />
             </XStack>
+            <Text mt={5}>{formError.email}</Text>
           </YStack>
           <YStack>
             <YStack>
@@ -160,14 +233,16 @@ export default function Register() {
               />
               <TextInput
                 returnKeyType="done"
+                secureTextEntry={true}
                 placeholder="password"
-                value={postData.password}
+                value={formData.password}
                 onChangeText={(value) => handleInputChange("password", value)}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
                 placeholderTextColor={Colors.extraColors.mediumGray}
               />
             </XStack>
+            <Text mt={5}>{formError.password}</Text>
           </YStack>
           <YStack>
             <YStack>
@@ -190,7 +265,8 @@ export default function Register() {
               <TextInput
                 returnKeyType="done"
                 placeholder="confirm password"
-                value={postData.confirmPassword}
+                value={formData.confirmPassword}
+                secureTextEntry={true}
                 onChangeText={(value) =>
                   handleInputChange("confirmPassword", value)
                 }
@@ -199,7 +275,9 @@ export default function Register() {
                 placeholderTextColor={Colors.extraColors.mediumGray}
               />
             </XStack>
+            <Text mt={5}>{formError.confirmPassword}</Text>
           </YStack>
+          <Text>{formError.message}</Text>
           <Form.Trigger asChild disabled={status !== "off"}>
             <Button
               icon={
@@ -209,7 +287,7 @@ export default function Register() {
               alignSelf="center"
               textAlign="center"
               fontWeight={"700"}
-              bg={"$blue5"}
+              bg={"$blue8"}
             >
               Register
             </Button>
@@ -217,7 +295,9 @@ export default function Register() {
         </Form>
         <XStack mt={24} justifyContent="center" alignItems="center">
           <Text>Already have an account? </Text>
-          <TouchableOpacity onPress={() => router.push("/profiles/login")}>
+          <TouchableOpacity
+            onPress={() => router.push("/authentication/login")}
+          >
             <Text col="$blue10">Login here</Text>
           </TouchableOpacity>
         </XStack>

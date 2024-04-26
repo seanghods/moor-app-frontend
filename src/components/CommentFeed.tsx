@@ -1,7 +1,7 @@
 import { Text, YStack } from "tamagui";
-import { CommentType } from "@/assets/data/postsData";
 import { useState, useEffect } from "react";
 import CommentItem from "./CommentItem";
+import { CommentType } from "../api-types/api-types";
 
 type Props = {
   comments: Array<CommentType> | undefined;
@@ -25,13 +25,13 @@ const CommentFeed: React.FC<Props> = ({ comments }) => {
       } = {};
 
       comments.forEach((comment) => {
-        commentMap[comment.id] = { ...comment, children: [] };
+        commentMap[comment._id] = { ...comment, children: [] };
       });
 
       comments.forEach((comment) => {
         if (comment.parentComment) {
           commentMap[comment.parentComment].children.push(
-            commentMap[comment.id]
+            commentMap[comment._id]
           );
         }
       });

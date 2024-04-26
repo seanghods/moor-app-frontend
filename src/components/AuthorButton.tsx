@@ -1,20 +1,20 @@
 import { StyleSheet, TouchableOpacity, useColorScheme } from "react-native";
 import { useUser } from "../app/context/UserContext";
 import Colors from "../constants/Colors";
-import { View } from "tamagui";
 import { router } from "expo-router";
 import { Text } from "tamagui";
+import { UserType } from "../api-types/api-types";
 
 type Props = {
-  author: { username: string; id: string };
+  creator: UserType;
   type: "feed" | "post";
 };
 
-const AuthorButton: React.FC<Props> = ({ author, type }) => {
+const AuthorButton: React.FC<Props> = ({ creator, type }) => {
   const { user } = useUser();
   const colorScheme = useColorScheme();
   const dynamicStyles = StyleSheet.create({
-    author: {
+    creator: {
       fontSize: 13,
       marginHorizontal: type == "post" ? 10 : 0,
       paddingTop: 5,
@@ -28,10 +28,10 @@ const AuthorButton: React.FC<Props> = ({ author, type }) => {
       delayPressIn={50}
       style={{ alignSelf: "flex-start" }}
       onPress={() => {
-        router.push(`/profiles/${author.id}`);
+        router.push(`/profiles/${creator._id}`);
       }}
     >
-      <Text style={dynamicStyles.author}>{author.username}</Text>
+      <Text style={dynamicStyles.creator}>{creator.username}</Text>
     </TouchableOpacity>
   );
 };

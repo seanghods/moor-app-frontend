@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Avatar,
   Separator,
@@ -8,14 +8,14 @@ import {
   XStack,
   YStack,
   getTokenValue,
+  useTheme,
 } from "tamagui";
-import { users } from "@/assets/data/userData";
 import { useUser } from "../context/UserContext";
 import { ImageBackground } from "react-native";
 
 export default function Profile() {
   const { user, setUser } = useUser();
-  useEffect(() => setUser(users[0]), []);
+  const theme = useTheme();
   const [viewType, setViewType] = useState<"Personal" | "History">("Personal");
   return (
     // <ScrollView bg="$background" flex={1}>
@@ -23,11 +23,11 @@ export default function Profile() {
       <ImageBackground
         source={{ uri: user?.coverImage }}
         resizeMode="cover"
-        // style={styles.image}
+        style={{ backgroundColor: theme.blue8.val }}
       >
         <View width={"100%"} height={"30%"}>
           <YStack p={25} width="36%" gap={10}>
-            <Avatar circular size="$10">
+            <Avatar circular bw={2} bc={theme.color12.val} size="$10">
               <Avatar.Image src={user?.profileImage} />
             </Avatar>
             <Text alignSelf="center" fontSize={20} fontWeight={"700"}>

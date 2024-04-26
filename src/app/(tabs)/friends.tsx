@@ -13,7 +13,7 @@ export default function Friends() {
           <>
             <Text fontSize={16}>
               <Text
-                onPress={() => router.push("/profiles/register")}
+                onPress={() => router.push("/authentication/register")}
                 fontSize={16}
                 color="$blue10"
               >

@@ -7,19 +7,10 @@ import {
   AntDesign,
 } from "@expo/vector-icons";
 import { Link, Tabs } from "expo-router";
-import { Pressable, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { useColorScheme } from "react-native";
 import { useUser } from "../context/UserContext";
-import {
-  Avatar,
-  useTheme,
-  Text,
-  XStack,
-  Popover,
-  Adapt,
-  YStack,
-  Button,
-} from "tamagui";
+import { Avatar, useTheme, Text } from "tamagui";
 import Dropdown from "@/src/components/FilterDropdown";
 
 export default function TabLayout() {
@@ -38,30 +29,29 @@ export default function TabLayout() {
         tabBarInactiveTintColor: "black",
         headerRight: () => (
           <Link
-            href={user ? `/profiles/${user?.id}` : "/profiles/login"}
+            href={user ? `/profiles/${user?._id}` : "/authentication/login"}
             asChild
           >
-            <Pressable>
-              {({ pressed }) =>
-                user && user?.profileImage ? (
-                  <Avatar
-                    size={"$3"}
-                    mr={25}
-                    circular
-                    style={{ opacity: pressed ? 0.5 : 1 }}
-                  >
-                    <Avatar.Image src={user.profileImage} />
-                  </Avatar>
-                ) : (
-                  <Ionicons
-                    name="person-sharp"
-                    style={{ marginRight: 25, opacity: pressed ? 0.5 : 1 }}
-                    size={24}
-                    color={theme.color12.val}
-                  />
-                )
-              }
-            </Pressable>
+            <TouchableOpacity>
+              {user && user?.profileImage ? (
+                <Avatar
+                  size={"$3"}
+                  mr={25}
+                  circular
+                  bw={1}
+                  bc={theme.color12.val}
+                >
+                  <Avatar.Image src={user.profileImage} />
+                </Avatar>
+              ) : (
+                <Ionicons
+                  name="person-sharp"
+                  style={{ marginRight: 25 }}
+                  size={24}
+                  color={theme.color12.val}
+                />
+              )}
+            </TouchableOpacity>
           </Link>
         ),
       }}

@@ -1,3 +1,6 @@
+import { UserType } from "@/src/api-types/api-types";
+import { API_ROUTES } from "@/src/utils/helpers";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {
   createContext,
   ReactNode,
@@ -5,7 +8,6 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { users, UserType } from "@/assets/data/userData";
 
 interface UserState {
   user: UserType | null;
@@ -25,11 +27,16 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserType | null>(null);
   useEffect(() => {
     const initializeUserSession = async () => {
-      // setUser(users[0]);
-      // const sessionUser = await fetchUserSession(); // Fetch user session from storage or API
-      // setUser(sessionUser); // Set the user state with the retrieved session data
+      const token = await AsyncStorage.getItem("userToken");
+      const response = await fetch(API_ROUTES.checkSession, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      setUser(data.user); // Set the user state with the retrieved session dataa
     };
-
     initializeUserSession();
   }, []);
 

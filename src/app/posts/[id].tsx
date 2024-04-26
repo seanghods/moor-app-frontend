@@ -47,13 +47,15 @@ const postPage: React.FC = () => {
     >
       <TouchableOpacity
         style={{ alignSelf: "flex-start", marginVertical: 2 }}
-        onPress={() => router.push(`/communities/${currentPost?.community.id}`)}
+        onPress={() =>
+          router.push(`/communities/${currentPost?.community._id}`)
+        }
       >
         <XStack w={"100%"} justifyContent="space-between" alignItems="center">
           <XStack pl={14} gap={8} alignItems="center" pt={10} py={3}>
             <MaterialIcons name="groups" size={25} color={theme.color12.val} />
             <Text fontSize={20} fontWeight={"700"}>
-              {currentPost?.community.title}
+              {currentPost?.community.name}
             </Text>
           </XStack>
           <TouchableOpacity>
@@ -79,8 +81,8 @@ const postPage: React.FC = () => {
               {currentPost?.title}
             </Text>
           </YStack>
-          {currentPost?.author ? (
-            <AuthorButton author={currentPost?.author} type="post" />
+          {currentPost?.creator ? (
+            <AuthorButton creator={currentPost?.creator} type="post" />
           ) : null}
           {currentPost?.link && (
             <YStack
@@ -126,7 +128,7 @@ const postPage: React.FC = () => {
             </YStack>
           )}
           <Text fontSize={15} flexGrow={1} p={8} mb={10}>
-            {currentPost?.body}
+            {currentPost?.description}
           </Text>
           <XStack
             gap={12}
@@ -204,7 +206,7 @@ const postPage: React.FC = () => {
                 w="90%"
                 h={100}
                 alignSelf="center"
-                onPress={() => router.push(`/discussions/${discussion.id}`)}
+                onPress={() => router.push(`/discussions/${discussion._id}`)}
                 key={index}
               >
                 <YStack gap={10}>

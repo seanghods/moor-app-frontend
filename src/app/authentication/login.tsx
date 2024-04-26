@@ -11,19 +11,23 @@ import Colors from "@/src/constants/Colors";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Text, View, Button, Form, Spinner, Image } from "tamagui";
 import { router } from "expo-router";
+import { useUser } from "../context/UserContext";
+import { API_ROUTES } from "@/src/utils/helpers";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login() {
   const colorScheme = useColorScheme();
-  const [postType, setPostType] = useState<"link" | "text">("link");
+  const { user, setUser } = useUser();
+  const [formError, setFormError] = useState({ message: "" });
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
     "off"
   );
-  const [postData, setPostData] = useState({
+  const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
   const handleInputChange = (name: string, value: string) => {
-    setPostData((prevState) => ({
+    setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -36,6 +40,46 @@ export default function Login() {
       };
     }
   }, [status]);
+  const handleLogIn = async () => {
+    setFormError({
+      message: "",
+    });
+    try {
+      setStatus("submitting");
+      const response = await fetch(API_ROUTES.logIn, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+        }),
+      });
+      if (!response.ok) {
+        setStatus("off");
+        const error = await response.json();
+        if (error.message) {
+          setFormError({
+            message: error.message,
+          });
+          return;
+        } else {
+          throw new Error("Failed to register");
+        }
+      }
+      setStatus("off");
+      const data = await response.json();
+      await AsyncStorage.setItem("userToken", data.token);
+      setUser(data.user);
+      router.push("/");
+    } catch (error) {
+      console.error("Login failed:", error);
+      setFormError({
+        message: "Login failed. Please try again.",
+      });
+    }
+  };
   const dynamicStyles = StyleSheet.create({
     textInput: {
       height: 40,
@@ -65,19 +109,9 @@ export default function Login() {
             uri: require("@/assets/images/moor-logo.jpg"),
           }}
         />
-        {/* <View style={{ padding: 15, paddingTop: 0 }}>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "700",
-            }}
-          >
-            Login
-          </Text>
-        </View> */}
         <Form
           onSubmit={() => {
-            setStatus("submitting");
+            handleLogIn();
           }}
         >
           <View>
@@ -96,7 +130,7 @@ export default function Login() {
               <TextInput
                 returnKeyType="done"
                 placeholder="username"
-                value={postData.username}
+                value={formData.username}
                 onChangeText={(value) => handleInputChange("username", value)}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
@@ -124,7 +158,8 @@ export default function Login() {
               <TextInput
                 returnKeyType="done"
                 placeholder="password"
-                value={postData.password}
+                value={formData.password}
+                secureTextEntry={true}
                 onChangeText={(value) => handleInputChange("password", value)}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
@@ -145,11 +180,14 @@ export default function Login() {
               alignSelf="center"
               textAlign="center"
               fontWeight={"700"}
-              bg={"$blue5"}
+              bg={"$blue8"}
             >
               Log In
             </Button>
           </Form.Trigger>
+          <Text mt={16} color={"$red9"} alignSelf="center">
+            {formError.message}
+          </Text>
         </Form>
         <View
           mt={24}
@@ -158,7 +196,9 @@ export default function Login() {
           alignItems="center"
         >
           <Text>Don't have an account yet? </Text>
-          <TouchableOpacity onPress={() => router.push("/profiles/register")}>
+          <TouchableOpacity
+            onPress={() => router.push("/authentication/register")}
+          >
             <Text col="$blue10">Register here</Text>
           </TouchableOpacity>
         </View>

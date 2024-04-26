@@ -25,7 +25,7 @@ const Dropdown = () => {
       top: 40,
       left: 10,
       width: 200,
-      backgroundColor: "white",
+      backgroundColor: theme.background.val,
       shadowColor: "#000",
       shadowOpacity: 0.2,
       shadowRadius: 3,

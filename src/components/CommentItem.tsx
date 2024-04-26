@@ -1,9 +1,9 @@
-import { CommentType } from "@/assets/data/postsData";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity, useColorScheme } from "react-native";
 import { Text, YStack, XStack, useTheme } from "tamagui";
 import Colors from "../constants/Colors";
 import { router } from "expo-router";
+import { CommentType } from "../api-types/api-types";
 
 type Props = {
   comment: CommentType;
@@ -15,7 +15,7 @@ const CommentItem: React.FC<Props> = ({ comment }) => {
   return (
     <YStack gap={5}>
       <TouchableOpacity
-        onPress={() => router.push(`/profiles/${comment.author.id}`)}
+        onPress={() => router.push(`/profiles/${comment.creator._id}`)}
       >
         <XStack gap={5} alignItems="center">
           <MaterialCommunityIcons
@@ -24,12 +24,12 @@ const CommentItem: React.FC<Props> = ({ comment }) => {
             color={Colors[colorScheme ?? "light"].text}
           />
           <Text color={Colors[colorScheme ?? "light"].info}>
-            {comment.author.username}
+            {comment.creator.username}
           </Text>
         </XStack>
       </TouchableOpacity>
       <Text fontSize={16} mb={3}>
-        {comment.body}
+        {comment.description}
       </Text>
       <XStack gap={7}>
         <XStack gap={3} alignItems="center">
