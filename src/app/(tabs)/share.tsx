@@ -16,6 +16,7 @@ import { Text, Button, Form, Spinner, YStack, XStack, useTheme } from "tamagui";
 import { API_ROUTES } from "@/src/utils/helpers";
 import { CommunityType } from "@/src/api-types/api-types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 
 export default function Share() {
   const theme = useTheme();
@@ -104,7 +105,7 @@ export default function Share() {
     }
     setStatus("submitted");
     const data = await response.json();
-    alert("Post created successfully");
+    router.push(`/posts/${data.post._id}`);
   };
   function isValidUrl(url: string) {
     const pattern = new RegExp(
@@ -373,7 +374,9 @@ export default function Share() {
               <TextInput
                 placeholder="description"
                 value={postData.description}
-                onChangeText={(value) => handleInputChange("body", value)}
+                onChangeText={(value) =>
+                  handleInputChange("description", value)
+                }
                 style={dynamicStyles.textArea}
                 autoCapitalize="none"
                 multiline={true}

@@ -1,21 +1,29 @@
 import PostFeed from "@/src/components/PostFeed";
 import { Text, Button, YStack, XStack, useTheme, Spinner } from "tamagui";
 import {
+  AntDesign,
   Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { CommunityType } from "@/src/api-types/api-types";
 import { API_ROUTES } from "@/src/utils/helpers";
+import { useUser } from "../../context/UserContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTrending } from "../../context/TrendingContext";
+import { useIsFocused } from "@react-navigation/native";
 
 const communityPage = () => {
   const { id } = useLocalSearchParams();
+  const { user, setUser } = useUser();
   const theme = useTheme();
   const [community, setCommunity] = useState<CommunityType | undefined>(
     undefined
   );
+  const { trendingPosts } = useTrending();
+  const isFocused = useIsFocused();
   useEffect(() => {
     async function getCommunity() {
       const response = await fetch(`${API_ROUTES.community}?id=${id}`, {
@@ -27,7 +35,75 @@ const communityPage = () => {
       setCommunity(data);
     }
     getCommunity();
-  }, []);
+  }, [isFocused]);
+  async function followCommunity(community: CommunityType) {
+    if (user) {
+      const token = await AsyncStorage.getItem("userToken");
+      const response = await fetch(API_ROUTES.followCommunity, {
+        method: "POST",
+        body: JSON.stringify({
+          communityId: community._id,
+        }),
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (data.success) {
+        if (user.communitiesFollowed.some((comm) => comm == community._id)) {
+          setUser((prevUser) => {
+            if (prevUser) {
+              return {
+                ...prevUser,
+                communitiesFollowed: prevUser.communitiesFollowed?.filter(
+                  (comm) => comm !== community._id
+                ),
+              };
+            }
+            return prevUser;
+          });
+          setCommunity((prevCommunity) => {
+            if (prevCommunity) {
+              return {
+                ...prevCommunity,
+                followers: prevCommunity.followers?.filter(
+                  (follower) => follower !== user._id
+                ),
+              };
+            }
+            return prevCommunity;
+          });
+        } else {
+          setCommunity((prevCommunity) => {
+            if (prevCommunity) {
+              return {
+                ...prevCommunity,
+                followers: [...prevCommunity.followers, user._id],
+              };
+            }
+            return prevCommunity;
+          });
+          const communitiesFollowed = user.communitiesFollowed;
+          communitiesFollowed.push(community._id);
+          setUser((prevUser) => {
+            if (prevUser) {
+              return {
+                ...prevUser,
+                communitiesFollowed: prevUser.communitiesFollowed
+                  ? [...prevUser.communitiesFollowed, community._id]
+                  : [community._id],
+              };
+            }
+            return prevUser;
+          });
+        }
+      }
+    } else {
+      router.push("/authentication/login");
+    }
+  }
   return (
     <YStack bg={"$background"} flex={1}>
       {community ? (
@@ -45,12 +121,27 @@ const communityPage = () => {
                     {community.name}
                   </Text>
                 </XStack>
-                <Button size={"$2"} theme="blue">
-                  <Ionicons
-                    name="person-add-outline"
-                    size={20}
-                    color={theme.color12.val}
-                  />
+                <Button
+                  size={"$2"}
+                  theme="blue"
+                  mr={6}
+                  onPress={() => followCommunity(community)}
+                >
+                  {user?.communitiesFollowed.some(
+                    (comm) => comm == community._id
+                  ) ? (
+                    <AntDesign
+                      name="check"
+                      size={20}
+                      color={theme.color12.val}
+                    />
+                  ) : (
+                    <Ionicons
+                      name="person-add-outline"
+                      size={20}
+                      color={theme.color12.val}
+                    />
+                  )}
                 </Button>
               </XStack>
               <Text my={7}>{community.description}</Text>
@@ -80,7 +171,11 @@ const communityPage = () => {
               </XStack>
             </YStack>
           </XStack>
-          <PostFeed posts={community.posts} showCommunity={false} />
+          <PostFeed
+            posts={community.posts}
+            showCommunity={false}
+            setCommunity={setCommunity}
+          />
         </>
       ) : (
         <Spinner />

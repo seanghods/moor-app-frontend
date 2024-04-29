@@ -11,7 +11,7 @@ import { TouchableOpacity } from "react-native";
 import { useColorScheme } from "react-native";
 import { useUser } from "../context/UserContext";
 import { Avatar, useTheme, Text } from "tamagui";
-import Dropdown from "@/src/components/FilterDropdown";
+// import Dropdown from "@/src/components/FilterDropdown";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -60,7 +60,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Trending",
-          headerLeft: () => <Dropdown />,
+          // headerLeft: () => <Dropdown />,
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="fire" size={32} color={color} />
           ),

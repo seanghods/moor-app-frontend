@@ -1,5 +1,6 @@
 import { Image, FlatList, TouchableOpacity, Linking } from "react-native";
 import {
+  AntDesign,
   Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
@@ -9,10 +10,13 @@ import { router } from "expo-router";
 import { API_ROUTES } from "@/src/utils/helpers";
 import { useEffect, useState } from "react";
 import { CommunityType } from "@/src/api-types/api-types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUser } from "../../context/UserContext";
 
 export default function Communities() {
   const theme = useTheme();
   const [communities, setCommunities] = useState<Array<CommunityType>>([]);
+  const { user, setUser } = useUser();
   const handleLinkPress = (linkUrl: string) => {
     Linking.openURL(linkUrl).catch((err) =>
       console.error("Couldn't load page", err)
@@ -56,6 +60,7 @@ type ShowProps = {
 };
 
 export const ShowCommunity: React.FC<ShowProps> = ({ community }) => {
+  const { user } = useUser();
   const theme = useTheme();
   return (
     <TouchableOpacity
@@ -92,13 +97,6 @@ export const ShowCommunity: React.FC<ShowProps> = ({ community }) => {
             <Text fontSize={20} fontWeight={"700"}>
               {community.name}
             </Text>
-            <Button size={"$2"} theme="blue" mr={6}>
-              <Ionicons
-                name="person-add-outline"
-                size={20}
-                color={theme.color12.val}
-              />
-            </Button>
           </XStack>
           <Text
             fontSize={14}

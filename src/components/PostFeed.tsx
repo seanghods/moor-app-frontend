@@ -17,14 +17,19 @@ import { router } from "expo-router";
 import { usePost } from "@/src/app/context/PostContext";
 import AuthorButton from "./AuthorButton";
 import { useTheme } from "tamagui";
-import { PostType } from "../api-types/api-types";
+import { PostType, UserType } from "../api-types/api-types";
+import { useUser } from "../app/context/UserContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_ROUTES } from "../utils/helpers";
+import { useTrending } from "../app/context/TrendingContext";
 
 type Props = {
   posts: Array<PostType>;
   showCommunity: boolean;
+  setCommunity?: Function;
 };
 
-const PostFeed: React.FC<Props> = ({ posts, showCommunity }) => {
+const PostFeed: React.FC<Props> = ({ posts, showCommunity, setCommunity }) => {
   const colorScheme = useColorScheme();
   const theme = useTheme();
   return (
@@ -34,7 +39,11 @@ const PostFeed: React.FC<Props> = ({ posts, showCommunity }) => {
       contentContainerStyle={{ gap: 5 }}
       keyExtractor={(item) => item._id.toString()}
       renderItem={({ item: post }) => (
-        <ShowPost post={post} showCommunity={showCommunity} />
+        <ShowPost
+          post={post}
+          showCommunity={showCommunity}
+          setCommunity={setCommunity}
+        />
       )}
     />
   );
@@ -45,17 +54,101 @@ export default PostFeed;
 type ShowProps = {
   post: PostType;
   showCommunity: boolean;
+  setCommunity?: Function;
 };
 
-export const ShowPost: React.FC<ShowProps> = ({ post, showCommunity }) => {
+export const ShowPost: React.FC<ShowProps> = ({
+  post,
+  showCommunity,
+  setCommunity,
+}) => {
   const colorScheme = useColorScheme();
   const theme = useTheme();
+  const { trendingPosts, setTrendingPosts } = useTrending();
   const { setCurrentPost } = usePost();
+  const { user, setUser } = useUser();
   const handleLinkPress = (linkUrl: string) => {
     Linking.openURL(linkUrl).catch((err) =>
       console.error("Couldn't load page", err)
     );
   };
+  async function postVote(voteType: "up" | "down") {
+    if (user && post) {
+      try {
+        const token = await AsyncStorage.getItem("userToken");
+        const response = await fetch(API_ROUTES.postVote, {
+          method: "POST",
+          body: JSON.stringify({
+            postId: post._id,
+            voteType,
+          }),
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        setUser((prevUser: UserType | null): UserType | null => {
+          if (prevUser === null) {
+            return null;
+          }
+          return {
+            ...prevUser,
+            postVotes: data.postVotes,
+          };
+        });
+        const currentPostIndex = trendingPosts?.findIndex(
+          (p) => p._id === post._id
+        );
+        if (
+          currentPostIndex !== -1 &&
+          currentPostIndex !== undefined &&
+          trendingPosts
+        ) {
+          const updatedTrendingPosts = [
+            ...trendingPosts.slice(0, currentPostIndex),
+            {
+              ...trendingPosts[currentPostIndex],
+              voteCount: data.voteCount,
+            },
+            ...trendingPosts.slice(currentPostIndex + 1),
+          ];
+          setTrendingPosts(updatedTrendingPosts);
+        }
+        if (setCommunity) {
+          setCommunity((prevCommunity: any) => {
+            if (prevCommunity) {
+              const updatedPosts = prevCommunity.posts.map((p: any) => {
+                if (p._id === post._id) {
+                  return {
+                    ...p,
+                    voteCount: data.voteCount,
+                  };
+                }
+                return p;
+              });
+              return {
+                ...prevCommunity,
+                posts: updatedPosts,
+              };
+            }
+            return prevCommunity;
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      router.push("/authentication/login");
+    }
+  }
+  function getVoteColor(voteType: "up" | "down") {
+    const hasVoted = user?.postVotes.some(
+      (vote) => vote.post === post?._id && vote.vote === voteType
+    );
+    return hasVoted ? theme.blue10.val : theme.color12.val;
+  }
   return (
     <TouchableOpacity
       delayPressIn={50}
@@ -159,19 +252,19 @@ export const ShowPost: React.FC<ShowProps> = ({ post, showCommunity }) => {
             >
               <XStack gap={7}>
                 <XStack alignItems="center">
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => postVote("up")}>
                     <Ionicons
                       name="chevron-up"
                       size={15}
-                      color={theme.color12.val}
+                      color={getVoteColor("up")}
                     />
                   </TouchableOpacity>
                   <Text> {post.voteCount} </Text>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => postVote("down")}>
                     <Ionicons
                       name="chevron-down"
                       size={15}
-                      color={theme.color12.val}
+                      color={getVoteColor("down")}
                     />
                   </TouchableOpacity>
                 </XStack>
@@ -185,7 +278,7 @@ export const ShowPost: React.FC<ShowProps> = ({ post, showCommunity }) => {
                 <Text fontSize={14}>
                   {" "}
                   {post?.discussions.reduce(
-                    (acc, currArray) => acc + currArray.comments.length,
+                    (acc, currArray) => acc + currArray?.comments?.length ?? 0,
                     0
                   )}
                 </Text>

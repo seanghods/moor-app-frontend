@@ -17,6 +17,7 @@ import { Text, Button, YStack, XStack, useTheme } from "tamagui";
 import * as ImagePicker from "expo-image-picker";
 import { API_ROUTES } from "@/src/utils/helpers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 
 export default function newCommunity() {
   const colorScheme = useColorScheme();
@@ -120,10 +121,11 @@ export default function newCommunity() {
         headers: {
           Accept: "application/json",
           Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
       });
-      const result = await response.json();
-      alert("Community created successfully");
+      const data = await response.json();
+      router.push(`/communities/${data.community._id}`);
     } catch (error) {
       console.error("Failed to upload data:", error);
     }

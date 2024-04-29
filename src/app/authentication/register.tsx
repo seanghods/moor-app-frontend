@@ -9,13 +9,23 @@ import {
 import { useState } from "react";
 import Colors from "@/src/constants/Colors";
 import { MaterialIcons, Entypo, Ionicons } from "@expo/vector-icons";
-import { Text, Button, Form, Spinner, Image, YStack, XStack } from "tamagui";
+import {
+  Text,
+  Button,
+  Form,
+  Spinner,
+  Image,
+  YStack,
+  XStack,
+  useTheme,
+} from "tamagui";
 import { router } from "expo-router";
 import { useUser } from "../context/UserContext";
 import { API_ROUTES } from "@/src/utils/helpers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Register() {
+  const theme = useTheme();
   const colorScheme = useColorScheme();
   const { user, setUser } = useUser();
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
@@ -123,12 +133,14 @@ export default function Register() {
       height: 40,
       paddingLeft: 5,
       width: "80%",
+      color: theme.color12.val,
     },
     textArea: {
       height: 140,
       paddingLeft: 5,
       width: "80%",
       marginTop: 8,
+      color: theme.color12.val,
     },
   });
   return (
@@ -169,7 +181,7 @@ export default function Register() {
                 name="person-sharp"
                 style={{ padding: 10 }}
                 size={18}
-                color="black"
+                color={theme.color12.val}
               />
               <TextInput
                 returnKeyType="done"
@@ -199,7 +211,7 @@ export default function Register() {
                 name="email"
                 style={{ padding: 10 }}
                 size={16}
-                color="black"
+                color={theme.color12.val}
               />
               <TextInput
                 returnKeyType="done"
@@ -229,7 +241,7 @@ export default function Register() {
                 name="password"
                 style={{ padding: 10 }}
                 size={18}
-                color="black"
+                color={theme.color12.val}
               />
               <TextInput
                 returnKeyType="done"
@@ -260,7 +272,7 @@ export default function Register() {
                 name="password"
                 style={{ padding: 10 }}
                 size={18}
-                color="black"
+                color={theme.color12.val}
               />
               <TextInput
                 returnKeyType="done"

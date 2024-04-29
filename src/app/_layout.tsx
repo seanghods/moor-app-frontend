@@ -14,6 +14,7 @@ import { TamaguiProvider, createTamagui } from "tamagui";
 import config from "@/tamagui.config";
 import { UserProvider } from "./context/UserContext";
 import { Feather } from "@expo/vector-icons";
+import { TrendingProvider } from "./context/TrendingContext";
 
 const tamaguiConfig = createTamagui(config);
 
@@ -55,57 +56,59 @@ function RootLayoutNav() {
   return (
     <UserProvider>
       <PostProvider>
-        <TamaguiProvider
-          config={tamaguiConfig}
-          defaultTheme={colorScheme as any}
-        >
-          <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        <TrendingProvider>
+          <TamaguiProvider
+            config={tamaguiConfig}
+            defaultTheme={colorScheme as any}
           >
-            <Stack>
-              <Stack.Screen
-                name="(tabs)"
-                options={{ headerShown: false, title: "Back" }}
-              />
-              <Stack.Screen name="posts/[id]" options={{ title: "Post" }} />
-              <Stack.Screen
-                name="discussions/[id]"
-                options={{ title: "Discussion" }}
-              />
-              <Stack.Screen
-                name="profiles/[id]"
-                options={{
-                  title: "Profile",
-                  headerRight: () => (
-                    <TouchableOpacity
-                      onPress={() => {
-                        router.push("/profiles/settings");
-                      }}
-                    >
-                      <Feather
-                        name="settings"
-                        size={24}
-                        color={colorScheme === "dark" ? "#eee" : "black"}
-                      />
-                    </TouchableOpacity>
-                  ),
-                }}
-              />
-              <Stack.Screen
-                name="profiles/settings"
-                options={{ title: "Settings" }}
-              />
-              <Stack.Screen
-                name="authentication/login"
-                options={{ title: "Log In" }}
-              />
-              <Stack.Screen
-                name="authentication/register"
-                options={{ title: "Register" }}
-              />
-            </Stack>
-          </ThemeProvider>
-        </TamaguiProvider>
+            <ThemeProvider
+              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+            >
+              <Stack>
+                <Stack.Screen
+                  name="(tabs)"
+                  options={{ headerShown: false, title: "Back" }}
+                />
+                <Stack.Screen name="posts/[id]" options={{ title: "Post" }} />
+                <Stack.Screen
+                  name="discussions/[id]"
+                  options={{ title: "Discussion" }}
+                />
+                <Stack.Screen
+                  name="profiles/[id]"
+                  options={{
+                    title: "Profile",
+                    headerRight: () => (
+                      <TouchableOpacity
+                        onPress={() => {
+                          router.push("/profiles/settings");
+                        }}
+                      >
+                        <Feather
+                          name="settings"
+                          size={24}
+                          color={colorScheme === "dark" ? "#eee" : "black"}
+                        />
+                      </TouchableOpacity>
+                    ),
+                  }}
+                />
+                <Stack.Screen
+                  name="profiles/settings"
+                  options={{ title: "Settings" }}
+                />
+                <Stack.Screen
+                  name="authentication/login"
+                  options={{ title: "Log In" }}
+                />
+                <Stack.Screen
+                  name="authentication/register"
+                  options={{ title: "Register" }}
+                />
+              </Stack>
+            </ThemeProvider>
+          </TamaguiProvider>
+        </TrendingProvider>
       </PostProvider>
     </UserProvider>
   );

@@ -11,16 +11,56 @@ import {
 } from "react-native";
 import { Button } from "tamagui";
 import { useLocalSearchParams } from "expo-router";
-import { useState } from "react";
-import { DiscussionType } from "@/src/api-types/api-types";
+import { useEffect, useState } from "react";
+import { DiscussionType, PostType } from "@/src/api-types/api-types";
+import { API_ROUTES } from "@/src/utils/helpers";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Discussion = () => {
   const theme = useTheme();
   const { id } = useLocalSearchParams();
-  const { currentPost } = usePost();
+  const { currentPost, setCurrentPost } = usePost();
+  const [comment, setComment] = useState<string>("");
   const [currentDiscussion, setCurrentDiscussion] = useState<
     DiscussionType | undefined
   >(currentPost?.discussions.find((discussion) => discussion._id == id));
+  useEffect(() => {
+    setCurrentDiscussion(
+      currentPost?.discussions.find((discussion) => discussion._id == id)
+    );
+  }, [currentPost]);
+  async function postComment() {
+    const token = await AsyncStorage.getItem("userToken");
+    const response = await fetch(API_ROUTES.comment, {
+      method: "POST",
+      body: JSON.stringify({
+        postId: currentPost?._id,
+        discussionId: currentDiscussion?._id,
+        body: comment,
+      }),
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    const discussions = currentPost?.discussions.filter(
+      (discussion) => discussion._id !== data.discussion._id
+    );
+    discussions?.push(data.discussion);
+    if (discussions) {
+      setCurrentPost((prevPost: PostType | null): PostType | null => {
+        if (prevPost === null) {
+          return null;
+        }
+        return {
+          ...prevPost,
+          discussions: discussions,
+        };
+      });
+    }
+  }
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <ScrollView
@@ -59,8 +99,8 @@ const Discussion = () => {
             />
             <TextInput
               placeholder="add a comment..."
-              // value={postData.body}
-              // onChangeText={(value) => handleInputChange("body", value)}
+              value={comment}
+              onChangeText={(value) => setComment(value)}
               style={{
                 height: 100,
                 paddingLeft: 5,
@@ -75,12 +115,19 @@ const Discussion = () => {
             />
           </XStack>
           <YStack w={"90%"} pt={12} pr={12} alignItems="flex-end">
-            <Button theme={"blue"}>Post</Button>
+            <Button onPress={() => postComment()} theme={"blue"}>
+              Post
+            </Button>
           </YStack>
         </YStack>
         <Separator alignSelf="stretch" />
         <View>
-          <CommentFeed comments={currentDiscussion?.comments} />
+          {currentDiscussion?._id && (
+            <CommentFeed
+              comments={currentDiscussion?.comments}
+              discussionId={currentDiscussion._id}
+            />
+          )}
         </View>
       </ScrollView>
     </TouchableWithoutFeedback>

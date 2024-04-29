@@ -56,7 +56,6 @@ const Dropdown = () => {
               key={index}
               style={styles.item}
               onPress={() => {
-                console.log(item); // Handle the item selection
                 setIsOpen(false);
               }}
             >

@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import Colors from "@/src/constants/Colors";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { Text, View, Button, Form, Spinner, Image } from "tamagui";
+import { Text, View, Button, Form, Spinner, Image, useTheme } from "tamagui";
 import { router } from "expo-router";
 import { useUser } from "../context/UserContext";
 import { API_ROUTES } from "@/src/utils/helpers";
@@ -17,6 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login() {
   const colorScheme = useColorScheme();
+  const theme = useTheme();
   const { user, setUser } = useUser();
   const [formError, setFormError] = useState({ message: "" });
   const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
@@ -85,12 +86,14 @@ export default function Login() {
       height: 40,
       paddingLeft: 5,
       width: "80%",
+      color: theme.color12.val,
     },
     textArea: {
       height: 140,
       paddingLeft: 5,
       width: "80%",
       marginTop: 8,
+      color: theme.color12.val,
     },
     inputContainer: {
       flexDirection: "row",
@@ -125,7 +128,7 @@ export default function Login() {
                 name="person-sharp"
                 style={{ padding: 10 }}
                 size={18}
-                color="black"
+                color={theme.color12.val}
               />
               <TextInput
                 returnKeyType="done"
@@ -153,7 +156,7 @@ export default function Login() {
                 name="password"
                 style={{ padding: 10 }}
                 size={18}
-                color="black"
+                color={theme.color12.val}
               />
               <TextInput
                 returnKeyType="done"

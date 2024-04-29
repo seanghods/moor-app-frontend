@@ -20,7 +20,6 @@ export type PostType = {
   voteCount: number;
   link?: string;
   description?: string;
-  likes: number;
   discussions: Array<DiscussionType>;
 };
 
@@ -33,8 +32,8 @@ export type DiscussionType = {
 
 export type CommentType = {
   _id: string;
-  creator: { username: string; _id: string };
-  description: string;
+  creator: UserType;
+  body: string;
   voteCount: number;
   parentPost: string;
   parentComment?: string;
@@ -45,14 +44,22 @@ export type UserType = {
   _id: string;
   username: string;
   email: string;
+  postVotes: {
+    post: string;
+    vote: "up" | "down";
+  }[];
+  commentVotes: {
+    comment: string;
+    vote: string;
+  }[];
   profileImage?: string;
   coverImage?: string;
   bio?: string;
   posts?: PostType[];
-  comments?: CommentType[];
-  communitiesFollowed?: CommunityType[];
-  usersFollowing?: UserType[];
-  usersFollowed?: UserType[];
+  comments: CommentType[];
+  communitiesFollowed: string[];
+  usersFollowing: UserType[];
+  usersFollowed: UserType[];
   createdAt?: string;
   updatedAt?: string;
   verified?: boolean;

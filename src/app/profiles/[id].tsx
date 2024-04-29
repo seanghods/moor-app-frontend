@@ -12,6 +12,7 @@ import {
 } from "tamagui";
 import { useUser } from "../context/UserContext";
 import { ImageBackground } from "react-native";
+import PostFeed from "@/src/components/PostFeed";
 
 export default function Profile() {
   const { user, setUser } = useUser();
@@ -39,28 +40,30 @@ export default function Profile() {
       <XStack width={"100%"} height={"10%"} justifyContent="space-between">
         <XStack p={25} gap={10}>
           <YStack alignItems="center" gap={3}>
-            <Text fontWeight={"700"}>40K</Text>
+            <Text fontWeight={"700"}>{user?.usersFollowed?.length ?? 0}</Text>
             <Text fontSize={10} color={"$gray10"}>
               Followers
             </Text>
           </YStack>
           <Separator bc={"$accentColor"} vertical />
           <YStack alignItems="center" gap={3}>
-            <Text fontWeight={"700"}>400</Text>
+            <Text fontWeight={"700"}>{user?.usersFollowed?.length ?? 0}</Text>
             <Text fontSize={10} color={"$gray10"}>
               Following
             </Text>
           </YStack>
           <Separator bc={"$accentColor"} vertical />
           <YStack alignItems="center" gap={3}>
-            <Text fontWeight={"700"}>40</Text>
+            <Text fontWeight={"700"}>{user?.posts?.length ?? 0}</Text>
             <Text fontSize={10} color={"$gray10"}>
               Post
             </Text>
           </YStack>
           <Separator bc={"$accentColor"} vertical />
           <YStack alignItems="center" gap={3}>
-            <Text fontWeight={"700"}>40</Text>
+            <Text fontWeight={"700"}>
+              {user?.communitiesFollowed?.length ?? 0}
+            </Text>
             <Text fontSize={10} color={"$gray10"}>
               Communities
             </Text>
@@ -105,15 +108,7 @@ export default function Profile() {
         <Text fontWeight={"700"}>{viewType}</Text>
       </XStack>
       <YStack mt={12}>
-        <Text p={40} alignSelf="center">
-          {viewType} posts go here.
-        </Text>
-        <Text p={40} alignSelf="center">
-          Another post goes here.
-        </Text>
-        <Text p={40} alignSelf="center">
-          More will populate similar to a feed.
-        </Text>
+        {user?.posts && <PostFeed posts={user.posts} showCommunity={true} />}
       </YStack>
     </YStack>
     // </ScrollView>

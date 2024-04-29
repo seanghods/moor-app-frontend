@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { usePost } from "@/src/app/context/PostContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Entypo,
   FontAwesome,
@@ -15,14 +15,23 @@ import {
   Linking,
   Image,
   ScrollView,
+  TextInput,
 } from "react-native";
 import { Button, Text, useTheme, XStack, YStack } from "tamagui";
 import AuthorButton from "@/src/components/AuthorButton";
+import { API_ROUTES } from "@/src/utils/helpers";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUser } from "../context/UserContext";
+import { PostType, UserType } from "@/src/api-types/api-types";
+import { useTrending } from "../context/TrendingContext";
 
 const postPage: React.FC = () => {
   const { id } = useLocalSearchParams();
+  const { user, setUser } = useUser();
   const colorScheme = useColorScheme();
   const theme = useTheme();
+  const { trendingPosts, setTrendingPosts } = useTrending();
+  const [newDiscussionName, setNewDiscussionName] = useState<string>("");
   const { currentPost, setCurrentPost } = usePost();
   const handleLinkPress = (linkUrl: string) => {
     Linking.openURL(linkUrl).catch((err) =>
@@ -31,12 +40,128 @@ const postPage: React.FC = () => {
   };
   useEffect(() => {
     async function getPostData() {
+      const response = await fetch(`${API_ROUTES.post}?id=${id}`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setCurrentPost(data.post);
+    }
+    getPostData();
+  }, []);
+  async function postVote(voteType: "up" | "down") {
+    if (user && currentPost) {
+      try {
+        const token = await AsyncStorage.getItem("userToken");
+        const response = await fetch(API_ROUTES.postVote, {
+          method: "POST",
+          body: JSON.stringify({
+            postId: currentPost._id,
+            voteType,
+          }),
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        setUser((prevUser: UserType | null): UserType | null => {
+          if (prevUser === null) {
+            return null;
+          }
+          return {
+            ...prevUser,
+            postVotes: data.postVotes,
+          };
+        });
+        setCurrentPost((prevPost: PostType | null): PostType | null => {
+          if (prevPost === null) {
+            return null;
+          }
+          return {
+            ...prevPost,
+            voteCount: data.voteCount,
+          };
+        });
+        const currentPostIndex = trendingPosts?.findIndex(
+          (p) => p._id === currentPost._id
+        );
+        if (
+          currentPostIndex !== -1 &&
+          currentPostIndex !== undefined &&
+          trendingPosts
+        ) {
+          const updatedTrendingPosts = [
+            ...trendingPosts.slice(0, currentPostIndex),
+            {
+              ...trendingPosts[currentPostIndex],
+              voteCount: data.voteCount,
+            },
+            ...trendingPosts.slice(currentPostIndex + 1),
+          ];
+          setTrendingPosts(updatedTrendingPosts);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      router.push("/authentication/login");
+    }
+  }
+  async function createDiscussion() {
+    if (user && currentPost) {
+      const token = await AsyncStorage.getItem("userToken");
+      const response = await fetch(API_ROUTES.discussion, {
+        method: "POST",
+        body: JSON.stringify({
+          postId: currentPost._id,
+          title: newDiscussionName,
+        }),
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setCurrentPost((prevPost: PostType | null): PostType | null => {
+        if (prevPost === null) {
+          return null;
+        }
+        return {
+          ...prevPost,
+          discussions: [...prevPost.discussions, data.discussion],
+        };
+      });
+
+      router.push(`/discussions/${data.discussion._id}`);
+    } else {
+      router.push("/authentication/login");
+    }
+  }
+  useEffect(() => {
+    async function getPostData() {
       if (!currentPost) {
-        //fetch from back end
+        const response = await fetch(`${API_ROUTES.post}?id=${id}`, {
+          headers: {
+            Accept: "application/json",
+          },
+        });
+        const data = await response.json();
+        setCurrentPost(data.post);
       }
     }
     getPostData();
   }, [currentPost]);
+  function getVoteColor(voteType: "up" | "down") {
+    const hasVoted = user?.postVotes.some(
+      (vote) => vote.post === currentPost?._id && vote.vote === voteType
+    );
+    return hasVoted ? theme.blue10.val : theme.color12.val;
+  }
   return (
     <ScrollView
       style={{
@@ -141,19 +266,19 @@ const postPage: React.FC = () => {
           >
             <XStack gap={7}>
               <XStack gap={3} alignItems="center">
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => postVote("up")}>
                   <Ionicons
                     name="chevron-up"
                     size={15}
-                    color={theme.color12.val}
+                    color={getVoteColor("up")}
                   />
                 </TouchableOpacity>
-                <Text> 1 </Text>
-                <TouchableOpacity>
+                <Text> {currentPost?.voteCount} </Text>
+                <TouchableOpacity onPress={() => postVote("down")}>
                   <Ionicons
                     name="chevron-down"
                     size={15}
-                    color={theme.color12.val}
+                    color={getVoteColor("down")}
                   />
                 </TouchableOpacity>
               </XStack>
@@ -166,7 +291,7 @@ const postPage: React.FC = () => {
               />
               <Text fontSize={16}>
                 {currentPost?.discussions.reduce(
-                  (acc, currArray) => acc + currArray.comments.length,
+                  (acc, currArray) => acc + (currArray.comments?.length ?? 0),
                   0
                 )}
               </Text>
@@ -179,15 +304,48 @@ const postPage: React.FC = () => {
           <Text fontSize={20} fontWeight={"700"}>
             Discussion Board:
           </Text>
-          <TouchableOpacity>
+        </XStack>
+        <YStack alignItems="center" p={10} mb={10}>
+          <XStack
+            w={"90%"}
+            p={5}
+            justifyContent="center"
+            alignItems="flex-start"
+            br={12}
+            bg={theme.color4.val}
+          >
             <FontAwesome
               name="pencil-square-o"
-              size={20}
-              style={{ marginRight: 15 }}
-              color="black"
+              size={18}
+              style={{ padding: 4 }}
+              color={theme.color12.val}
             />
-          </TouchableOpacity>
-        </XStack>
+            <TextInput
+              placeholder="add a new discussion board..."
+              value={newDiscussionName}
+              onChangeText={(value) => setNewDiscussionName(value)}
+              style={{
+                height: 25,
+                paddingLeft: 5,
+                width: "90%",
+                color: theme.color12.val,
+              }}
+              autoCapitalize="none"
+              multiline={true}
+              numberOfLines={4}
+              placeholderTextColor={theme.color11.val}
+            />
+          </XStack>
+          <YStack w={"90%"} pt={12} alignItems="flex-end">
+            <Button
+              size={"$3"}
+              theme={"blue"}
+              onPress={() => createDiscussion()}
+            >
+              Create
+            </Button>
+          </YStack>
+        </YStack>
         <YStack gap={20}>
           {currentPost?.discussions.map((discussion, index) => {
             return (
@@ -215,7 +373,7 @@ const postPage: React.FC = () => {
                   </YStack>
                   <XStack gap={2} alignItems="center" justifyContent="center">
                     <Text style={{ fontSize: 14 }}>
-                      {discussion.comments.length}
+                      {discussion.comments?.length ?? 0}
                     </Text>
                     <MaterialCommunityIcons
                       name="comment-outline"

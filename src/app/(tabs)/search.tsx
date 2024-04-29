@@ -157,8 +157,8 @@ export default function Search() {
             <>
               {results.userResults.map((user, index) => {
                 return (
-                  <YStack pt={12}>
-                    <ShowUser key={index} user={user} />
+                  <YStack key={index} pt={12}>
+                    <ShowUser user={user} />
                   </YStack>
                 );
               })}
@@ -168,8 +168,8 @@ export default function Search() {
             <>
               {results.postResults.map((post, index) => {
                 return (
-                  <YStack pt={12} pl={10}>
-                    <ShowPost key={index} post={post} showCommunity={true} />
+                  <YStack pt={12} key={index} pl={10}>
+                    <ShowPost post={post} showCommunity={true} />
                   </YStack>
                 );
               })}
@@ -180,7 +180,7 @@ export default function Search() {
               {results.communityResults.map(
                 (community: CommunityType, index) => {
                   return (
-                    <YStack pt={12}>
+                    <YStack key={index} pt={12}>
                       <ShowCommunity key={index} community={community} />
                     </YStack>
                   );

@@ -4,27 +4,14 @@ import { API_ROUTES } from "@/src/utils/helpers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { Spinner, YStack } from "tamagui";
+import { useTrending } from "../context/TrendingContext";
 
 const Trending = () => {
-  const [feed, setFeed] = useState<PostType[]>([]);
-  useEffect(() => {
-    async function getTrending() {
-      const token = await AsyncStorage.getItem("userToken");
-      const response = await fetch(API_ROUTES.trending, {
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      setFeed(data);
-    }
-    getTrending();
-  }, []);
+  const { trendingPosts } = useTrending();
   return (
     <>
-      {feed.length > 0 ? (
-        <PostFeed showCommunity={true} posts={feed} />
+      {trendingPosts && trendingPosts.length > 0 ? (
+        <PostFeed showCommunity={true} posts={trendingPosts} />
       ) : (
         <YStack flex={1} bg={"$background"}>
           <Spinner />

@@ -6,8 +6,13 @@ export const BASE_URL = "http://10.0.1.18:3001/api";
 export const API_ROUTES = {
   base: `${BASE_URL}`,
   community: `${BASE_URL}/community`,
+  followCommunity: `${BASE_URL}/community/follow`,
   allCommunity: `${BASE_URL}/community/all`,
   post: `${BASE_URL}/post`,
+  postVote: `${BASE_URL}/post/vote`,
+  commentVote: `${BASE_URL}/comment/vote`,
+  discussion: `${BASE_URL}/discussion`,
+  comment: `${BASE_URL}/comment`,
   search: `${BASE_URL}/search`,
   trending: `${BASE_URL}/trending`,
   register: `${BASE_URL}/register`,
