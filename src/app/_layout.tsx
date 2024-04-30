@@ -15,6 +15,7 @@ import config from "@/tamagui.config";
 import { UserProvider } from "./context/UserContext";
 import { Feather } from "@expo/vector-icons";
 import { TrendingProvider } from "./context/TrendingContext";
+import ProfileSettingsHeader from "../components/ProfileSettingsHeader";
 
 const tamaguiConfig = createTamagui(config);
 
@@ -78,19 +79,7 @@ function RootLayoutNav() {
                   name="profiles/[id]"
                   options={{
                     title: "Profile",
-                    headerRight: () => (
-                      <TouchableOpacity
-                        onPress={() => {
-                          router.push("/profiles/settings");
-                        }}
-                      >
-                        <Feather
-                          name="settings"
-                          size={24}
-                          color={colorScheme === "dark" ? "#eee" : "black"}
-                        />
-                      </TouchableOpacity>
-                    ),
+                    headerRight: () => <ProfileSettingsHeader />,
                   }}
                 />
                 <Stack.Screen

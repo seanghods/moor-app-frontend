@@ -11,7 +11,6 @@ type Props = {
 };
 
 const AuthorButton: React.FC<Props> = ({ creator, type }) => {
-  const { user } = useUser();
   const colorScheme = useColorScheme();
   const dynamicStyles = StyleSheet.create({
     creator: {

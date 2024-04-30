@@ -6,9 +6,16 @@ import { CommentType } from "../api-types/api-types";
 type Props = {
   comments: Array<CommentType> | undefined;
   discussionId: string;
+  parentComment: string;
+  setParentComment: Function;
 };
 
-const CommentFeed: React.FC<Props> = ({ comments, discussionId }) => {
+const CommentFeed: React.FC<Props> = ({
+  comments,
+  discussionId,
+  parentComment,
+  setParentComment,
+}) => {
   const [processedComments, setProcessedComments] = useState<
     Array<CommentType>
   >([]);
@@ -60,7 +67,12 @@ const CommentFeed: React.FC<Props> = ({ comments, discussionId }) => {
         ) : (
           processedComments.map((comment, index) => (
             <YStack key={index}>
-              <CommentItem comment={comment} discussionId={discussionId} />
+              <CommentItem
+                comment={comment}
+                discussionId={discussionId}
+                parentComment={parentComment}
+                setParentComment={setParentComment}
+              />
             </YStack>
           ))
         )}

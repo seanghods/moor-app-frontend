@@ -18,9 +18,11 @@ import * as ImagePicker from "expo-image-picker";
 import { API_ROUTES } from "@/src/utils/helpers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
+import { useUser } from "../../context/UserContext";
 
 export default function newCommunity() {
   const colorScheme = useColorScheme();
+  const { setUser } = useUser();
   const theme = useTheme();
   const [communityData, setCommunityData] = useState<CommunityDataType>({
     name: "",
@@ -125,6 +127,18 @@ export default function newCommunity() {
         },
       });
       const data = await response.json();
+      setUser((prevUser) => {
+        if (prevUser) {
+          return {
+            ...prevUser,
+            communitiesFollowed: [
+              ...prevUser.communitiesFollowed,
+              data.community._id,
+            ],
+          };
+        }
+        return prevUser;
+      });
       router.push(`/communities/${data.community._id}`);
     } catch (error) {
       console.error("Failed to upload data:", error);

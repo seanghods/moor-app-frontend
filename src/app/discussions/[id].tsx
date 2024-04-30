@@ -21,6 +21,7 @@ const Discussion = () => {
   const { id } = useLocalSearchParams();
   const { currentPost, setCurrentPost } = usePost();
   const [comment, setComment] = useState<string>("");
+  const [parentComment, setParentComment] = useState<string>("");
   const [currentDiscussion, setCurrentDiscussion] = useState<
     DiscussionType | undefined
   >(currentPost?.discussions.find((discussion) => discussion._id == id));
@@ -37,6 +38,7 @@ const Discussion = () => {
         postId: currentPost?._id,
         discussionId: currentDiscussion?._id,
         body: comment,
+        parentComment: parentComment,
       }),
       headers: {
         Accept: "application/json",
@@ -60,6 +62,8 @@ const Discussion = () => {
         };
       });
     }
+    setComment("");
+    setParentComment("");
   }
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -126,6 +130,8 @@ const Discussion = () => {
             <CommentFeed
               comments={currentDiscussion?.comments}
               discussionId={currentDiscussion._id}
+              parentComment={parentComment}
+              setParentComment={setParentComment}
             />
           )}
         </View>

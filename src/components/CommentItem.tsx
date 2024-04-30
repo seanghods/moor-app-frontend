@@ -12,9 +12,16 @@ import { useUser } from "../app/context/UserContext";
 type Props = {
   comment: CommentType;
   discussionId: string;
+  parentComment: string;
+  setParentComment: Function;
 };
 
-const CommentItem: React.FC<Props> = ({ comment, discussionId }) => {
+const CommentItem: React.FC<Props> = ({
+  comment,
+  discussionId,
+  parentComment,
+  setParentComment,
+}) => {
   const { user, setUser } = useUser();
   const colorScheme = useColorScheme();
   const theme = useTheme();
@@ -98,7 +105,7 @@ const CommentItem: React.FC<Props> = ({ comment, discussionId }) => {
       <TouchableOpacity
         onPress={() => router.push(`/profiles/${comment.creator._id}`)}
       >
-        <XStack gap={5} alignItems="center">
+        <XStack gap={1} alignItems="center">
           <Avatar
             size={"$1"}
             flex={1}
@@ -131,7 +138,11 @@ const CommentItem: React.FC<Props> = ({ comment, discussionId }) => {
             />
           </TouchableOpacity>
         </XStack>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            setParentComment(parentComment == comment._id ? "" : comment._id)
+          }
+        >
           <XStack gap={5}>
             <MaterialCommunityIcons
               name="comment-outline"
@@ -141,6 +152,9 @@ const CommentItem: React.FC<Props> = ({ comment, discussionId }) => {
             <Text fontSize={12} color={Colors[colorScheme ?? "light"].info}>
               Reply
             </Text>
+            {parentComment == comment._id && (
+              <Text fontSize={12}>Replying</Text>
+            )}
           </XStack>
         </TouchableOpacity>
       </XStack>
@@ -151,6 +165,8 @@ const CommentItem: React.FC<Props> = ({ comment, discussionId }) => {
               key={index}
               comment={childComment}
               discussionId={discussionId}
+              parentComment={parentComment}
+              setParentComment={setParentComment}
             />
           ))}
         </YStack>
