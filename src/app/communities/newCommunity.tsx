@@ -18,7 +18,7 @@ import * as ImagePicker from "expo-image-picker";
 import { API_ROUTES } from "@/src/utils/helpers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import { useUser } from "../../context/UserContext";
+import { useUser } from "../context/UserContext";
 
 export default function newCommunity() {
   const colorScheme = useColorScheme();
@@ -110,7 +110,7 @@ export default function newCommunity() {
       formData.append("image", {
         uri,
         type,
-        name,
+        name: communityData.name.toLowerCase().split(" ").join("-"),
       } as any);
     }
     formData.append("name", communityData.name);
@@ -139,7 +139,7 @@ export default function newCommunity() {
         }
         return prevUser;
       });
-      router.push(`/communities/${data.community._id}`);
+      router.replace(`/communities/${data.community._id}`);
     } catch (error) {
       console.error("Failed to upload data:", error);
     }
@@ -192,7 +192,7 @@ export default function newCommunity() {
               name="groups"
               style={{ padding: 10 }}
               size={25}
-              color="black"
+              color={theme.color12.val}
             />
             <TextInput
               returnKeyType="done"
@@ -251,7 +251,7 @@ export default function newCommunity() {
               name="subtitles-outline"
               style={{ padding: 10 }}
               size={25}
-              color="black"
+              color={theme.color12.val}
             />
             <TextInput
               placeholder="description"

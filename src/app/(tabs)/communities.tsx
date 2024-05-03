@@ -1,27 +1,21 @@
 import { Image, FlatList, TouchableOpacity, Linking } from "react-native";
 import {
-  AntDesign,
   Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { Button, Spinner, Text, XStack, YStack, useTheme } from "tamagui";
+import { Spinner, Text, XStack, YStack, useTheme } from "tamagui";
 import { router } from "expo-router";
 import { API_ROUTES } from "@/src/utils/helpers";
 import { useEffect, useState } from "react";
 import { CommunityType } from "@/src/api-types/api-types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useUser } from "../../context/UserContext";
+import { useUser } from "../context/UserContext";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function Communities() {
   const theme = useTheme();
   const [communities, setCommunities] = useState<Array<CommunityType>>([]);
-  const { user, setUser } = useUser();
-  const handleLinkPress = (linkUrl: string) => {
-    Linking.openURL(linkUrl).catch((err) =>
-      console.error("Couldn't load page", err)
-    );
-  };
+  const isFocused = useIsFocused();
   useEffect(() => {
     async function getCommunities() {
       const response = await fetch(API_ROUTES.allCommunity, {
@@ -33,7 +27,7 @@ export default function Communities() {
       setCommunities(data);
     }
     getCommunities();
-  }, []);
+  }, [isFocused]);
   return (
     <>
       {communities.length == 0 ? (

@@ -17,11 +17,11 @@ import { router } from "expo-router";
 import { usePost } from "@/src/app/context/PostContext";
 import AuthorButton from "./AuthorButton";
 import { useTheme } from "tamagui";
-import { PostType, UserType } from "../api-types/api-types";
-import { useUser } from "../app/context/UserContext";
+import { PostType, UserType } from "../../api-types/api-types";
+import { useUser } from "../../app/context/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { API_ROUTES } from "../utils/helpers";
-import { useTrending } from "../app/context/TrendingContext";
+import { API_ROUTES } from "../../utils/helpers";
+import { useTrending } from "../../app/context/TrendingContext";
 
 type Props = {
   posts: Array<PostType>;
@@ -161,7 +161,7 @@ export const ShowPost: React.FC<ShowProps> = ({
         {showCommunity && (
           <TouchableOpacity
             delayPressIn={50}
-            style={{ alignSelf: "flex-start", marginVertical: 2 }}
+            style={{ alignSelf: "flex-start", marginVertical: 4 }}
             onPress={() => router.push(`/communities/${post.community._id}`)}
           >
             <XStack pl={14} gap={8} alignItems="center">

@@ -5,12 +5,13 @@ import {
   MaterialIcons,
   Entypo,
   AntDesign,
+  FontAwesome,
 } from "@expo/vector-icons";
-import { Link, Tabs } from "expo-router";
+import { Link, Tabs, router } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import { useColorScheme } from "react-native";
 import { useUser } from "../context/UserContext";
-import { Avatar, useTheme, Text } from "tamagui";
+import { Avatar, useTheme, Text, XStack } from "tamagui";
 // import Dropdown from "@/src/components/FilterDropdown";
 
 export default function TabLayout() {
@@ -41,7 +42,7 @@ export default function TabLayout() {
                   bw={1}
                   bc={theme.color12.val}
                 >
-                  <Avatar.Image src={user.profileImage} />
+                  <Avatar.Image scale={1.1} src={user.profileImage} />
                 </Avatar>
               ) : (
                 <Ionicons
@@ -70,10 +71,22 @@ export default function TabLayout() {
         name="communities"
         options={{
           title: "Communities",
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.push("/communities/newCommunity")}
+            >
+              <XStack ml={25}>
+                <FontAwesome
+                  name="pencil-square-o"
+                  size={23}
+                  color={theme.color12.val}
+                />
+              </XStack>
+            </TouchableOpacity>
+          ),
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="groups" size={32} color={color} />
           ),
-          headerShown: false,
         }}
       />
       <Tabs.Screen

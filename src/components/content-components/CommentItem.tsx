@@ -1,13 +1,16 @@
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity, useColorScheme } from "react-native";
-import { Text, YStack, XStack, useTheme, Avatar } from "tamagui";
-import Colors from "../constants/Colors";
+import { Text, YStack, XStack, useTheme, Avatar, Separator } from "tamagui";
+import Colors from "../../constants/Colors";
 import { router } from "expo-router";
-import { CommentType, PostType, UserType } from "../api-types/api-types";
+import { CommentType, PostType, UserType } from "../../api-types/api-types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { API_ROUTES } from "../utils/helpers";
-import { usePost } from "../app/context/PostContext";
-import { useUser } from "../app/context/UserContext";
+import { API_ROUTES } from "../../utils/helpers";
+import { usePost } from "../../app/context/PostContext";
+import { useUser } from "../../app/context/UserContext";
+import { useRef } from "react";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import BottomSheet from "../BottomSheet";
 
 type Props = {
   comment: CommentType;
@@ -26,6 +29,10 @@ const CommentItem: React.FC<Props> = ({
   const colorScheme = useColorScheme();
   const theme = useTheme();
   const { currentPost, setCurrentPost } = usePost();
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
+  function openModal() {
+    bottomSheetRef.current?.present();
+  }
   async function commentVote(voteType: "up" | "down") {
     if (user) {
       user.commentVotes.push({ comment: comment._id, vote: voteType });
@@ -102,7 +109,9 @@ const CommentItem: React.FC<Props> = ({
   }
   return (
     <YStack gap={5}>
+      <BottomSheet ref={bottomSheetRef} comment={comment} />
       <TouchableOpacity
+        style={{ alignSelf: "flex-start" }}
         onPress={() => router.push(`/profiles/${comment.creator._id}`)}
       >
         <XStack gap={1} alignItems="center">
@@ -114,7 +123,7 @@ const CommentItem: React.FC<Props> = ({
             bw={1}
             bc={theme.color12.val}
           >
-            <Avatar.Image src={comment.creator.profileImage} />
+            <Avatar.Image scale={1.1} src={comment.creator.profileImage} />
           </Avatar>
           <Text color={Colors[colorScheme ?? "light"].info}>
             {comment.creator.username}
@@ -124,7 +133,7 @@ const CommentItem: React.FC<Props> = ({
       <Text fontSize={16} mb={3}>
         {comment.body}
       </Text>
-      <XStack gap={7}>
+      <XStack gap={7} alignItems="center">
         <XStack gap={3} alignItems="center">
           <TouchableOpacity onPress={() => commentVote("up")}>
             <Ionicons name="chevron-up" size={15} color={getVoteColor("up")} />
@@ -157,17 +166,33 @@ const CommentItem: React.FC<Props> = ({
             )}
           </XStack>
         </TouchableOpacity>
+        {user &&
+        (user._id === comment?.creator._id ||
+          user.isAdmin ||
+          currentPost?.community.moderators.includes(user._id)) ? (
+          <TouchableOpacity onPress={() => openModal()}>
+            <Entypo
+              name="dots-three-horizontal"
+              size={18}
+              color={theme.color12.val}
+            />
+          </TouchableOpacity>
+        ) : null}
       </XStack>
       {comment.children && comment.children.length > 0 && (
-        <YStack pl={20} p={15}>
+        <YStack>
           {comment.children.map((childComment, index) => (
-            <CommentItem
-              key={index}
-              comment={childComment}
-              discussionId={discussionId}
-              parentComment={parentComment}
-              setParentComment={setParentComment}
-            />
+            <YStack mt={15} key={index}>
+              <XStack gap={20}>
+                <Separator vertical={true} bc={theme.color9.val} />
+                <CommentItem
+                  comment={childComment}
+                  discussionId={discussionId}
+                  parentComment={parentComment}
+                  setParentComment={setParentComment}
+                />
+              </XStack>
+            </YStack>
           ))}
         </YStack>
       )}

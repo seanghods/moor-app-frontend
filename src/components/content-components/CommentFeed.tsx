@@ -1,7 +1,7 @@
 import { Text, YStack } from "tamagui";
 import { useState, useEffect } from "react";
 import CommentItem from "./CommentItem";
-import { CommentType } from "../api-types/api-types";
+import { CommentType } from "../../api-types/api-types";
 
 type Props = {
   comments: Array<CommentType> | undefined;
@@ -44,9 +44,9 @@ const CommentFeed: React.FC<Props> = ({
         }
       });
 
-      const finalComments = Object.values(commentMap).filter(
-        (comment) => !comment.parentComment
-      );
+      const finalComments = Object.values(commentMap)
+        .filter((comment) => !comment.parentComment)
+        .sort((a, b) => b.voteCount - a.voteCount);
 
       return finalComments;
     } else {

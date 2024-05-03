@@ -2,15 +2,15 @@ import React from "react";
 import { TouchableOpacity, useColorScheme } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import { useUser } from "../app/context/UserContext";
+import { useUser } from "../../app/context/UserContext";
 
 const ProfileSettingsHeader = () => {
   const { id } = useLocalSearchParams();
   const colorScheme = useColorScheme();
-  const { user } = useUser(); // Assuming UserContext provides user details
+  const { user } = useUser();
 
   if (!user || user._id !== id) {
-    return null; // Don't show the settings button if user is not logged in or IDs don't match
+    return null;
   }
 
   return (

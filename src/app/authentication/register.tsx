@@ -185,11 +185,11 @@ export default function Register() {
               />
               <TextInput
                 returnKeyType="done"
+                autoCapitalize="none"
                 placeholder="username"
                 value={formData.username}
                 onChangeText={(value) => handleInputChange("username", value)}
                 style={dynamicStyles.textInput}
-                autoCapitalize="none"
                 placeholderTextColor={Colors.extraColors.mediumGray}
               />
             </XStack>

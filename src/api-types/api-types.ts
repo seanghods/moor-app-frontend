@@ -26,7 +26,7 @@ export type PostType = {
 export type DiscussionType = {
   _id: string;
   title: string;
-  creator: { username: string; id: string };
+  creator: UserType;
   comments: Array<CommentType>;
 };
 
@@ -44,6 +44,7 @@ export type UserType = {
   _id: string;
   username: string;
   email: string;
+  isAdmin: boolean;
   postVotes: {
     post: string;
     vote: "up" | "down";
@@ -58,8 +59,8 @@ export type UserType = {
   posts?: PostType[];
   comments: CommentType[];
   communitiesFollowed: string[];
-  usersFollowing: UserType[];
-  usersFollowed: UserType[];
+  usersFollowing: (UserType | string)[] | string[];
+  usersFollowers: UserType[] | string[];
   createdAt?: string;
   updatedAt?: string;
   verified?: boolean;

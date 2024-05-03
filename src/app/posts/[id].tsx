@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { usePost } from "@/src/app/context/PostContext";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Entypo,
   FontAwesome,
@@ -18,12 +18,14 @@ import {
   TextInput,
 } from "react-native";
 import { Button, Text, useTheme, XStack, YStack } from "tamagui";
-import AuthorButton from "@/src/components/AuthorButton";
+import AuthorButton from "@/src/components/content-components/AuthorButton";
 import { API_ROUTES } from "@/src/utils/helpers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUser } from "../context/UserContext";
 import { PostType, UserType } from "@/src/api-types/api-types";
 import { useTrending } from "../context/TrendingContext";
+import BottomSheet from "@/src/components/BottomSheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 const postPage: React.FC = () => {
   const { id } = useLocalSearchParams();
@@ -32,7 +34,11 @@ const postPage: React.FC = () => {
   const theme = useTheme();
   const { trendingPosts, setTrendingPosts } = useTrending();
   const [newDiscussionName, setNewDiscussionName] = useState<string>("");
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { currentPost, setCurrentPost } = usePost();
+  function openModal() {
+    bottomSheetRef.current?.present();
+  }
   const handleLinkPress = (linkUrl: string) => {
     Linking.openURL(linkUrl).catch((err) =>
       console.error("Couldn't load page", err)
@@ -111,6 +117,7 @@ const postPage: React.FC = () => {
       router.push("/authentication/login");
     }
   }
+
   async function createDiscussion() {
     if (user && currentPost) {
       const token = await AsyncStorage.getItem("userToken");
@@ -170,29 +177,41 @@ const postPage: React.FC = () => {
         backgroundColor: Colors[colorScheme ?? "light"].background,
       }}
     >
-      <TouchableOpacity
-        style={{ alignSelf: "flex-start", marginVertical: 2 }}
-        onPress={() =>
-          router.push(`/communities/${currentPost?.community._id}`)
-        }
-      >
-        <XStack w={"100%"} justifyContent="space-between" alignItems="center">
-          <XStack pl={14} gap={8} alignItems="center" pt={10} py={3}>
+      <BottomSheet ref={bottomSheetRef} post={currentPost} />
+      <XStack w={"100%"} justifyContent="space-between" alignItems="center">
+        <TouchableOpacity
+          style={{ alignSelf: "flex-start", marginVertical: 2 }}
+          onPress={() =>
+            router.push(`/communities/${currentPost?.community._id}`)
+          }
+        >
+          <XStack pl={14} gap={8} alignItems="center" mt={12} pt={10} py={3}>
             <MaterialIcons name="groups" size={25} color={theme.color12.val} />
             <Text fontSize={20} fontWeight={"700"}>
               {currentPost?.community.name}
             </Text>
           </XStack>
-          <TouchableOpacity>
+        </TouchableOpacity>
+        {user &&
+        (user._id === currentPost?.creator._id ||
+          user.isAdmin ||
+          currentPost?.community.moderators.includes(user._id)) ? (
+          <TouchableOpacity
+            style={{
+              zIndex: 25,
+              paddingTop: 10,
+            }}
+            onPress={() => openModal()}
+          >
             <Entypo
               name="dots-three-vertical"
-              size={16}
+              size={18}
               color={theme.color12.val}
-              style={{ marginRight: 10 }}
+              style={{ marginRight: 15 }}
             />
           </TouchableOpacity>
-        </XStack>
-      </TouchableOpacity>
+        ) : null}
+      </XStack>
       <XStack
         gap={8}
         pt={2}
@@ -305,47 +324,7 @@ const postPage: React.FC = () => {
             Discussion Board:
           </Text>
         </XStack>
-        <YStack alignItems="center" p={10} mb={10}>
-          <XStack
-            w={"90%"}
-            p={5}
-            justifyContent="center"
-            alignItems="flex-start"
-            br={12}
-            bg={theme.color4.val}
-          >
-            <FontAwesome
-              name="pencil-square-o"
-              size={18}
-              style={{ padding: 4 }}
-              color={theme.color12.val}
-            />
-            <TextInput
-              placeholder="add a new discussion board..."
-              value={newDiscussionName}
-              onChangeText={(value) => setNewDiscussionName(value)}
-              style={{
-                height: 25,
-                paddingLeft: 5,
-                width: "90%",
-                color: theme.color12.val,
-              }}
-              autoCapitalize="none"
-              multiline={true}
-              numberOfLines={4}
-              placeholderTextColor={theme.color11.val}
-            />
-          </XStack>
-          <YStack w={"90%"} pt={12} alignItems="flex-end">
-            <Button
-              size={"$3"}
-              theme={"blue"}
-              onPress={() => createDiscussion()}
-            >
-              Create
-            </Button>
-          </YStack>
-        </YStack>
+
         <YStack gap={20}>
           {currentPost?.discussions.map((discussion, index) => {
             return (
@@ -385,6 +364,47 @@ const postPage: React.FC = () => {
               </Button>
             );
           })}
+        </YStack>
+        <YStack alignItems="center" p={10} mt={15}>
+          <XStack
+            w={"90%"}
+            p={5}
+            justifyContent="center"
+            alignItems="flex-start"
+            br={12}
+            bg={theme.color4.val}
+          >
+            <FontAwesome
+              name="pencil-square-o"
+              size={18}
+              style={{ padding: 4 }}
+              color={theme.color12.val}
+            />
+            <TextInput
+              placeholder="add a new discussion board..."
+              value={newDiscussionName}
+              onChangeText={(value) => setNewDiscussionName(value)}
+              style={{
+                height: 25,
+                paddingLeft: 5,
+                width: "90%",
+                color: theme.color12.val,
+              }}
+              autoCapitalize="none"
+              multiline={true}
+              numberOfLines={4}
+              placeholderTextColor={theme.color11.val}
+            />
+          </XStack>
+          <YStack w={"90%"} pt={12} alignItems="flex-end">
+            <Button
+              size={"$3"}
+              theme={"blue"}
+              onPress={() => createDiscussion()}
+            >
+              Create
+            </Button>
+          </YStack>
         </YStack>
       </YStack>
       <YStack h={40} />

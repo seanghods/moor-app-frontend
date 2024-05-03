@@ -13,9 +13,12 @@ import { PostProvider } from "./context/PostContext";
 import { TamaguiProvider, createTamagui } from "tamagui";
 import config from "@/tamagui.config";
 import { UserProvider } from "./context/UserContext";
-import { Feather } from "@expo/vector-icons";
 import { TrendingProvider } from "./context/TrendingContext";
-import ProfileSettingsHeader from "../components/ProfileSettingsHeader";
+import ProfileSettingsHeader from "../components/profile-headers/ProfileSettingsHeader";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import DeleteUserHeader from "../components/profile-headers/DeleteUserHeader";
+import ShowSettingsOrDeleteHeader from "../components/profile-headers/ShowSettingsOrDeleteHeader";
 
 const tamaguiConfig = createTamagui(config);
 
@@ -55,50 +58,69 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <UserProvider>
-      <PostProvider>
-        <TrendingProvider>
-          <TamaguiProvider
-            config={tamaguiConfig}
-            defaultTheme={colorScheme as any}
-          >
-            <ThemeProvider
-              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-            >
-              <Stack>
-                <Stack.Screen
-                  name="(tabs)"
-                  options={{ headerShown: false, title: "Back" }}
-                />
-                <Stack.Screen name="posts/[id]" options={{ title: "Post" }} />
-                <Stack.Screen
-                  name="discussions/[id]"
-                  options={{ title: "Discussion" }}
-                />
-                <Stack.Screen
-                  name="profiles/[id]"
-                  options={{
-                    title: "Profile",
-                    headerRight: () => <ProfileSettingsHeader />,
-                  }}
-                />
-                <Stack.Screen
-                  name="profiles/settings"
-                  options={{ title: "Settings" }}
-                />
-                <Stack.Screen
-                  name="authentication/login"
-                  options={{ title: "Log In" }}
-                />
-                <Stack.Screen
-                  name="authentication/register"
-                  options={{ title: "Register" }}
-                />
-              </Stack>
-            </ThemeProvider>
-          </TamaguiProvider>
-        </TrendingProvider>
-      </PostProvider>
-    </UserProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomSheetModalProvider>
+        <UserProvider>
+          <PostProvider>
+            <TrendingProvider>
+              <TamaguiProvider
+                config={tamaguiConfig}
+                defaultTheme={colorScheme as any}
+              >
+                <ThemeProvider
+                  value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+                >
+                  <Stack>
+                    <Stack.Screen
+                      name="(tabs)"
+                      options={{ headerShown: false, title: "Back" }}
+                    />
+                    <Stack.Screen
+                      name="communities/[id]"
+                      options={{ title: "Community" }}
+                    />
+                    <Stack.Screen
+                      name="communities/newCommunity"
+                      options={{ title: "New Community" }}
+                    />
+                    <Stack.Screen
+                      name="posts/[id]"
+                      options={{ title: "Post" }}
+                    />
+                    <Stack.Screen
+                      name="discussions/[id]"
+                      options={{ title: "Discussion" }}
+                    />
+                    <Stack.Screen
+                      name="profiles/[id]"
+                      options={{
+                        title: "Profile",
+                        headerRight: () => (
+                          <>
+                            <ShowSettingsOrDeleteHeader />
+                          </>
+                        ),
+                      }}
+                    />
+                    <Stack.Screen
+                      name="profiles/settings"
+                      options={{ title: "Settings" }}
+                    />
+                    <Stack.Screen
+                      name="authentication/login"
+                      options={{ title: "Log In" }}
+                    />
+                    <Stack.Screen
+                      name="authentication/register"
+                      options={{ title: "Register" }}
+                    />
+                  </Stack>
+                </ThemeProvider>
+              </TamaguiProvider>
+            </TrendingProvider>
+          </PostProvider>
+        </UserProvider>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 }

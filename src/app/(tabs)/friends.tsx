@@ -1,16 +1,37 @@
-import { Text, YStack } from "tamagui";
+import { Spinner, Text, YStack } from "tamagui";
 import { useUser } from "../context/UserContext";
 import { router } from "expo-router";
-import { TouchableOpacity } from "react-native";
+import { PostType } from "@/src/api-types/api-types";
+import { useEffect, useState } from "react";
+import { API_ROUTES } from "@/src/utils/helpers";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import PostFeed from "@/src/components/content-components/PostFeed";
 
 export default function Friends() {
   const { user } = useUser();
-  //pull posts from following
+  const [friendsPosts, setFriendsPosts] = useState<PostType[]>([]);
+  useEffect(() => {
+    async function getFriendsPosts() {
+      if (user) {
+        const token = await AsyncStorage.getItem("userToken");
+        const response = await fetch(API_ROUTES.friendsPosts, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        });
+        const data = await response.json();
+        setFriendsPosts(data.posts);
+      }
+    }
+    getFriendsPosts();
+  }, [user]);
   return (
     <YStack bg={"$background"} flex={1}>
-      <YStack py={24} width="80%" alignSelf="center">
-        {!user ? (
-          <>
+      {!user ? (
+        <>
+          <YStack py={24} width="80%" alignSelf="center">
             <Text fontSize={16}>
               <Text
                 onPress={() => router.push("/authentication/register")}
@@ -24,14 +45,28 @@ export default function Friends() {
                 here!"
               </Text>
             </Text>
-          </>
-        ) : (
+          </YStack>
+        </>
+      ) : user.usersFollowing.length == 0 ? (
+        <YStack py={24} width="80%" alignSelf="center">
           <Text fontSize={16}>
             You aren't following anyone yet! Follow users to see their personal
             posts appear here.
           </Text>
-        )}
-      </YStack>
+        </YStack>
+      ) : friendsPosts.length == 0 ? (
+        <YStack py={24} width="80%" alignSelf="center">
+          <Spinner />
+        </YStack>
+      ) : (
+        <YStack>
+          <PostFeed
+            posts={friendsPosts}
+            showCommunity={true}
+            setCommunity={setFriendsPosts}
+          />
+        </YStack>
+      )}
     </YStack>
   );
 }

@@ -1,19 +1,23 @@
-import PostFeed from "@/src/components/PostFeed";
+import PostFeed from "@/src/components/content-components/PostFeed";
 import { Text, Button, YStack, XStack, useTheme, Spinner } from "tamagui";
 import {
   AntDesign,
+  Entypo,
   Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CommunityType } from "@/src/api-types/api-types";
 import { API_ROUTES } from "@/src/utils/helpers";
-import { useUser } from "../../context/UserContext";
+import { useUser } from "../context/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useTrending } from "../../context/TrendingContext";
+import { useTrending } from "../context/TrendingContext";
 import { useIsFocused } from "@react-navigation/native";
+import BottomSheet from "@/src/components/BottomSheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { TouchableOpacity } from "react-native";
 
 const communityPage = () => {
   const { id } = useLocalSearchParams();
@@ -24,6 +28,10 @@ const communityPage = () => {
   );
   const { trendingPosts } = useTrending();
   const isFocused = useIsFocused();
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
+  function openModal() {
+    bottomSheetRef.current?.present();
+  }
   useEffect(() => {
     async function getCommunity() {
       const response = await fetch(`${API_ROUTES.community}?id=${id}`, {
@@ -108,6 +116,7 @@ const communityPage = () => {
     <YStack bg={"$background"} flex={1}>
       {community ? (
         <>
+          <BottomSheet ref={bottomSheetRef} community={community} />
           <XStack mx={6}>
             <YStack bg="$blue3" flex={1} gap={3} p={8} pb={2} my={2}>
               <XStack justifyContent="space-between" alignItems="center">
@@ -168,6 +177,18 @@ const communityPage = () => {
                   />
                   <Text style={{ fontSize: 14 }}>{community.posts.length}</Text>
                 </XStack>
+                {user &&
+                (user._id === community?.creator._id ||
+                  user.isAdmin ||
+                  community.moderators.includes(user._id)) ? (
+                  <TouchableOpacity onPress={() => openModal()}>
+                    <Entypo
+                      name="dots-three-horizontal"
+                      size={18}
+                      color={theme.color12.val}
+                    />
+                  </TouchableOpacity>
+                ) : null}
               </XStack>
             </YStack>
           </XStack>

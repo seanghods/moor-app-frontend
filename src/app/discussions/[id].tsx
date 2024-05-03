@@ -1,5 +1,5 @@
 import { usePost } from "@/src/app/context/PostContext";
-import CommentFeed from "@/src/components/CommentFeed";
+import CommentFeed from "@/src/components/content-components/CommentFeed";
 import { Separator, Text, View, XStack, YStack, useTheme } from "tamagui";
 import { Entypo, FontAwesome } from "@expo/vector-icons";
 import {
@@ -11,20 +11,28 @@ import {
 } from "react-native";
 import { Button } from "tamagui";
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DiscussionType, PostType } from "@/src/api-types/api-types";
 import { API_ROUTES } from "@/src/utils/helpers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUser } from "../context/UserContext";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import BottomSheet from "@/src/components/BottomSheet";
 
 const Discussion = () => {
   const theme = useTheme();
   const { id } = useLocalSearchParams();
+  const { user } = useUser();
   const { currentPost, setCurrentPost } = usePost();
   const [comment, setComment] = useState<string>("");
   const [parentComment, setParentComment] = useState<string>("");
   const [currentDiscussion, setCurrentDiscussion] = useState<
     DiscussionType | undefined
   >(currentPost?.discussions.find((discussion) => discussion._id == id));
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
+  function openModal() {
+    bottomSheetRef.current?.present();
+  }
   useEffect(() => {
     setCurrentDiscussion(
       currentPost?.discussions.find((discussion) => discussion._id == id)
@@ -74,17 +82,23 @@ const Discussion = () => {
           backgroundColor: theme.background.val,
         }}
       >
+        <BottomSheet ref={bottomSheetRef} discussion={currentDiscussion} />
         <XStack justifyContent="space-between" alignItems="center" mr={15}>
           <Text p={15} fontSize={20} fontWeight={"700"}>
             {currentDiscussion?.title}
           </Text>
-          <TouchableOpacity>
-            <Entypo
-              name="dots-three-vertical"
-              size={18}
-              color={theme.color12.val}
-            />
-          </TouchableOpacity>
+          {user &&
+          (user._id === currentDiscussion?.creator._id ||
+            user.isAdmin ||
+            currentPost?.community.moderators.includes(user._id)) ? (
+            <TouchableOpacity onPress={() => openModal()}>
+              <Entypo
+                name="dots-three-vertical"
+                size={18}
+                color={theme.color12.val}
+              />
+            </TouchableOpacity>
+          ) : null}
         </XStack>
         <YStack alignItems="center" p={10}>
           <XStack

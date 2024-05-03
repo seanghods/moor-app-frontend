@@ -1,27 +1,17 @@
 import {
-  FlatList,
-  Image,
   Keyboard,
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import {
-  Avatar,
-  Button,
-  ScrollView,
-  Spinner,
-  XStack,
-  YStack,
-  useTheme,
-} from "tamagui";
+import { Avatar, ScrollView, XStack, YStack, useTheme } from "tamagui";
 import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { API_ROUTES } from "@/src/utils/helpers";
 import { Text } from "tamagui";
 import { CommunityType, PostType, UserType } from "@/src/api-types/api-types";
 import { ShowCommunity } from "./communities";
-import { ShowPost } from "@/src/components/PostFeed";
+import { ShowPost } from "@/src/components/content-components/PostFeed";
 import { router } from "expo-router";
 
 export default function Search() {
@@ -218,7 +208,7 @@ export const ShowUser: React.FC<ShowUserProps> = ({ user }) => {
       <XStack gap={8} p={8} py={4} bbw={2} bbc="#eee">
         <YStack w="30%" justifyContent="center" alignItems="center">
           <Avatar flex={1} mr={5} circular bw={1} bc={theme.color12.val}>
-            <Avatar.Image src={user.profileImage} />
+            <Avatar.Image scale={1.1} src={user.profileImage} />
           </Avatar>
         </YStack>
         <YStack flex={1} justifyContent="center">

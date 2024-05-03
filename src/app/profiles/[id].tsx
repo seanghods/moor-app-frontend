@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   Avatar,
+  Button,
   Separator,
   Spinner,
   Switch,
@@ -13,19 +14,17 @@ import {
 } from "tamagui";
 import { useUser } from "../context/UserContext";
 import { ImageBackground, TouchableOpacity } from "react-native";
-import PostFeed from "@/src/components/PostFeed";
-import { useLocalSearchParams } from "expo-router";
+import PostFeed from "@/src/components/content-components/PostFeed";
+import { router, useLocalSearchParams } from "expo-router";
 import { API_ROUTES } from "@/src/utils/helpers";
 import { UserType } from "@/src/api-types/api-types";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Profile() {
   const { user, setUser } = useUser();
   const [shownUser, setShownUser] = useState<UserType | undefined>(undefined);
   const { id } = useLocalSearchParams();
-  // useEffect(() => {
-  //   console.log(user);
-  //   console.log(shownUser);
-  // }, [user, shownUser]);
   const theme = useTheme();
   const [viewType, setViewType] = useState<"Personal" | "History">("Personal");
   useEffect(() => {
@@ -44,6 +43,55 @@ export default function Profile() {
     }
     getUser();
   }, [user]);
+  async function followUser() {
+    if (user) {
+      if (shownUser) {
+        const token = await AsyncStorage.getItem("userToken");
+        const response = await fetch(API_ROUTES.followUser, {
+          method: "POST",
+          body: JSON.stringify({
+            userId: shownUser._id,
+          }),
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        if (data.success) {
+          if (user.usersFollowing.some((user) => user == shownUser?._id)) {
+            setUser((prevUser) => {
+              if (prevUser) {
+                return {
+                  ...prevUser,
+                  usersFollowing: prevUser.usersFollowing?.filter(
+                    (id) => id != shownUser?._id
+                  ),
+                };
+              }
+              return prevUser;
+            });
+          } else {
+            setUser((prevUser) => {
+              if (prevUser) {
+                return {
+                  ...prevUser,
+                  usersFollowing: [
+                    ...(prevUser.usersFollowing ?? []),
+                    shownUser?._id,
+                  ],
+                };
+              }
+              return prevUser;
+            });
+          }
+        }
+      }
+    } else {
+      router.push("/authentication/login");
+    }
+  }
   return (
     <YStack bg="$background" flex={1}>
       {shownUser ? (
@@ -53,18 +101,48 @@ export default function Profile() {
             resizeMode="cover"
             style={{ backgroundColor: theme.blue8.val, height: 180 }}
           >
+            <XStack w={"100%"} h={5} justifyContent="flex-end">
+              <TouchableOpacity>
+                <Text>X</Text>
+              </TouchableOpacity>
+            </XStack>
             <XStack>
               <YStack width={"30%"} height={"100%"}>
                 <YStack p={25} width="36%" gap={10}>
                   <Avatar circular bw={2} bc={theme.color12.val} size="$10">
-                    <Avatar.Image src={shownUser.profileImage} />
+                    <Avatar.Image scale={1.1} src={shownUser.profileImage} />
                   </Avatar>
                 </YStack>
               </YStack>
               <YStack width={"70%"} p={40} gap={5}>
-                <Text fontSize={20} fontWeight={"700"}>
-                  {shownUser.username}
-                </Text>
+                <XStack justifyContent="space-between">
+                  <Text fontSize={20} fontWeight={"700"}>
+                    {shownUser.username}
+                  </Text>
+                  {shownUser._id !== user?._id && (
+                    <Button
+                      size={"$2"}
+                      bg={"$blue6"}
+                      onPress={() => followUser()}
+                    >
+                      {user?.usersFollowing.some(
+                        (id) => id == shownUser._id
+                      ) ? (
+                        <AntDesign
+                          name="check"
+                          size={20}
+                          color={theme.color12.val}
+                        />
+                      ) : (
+                        <Ionicons
+                          name="person-add-outline"
+                          size={20}
+                          color={theme.color12.val}
+                        />
+                      )}
+                    </Button>
+                  )}
+                </XStack>
                 <YStack gap={1}>
                   <Text fontWeight={"700"}>Bio:</Text>
                   <Text>{shownUser.bio}</Text>
@@ -76,7 +154,7 @@ export default function Profile() {
             <XStack p={25} gap={10}>
               <YStack alignItems="center" gap={3}>
                 <Text fontWeight={"700"}>
-                  {shownUser.usersFollowed?.length ?? 0}
+                  {shownUser.usersFollowers?.length ?? 0}
                 </Text>
                 <Text fontSize={10} color={"$gray10"}>
                   Followers
@@ -85,7 +163,7 @@ export default function Profile() {
               <Separator bc={"$accentColor"} vertical />
               <YStack alignItems="center" gap={3}>
                 <Text fontWeight={"700"}>
-                  {shownUser.usersFollowed?.length ?? 0}
+                  {shownUser.usersFollowing?.length ?? 0}
                 </Text>
                 <Text fontSize={10} color={"$gray10"}>
                   Following

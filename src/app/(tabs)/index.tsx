@@ -1,5 +1,5 @@
 import { PostType } from "@/src/api-types/api-types";
-import PostFeed from "@/src/components/PostFeed";
+import PostFeed from "@/src/components/content-components/PostFeed";
 import { API_ROUTES } from "@/src/utils/helpers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";

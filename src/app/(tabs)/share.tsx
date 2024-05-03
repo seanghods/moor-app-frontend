@@ -105,7 +105,7 @@ export default function Share() {
     }
     setStatus("submitted");
     const data = await response.json();
-    router.push(`/posts/${data.post._id}`);
+    router.replace(`/posts/${data.post._id}`);
   };
   function isValidUrl(url: string) {
     const pattern = new RegExp(
@@ -165,7 +165,7 @@ export default function Share() {
             }
           >
             <XStack alignItems="center" justifyContent="center" gap={3}>
-              <Entypo name="link" size={16} color="black" />
+              <Entypo name="link" size={16} color={theme.color12.val} />
               <Text>Link</Text>
             </XStack>
           </YStack>
@@ -187,7 +187,7 @@ export default function Share() {
               <MaterialCommunityIcons
                 name="subtitles-outline"
                 size={16}
-                color="black"
+                color={theme.color12.val}
               />
               <Text>Text</Text>
             </XStack>
@@ -219,7 +219,7 @@ export default function Share() {
                 name="groups"
                 style={{ padding: 10 }}
                 size={25}
-                color="black"
+                color={theme.color12.val}
               />
               <TextInput
                 returnKeyType="done"
@@ -305,7 +305,7 @@ export default function Share() {
                 name="title"
                 style={{ padding: 10 }}
                 size={25}
-                color="black"
+                color={theme.color12.val}
               />
               <TextInput
                 returnKeyType="done"
@@ -337,7 +337,7 @@ export default function Share() {
                   name="link"
                   style={{ padding: 10 }}
                   size={25}
-                  color="black"
+                  color={theme.color12.val}
                 />
                 <TextInput
                   returnKeyType="done"
@@ -369,7 +369,7 @@ export default function Share() {
                 name="subtitles-outline"
                 style={{ padding: 10, alignSelf: "flex-start" }}
                 size={25}
-                color="black"
+                color={theme.color12.val}
               />
               <TextInput
                 placeholder="description"
