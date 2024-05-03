@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   Keyboard,
   StyleSheet,
@@ -19,6 +20,7 @@ import { API_ROUTES } from "@/src/utils/helpers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useUser } from "../context/UserContext";
+import validateInput from "@/src/components/ValidateInputFunction";
 
 export default function newCommunity() {
   const colorScheme = useColorScheme();
@@ -59,7 +61,7 @@ export default function newCommunity() {
       const type = getMimeType(uri);
       if (asset.fileSize && asset.fileSize > 5048000) {
         // 5MB in bytes
-        alert("File size should not exceed 5MB");
+        Alert.alert("Error", "File size should not exceed 5MB");
         return;
       }
 
@@ -93,15 +95,22 @@ export default function newCommunity() {
   };
   const uploadData = async () => {
     if (communityData.name === "") {
-      alert("Please fill in the community name");
+      Alert.alert("Error", "Please fill in the community name");
       return;
     }
     if (communityData.name.length < 3) {
-      alert("Community name must be longer than 3 characters");
+      Alert.alert("Error", "Community name must be longer than 3 characters");
       return;
     }
     if (communityData.description === "") {
-      alert("Please create a community description.");
+      Alert.alert("Error", "Please create a community description.");
+      return;
+    }
+    if (!validateInput(communityData.name, false)) {
+      Alert.alert(
+        "Error",
+        "Community name can only contain letters and numbers"
+      );
       return;
     }
     const formData = new FormData();
@@ -196,6 +205,7 @@ export default function newCommunity() {
             />
             <TextInput
               returnKeyType="done"
+              maxLength={20}
               placeholder="community"
               value={communityData.name}
               onChangeText={(value) => handleInputChange("name", value)}

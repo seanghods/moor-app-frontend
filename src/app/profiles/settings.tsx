@@ -15,6 +15,7 @@ import { router } from "expo-router";
 import { Entypo } from "@expo/vector-icons";
 import { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
+import validateInput from "@/src/components/ValidateInputFunction";
 
 export default function Settings() {
   const { user, setUser } = useUser();
@@ -29,8 +30,18 @@ export default function Settings() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setnewPassword] = useState("");
   async function changeUsername() {
-    if (!newUsername || newUsername.length < 3) {
-      Alert.alert("Error", "Username must be at least 3 characters long.");
+    if (!newUsername || newUsername.length < 3 || newUsername.length > 12) {
+      Alert.alert(
+        "Error",
+        "Username must be at least 3 characters long and less than 13."
+      );
+      return;
+    }
+    if (!validateInput(newUsername, true)) {
+      Alert.alert(
+        "Error",
+        "Username can only contain letters, numbers, and underscores."
+      );
       return;
     }
     const token = await AsyncStorage.getItem("userToken");
@@ -291,6 +302,7 @@ export default function Settings() {
               <TextInput
                 returnKeyType="done"
                 value={newUsername}
+                maxLength={12}
                 onChangeText={setNewUsername}
                 style={{
                   padding: 10,

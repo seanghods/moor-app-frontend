@@ -8,9 +8,7 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import Colors from "@/src/constants/Colors";
 import {
-  useColorScheme,
   TouchableOpacity,
   Linking,
   Image,
@@ -28,10 +26,9 @@ import BottomSheet from "@/src/components/BottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 const postPage: React.FC = () => {
+  const theme = useTheme();
   const { id } = useLocalSearchParams();
   const { user, setUser } = useUser();
-  const colorScheme = useColorScheme();
-  const theme = useTheme();
   const { trendingPosts, setTrendingPosts } = useTrending();
   const [newDiscussionName, setNewDiscussionName] = useState<string>("");
   const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -174,7 +171,7 @@ const postPage: React.FC = () => {
       style={{
         flex: 1,
         width: "100%",
-        backgroundColor: Colors[colorScheme ?? "light"].background,
+        backgroundColor: theme.background.val,
       }}
     >
       <BottomSheet ref={bottomSheetRef} post={currentPost} />
@@ -212,13 +209,7 @@ const postPage: React.FC = () => {
           </TouchableOpacity>
         ) : null}
       </XStack>
-      <XStack
-        gap={8}
-        pt={2}
-        p={8}
-        bbw={2}
-        bbc={colorScheme == "light" ? "#eee" : "#333333"}
-      >
+      <XStack gap={8} pt={2} p={8} bbw={2} bbc={theme.color5.val}>
         <YStack flex={1}>
           <YStack>
             <Text fontSize={25} fontWeight="700" py={3}>
@@ -281,7 +272,7 @@ const postPage: React.FC = () => {
             px={8}
             br={15}
             bw={1}
-            bc={Colors.extraColors.lightGray}
+            bc={"#E0E0E0"}
           >
             <XStack gap={7}>
               <XStack gap={3} alignItems="center">
@@ -357,7 +348,7 @@ const postPage: React.FC = () => {
                     <MaterialCommunityIcons
                       name="comment-outline"
                       size={18}
-                      color={Colors[colorScheme ?? "light"].text}
+                      color={theme.color12.val}
                     />
                   </XStack>
                 </YStack>
@@ -383,6 +374,7 @@ const postPage: React.FC = () => {
             <TextInput
               placeholder="add a new discussion board..."
               value={newDiscussionName}
+              maxLength={35}
               onChangeText={(value) => setNewDiscussionName(value)}
               style={{
                 height: 25,

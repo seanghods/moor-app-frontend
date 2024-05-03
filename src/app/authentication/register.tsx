@@ -23,6 +23,7 @@ import { router } from "expo-router";
 import { useUser } from "../context/UserContext";
 import { API_ROUTES } from "@/src/utils/helpers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import validateInput from "@/src/components/ValidateInputFunction";
 
 export default function Register() {
   const theme = useTheme();
@@ -76,6 +77,14 @@ export default function Register() {
       setFormError((prevState) => ({
         ...prevState,
         username: "Username must be greater than 3 characters.",
+      }));
+      return;
+    }
+    if (!validateInput(formData.username, true)) {
+      setFormError((prevState) => ({
+        ...prevState,
+        username:
+          "Username can only contain letters, numbers, hyphens, and underscores.",
       }));
       return;
     }
@@ -187,6 +196,7 @@ export default function Register() {
                 returnKeyType="done"
                 autoCapitalize="none"
                 placeholder="username"
+                maxLength={12}
                 value={formData.username}
                 onChangeText={(value) => handleInputChange("username", value)}
                 style={dynamicStyles.textInput}

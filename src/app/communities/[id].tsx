@@ -13,11 +13,10 @@ import { CommunityType } from "@/src/api-types/api-types";
 import { API_ROUTES } from "@/src/utils/helpers";
 import { useUser } from "../context/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useTrending } from "../context/TrendingContext";
 import { useIsFocused } from "@react-navigation/native";
 import BottomSheet from "@/src/components/BottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { TouchableOpacity } from "react-native";
+import { Alert, TouchableOpacity } from "react-native";
 
 const communityPage = () => {
   const { id } = useLocalSearchParams();
@@ -26,7 +25,6 @@ const communityPage = () => {
   const [community, setCommunity] = useState<CommunityType | undefined>(
     undefined
   );
-  const { trendingPosts } = useTrending();
   const isFocused = useIsFocused();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   function openModal() {
@@ -40,76 +38,79 @@ const communityPage = () => {
         },
       });
       const data = await response.json();
-      setCommunity(data);
+      if (!data.success) {
+        return Alert.alert("Error", data.message);
+      }
+      setCommunity(data.community);
     }
     getCommunity();
   }, [isFocused]);
   async function followCommunity(community: CommunityType) {
-    if (user) {
-      const token = await AsyncStorage.getItem("userToken");
-      const response = await fetch(API_ROUTES.followCommunity, {
-        method: "POST",
-        body: JSON.stringify({
-          communityId: community._id,
-        }),
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      if (data.success) {
-        if (user.communitiesFollowed.some((comm) => comm == community._id)) {
-          setUser((prevUser) => {
-            if (prevUser) {
-              return {
-                ...prevUser,
-                communitiesFollowed: prevUser.communitiesFollowed?.filter(
-                  (comm) => comm !== community._id
-                ),
-              };
-            }
-            return prevUser;
-          });
-          setCommunity((prevCommunity) => {
-            if (prevCommunity) {
-              return {
-                ...prevCommunity,
-                followers: prevCommunity.followers?.filter(
-                  (follower) => follower !== user._id
-                ),
-              };
-            }
-            return prevCommunity;
-          });
-        } else {
-          setCommunity((prevCommunity) => {
-            if (prevCommunity) {
-              return {
-                ...prevCommunity,
-                followers: [...prevCommunity.followers, user._id],
-              };
-            }
-            return prevCommunity;
-          });
-          const communitiesFollowed = user.communitiesFollowed;
-          communitiesFollowed.push(community._id);
-          setUser((prevUser) => {
-            if (prevUser) {
-              return {
-                ...prevUser,
-                communitiesFollowed: prevUser.communitiesFollowed
-                  ? [...prevUser.communitiesFollowed, community._id]
-                  : [community._id],
-              };
-            }
-            return prevUser;
-          });
+    if (!user) {
+      return router.push("/authentication/login");
+    }
+    const token = await AsyncStorage.getItem("userToken");
+    const response = await fetch(API_ROUTES.followCommunity, {
+      method: "POST",
+      body: JSON.stringify({
+        communityId: community._id,
+      }),
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    if (!data.success) {
+      return Alert.alert("Error", data.message);
+    }
+    if (user.communitiesFollowed.some((comm) => comm == community._id)) {
+      setUser((prevUser) => {
+        if (prevUser) {
+          return {
+            ...prevUser,
+            communitiesFollowed: prevUser.communitiesFollowed?.filter(
+              (comm) => comm !== community._id
+            ),
+          };
         }
-      }
+        return prevUser;
+      });
+      setCommunity((prevCommunity) => {
+        if (prevCommunity) {
+          return {
+            ...prevCommunity,
+            followers: prevCommunity.followers?.filter(
+              (follower) => follower !== user._id
+            ),
+          };
+        }
+        return prevCommunity;
+      });
     } else {
-      router.push("/authentication/login");
+      setCommunity((prevCommunity) => {
+        if (prevCommunity) {
+          return {
+            ...prevCommunity,
+            followers: [...prevCommunity.followers, user._id],
+          };
+        }
+        return prevCommunity;
+      });
+      const communitiesFollowed = user.communitiesFollowed;
+      communitiesFollowed.push(community._id);
+      setUser((prevUser) => {
+        if (prevUser) {
+          return {
+            ...prevUser,
+            communitiesFollowed: prevUser.communitiesFollowed
+              ? [...prevUser.communitiesFollowed, community._id]
+              : [community._id],
+          };
+        }
+        return prevUser;
+      });
     }
   }
   return (

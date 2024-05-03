@@ -1,4 +1,10 @@
-import { Image, FlatList, TouchableOpacity, Linking } from "react-native";
+import {
+  Image,
+  FlatList,
+  TouchableOpacity,
+  Linking,
+  Alert,
+} from "react-native";
 import {
   Ionicons,
   MaterialCommunityIcons,
@@ -24,7 +30,10 @@ export default function Communities() {
         },
       });
       const data = await response.json();
-      setCommunities(data);
+      if (!data.success) {
+        return Alert.alert("Error", data.message);
+      }
+      setCommunities(data.communities);
     }
     getCommunities();
   }, [isFocused]);

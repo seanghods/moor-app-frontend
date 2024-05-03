@@ -311,6 +311,7 @@ export default function Share() {
                 returnKeyType="done"
                 placeholder="title"
                 value={postData.title}
+                maxLength={100}
                 onChangeText={(value) => handleInputChange("title", value)}
                 style={dynamicStyles.textInput}
                 autoCapitalize="none"
