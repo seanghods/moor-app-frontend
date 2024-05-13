@@ -1,7 +1,6 @@
-export const BASE_URL = 'http://10.0.1.18:3001/api';
-// import.meta.env.MODE === "production"
-//   ? "https://api.liftrightai.com/api"
-//   : "/api";
+export const BASE_URL = __DEV__
+  ? 'http://10.0.1.18:3001/api'
+  : 'https://moor-app-174f83203b5c.herokuapp.com/api';
 
 export const API_ROUTES = {
   base: `${BASE_URL}`,
