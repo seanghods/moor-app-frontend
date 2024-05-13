@@ -4,7 +4,7 @@
     "slug": "moor",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/moor.jpeg",
+    "icon": "./assets/images/moor.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -21,7 +21,7 @@
       "package": "com.moor.moorfe",
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/moor.jpeg",
+        "foregroundImage": "./assets/images/moor.png",
         "backgroundColor": "#ffffff"
       }
     },
@@ -33,6 +33,14 @@
     "privacy": "public",
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "df55213c-426c-4e35-a01b-558c378559b2"
+      }
     }
   }
 }
