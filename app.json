@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "moor-app-frontend",
-    "slug": "moor-app-frontend",
+    "name": "Moor",
+    "slug": "moor",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/moor.jpeg",
@@ -14,9 +14,12 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.moor.moorfe"
     },
     "android": {
+      "package": "com.moor.moorfe",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/moor.jpeg",
         "backgroundColor": "#ffffff"
@@ -27,6 +30,7 @@
       "output": "static"
     },
     "plugins": ["expo-router"],
+    "privacy": "public",
     "experiments": {
       "typedRoutes": true
     }
