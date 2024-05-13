@@ -1,16 +1,16 @@
-import { Entypo, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { TouchableOpacity, useColorScheme } from "react-native";
-import { Text, YStack, XStack, useTheme, Avatar, Separator } from "tamagui";
-import Colors from "../../constants/Colors";
-import { router } from "expo-router";
-import { CommentType, PostType, UserType } from "../../api-types/api-types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { API_ROUTES } from "../../utils/helpers";
-import { usePost } from "../../app/context/PostContext";
-import { useUser } from "../../app/context/UserContext";
-import { useRef } from "react";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import BottomSheet from "../BottomSheet";
+import { Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { TouchableOpacity, useColorScheme } from 'react-native';
+import { Text, YStack, XStack, useTheme, Avatar, Separator } from 'tamagui';
+import Colors from '../../constants/Colors';
+import { router } from 'expo-router';
+import { CommentType, PostType, UserType } from '../../api-types/api-types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_ROUTES } from '../../utils/helpers';
+import { usePost } from '../../app/context/PostContext';
+import { useUser } from '../../app/context/UserContext';
+import { useRef } from 'react';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import BottomSheet from '../BottomSheet';
 
 type Props = {
   comment: CommentType;
@@ -33,21 +33,21 @@ const CommentItem: React.FC<Props> = ({
   function openModal() {
     bottomSheetRef.current?.present();
   }
-  async function commentVote(voteType: "up" | "down") {
+  async function commentVote(voteType: 'up' | 'down') {
     if (user) {
       user.commentVotes.push({ comment: comment._id, vote: voteType });
       try {
-        const token = await AsyncStorage.getItem("userToken");
+        const token = await AsyncStorage.getItem('userToken');
         const response = await fetch(API_ROUTES.commentVote, {
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({
             commentId: comment._id,
             voteType,
           }),
           headers: {
-            Accept: "application/json",
+            Accept: 'application/json',
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         });
         const data = await response.json();
@@ -98,10 +98,10 @@ const CommentItem: React.FC<Props> = ({
         console.error(error);
       }
     } else {
-      router.push("/authentication/login");
+      router.push('/authentication/login');
     }
   }
-  function getVoteColor(voteType: "up" | "down") {
+  function getVoteColor(voteType: 'up' | 'down') {
     const hasVoted = user?.commentVotes.some(
       (vote) => vote.comment === comment._id && vote.vote === voteType
     );
@@ -110,55 +110,69 @@ const CommentItem: React.FC<Props> = ({
   return (
     <YStack gap={5}>
       <BottomSheet ref={bottomSheetRef} comment={comment} />
-      <TouchableOpacity
-        style={{ alignSelf: "flex-start" }}
-        onPress={() => router.push(`/profiles/${comment.creator._id}`)}
-      >
-        <XStack gap={1} alignItems="center">
-          <Avatar
-            size={"$1"}
-            flex={1}
-            mr={5}
-            circular
-            bw={1}
-            bc={theme.color12.val}
-          >
-            <Avatar.Image scale={1.1} src={comment.creator.profileImage} />
-          </Avatar>
-          <Text color={Colors[colorScheme ?? "light"].info}>
-            {comment.creator.username}
+      <XStack gap={24} alignItems='center'>
+        <TouchableOpacity
+          style={{ alignSelf: 'flex-start' }}
+          onPress={() => router.push(`/profiles/${comment.creator._id}`)}
+        >
+          <XStack gap={1} alignItems='center'>
+            <Avatar
+              size={'$1'}
+              flex={1}
+              mr={5}
+              circular
+              bw={1}
+              bc={theme.color12.val}
+            >
+              <Avatar.Image scale={1.1} src={comment.creator.profileImage} />
+            </Avatar>
+            <Text color={Colors[colorScheme ?? 'light'].info}>
+              {comment.creator.username}
+            </Text>
+          </XStack>
+        </TouchableOpacity>
+        <XStack gap={2}>
+          <Text pt={1} fontSize={12} color={theme.color12.val}>
+            - {new Date(comment.createdAt).toLocaleDateString().slice(0, -5)}
+          </Text>
+          <Text pt={1} fontSize={12} color={theme.color12.val}>
+            -{' '}
+            {new Date(comment.createdAt).toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
           </Text>
         </XStack>
-      </TouchableOpacity>
+      </XStack>
       <Text fontSize={16} mb={3}>
         {comment.body}
       </Text>
-      <XStack gap={7} alignItems="center">
-        <XStack gap={3} alignItems="center">
-          <TouchableOpacity onPress={() => commentVote("up")}>
-            <Ionicons name="chevron-up" size={15} color={getVoteColor("up")} />
+      <XStack gap={7} alignItems='center'>
+        <XStack gap={3} alignItems='center'>
+          <TouchableOpacity onPress={() => commentVote('up')}>
+            <Ionicons name='chevron-up' size={15} color={getVoteColor('up')} />
           </TouchableOpacity>
           <Text> {comment.voteCount} </Text>
-          <TouchableOpacity onPress={() => commentVote("down")}>
+          <TouchableOpacity onPress={() => commentVote('down')}>
             <Ionicons
-              name="chevron-down"
+              name='chevron-down'
               size={15}
-              color={getVoteColor("down")}
+              color={getVoteColor('down')}
             />
           </TouchableOpacity>
         </XStack>
         <TouchableOpacity
           onPress={() =>
-            setParentComment(parentComment == comment._id ? "" : comment._id)
+            setParentComment(parentComment == comment._id ? '' : comment._id)
           }
         >
           <XStack gap={5}>
             <MaterialCommunityIcons
-              name="comment-outline"
+              name='comment-outline'
               size={16}
-              color={Colors[colorScheme ?? "light"].info}
+              color={Colors[colorScheme ?? 'light'].info}
             />
-            <Text fontSize={12} color={Colors[colorScheme ?? "light"].info}>
+            <Text fontSize={12} color={Colors[colorScheme ?? 'light'].info}>
               Reply
             </Text>
             {parentComment == comment._id && (
@@ -172,7 +186,7 @@ const CommentItem: React.FC<Props> = ({
           currentPost?.community.moderators.includes(user._id)) ? (
           <TouchableOpacity onPress={() => openModal()}>
             <Entypo
-              name="dots-three-horizontal"
+              name='dots-three-horizontal'
               size={18}
               color={theme.color12.val}
             />

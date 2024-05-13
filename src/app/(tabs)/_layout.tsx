@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   MaterialCommunityIcons,
   Ionicons,
@@ -6,12 +6,12 @@ import {
   Entypo,
   AntDesign,
   FontAwesome,
-} from "@expo/vector-icons";
-import { Link, Tabs, router } from "expo-router";
-import { TouchableOpacity } from "react-native";
-import { useColorScheme } from "react-native";
-import { useUser } from "../context/UserContext";
-import { Avatar, useTheme, Text, XStack } from "tamagui";
+} from '@expo/vector-icons';
+import { Link, Tabs, router } from 'expo-router';
+import { Platform, TouchableOpacity } from 'react-native';
+import { useColorScheme } from 'react-native';
+import { useUser } from '../context/UserContext';
+import { Avatar, useTheme, Text, XStack } from 'tamagui';
 // import Dropdown from "@/src/components/FilterDropdown";
 
 export default function TabLayout() {
@@ -22,31 +22,33 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "white",
+        tabBarActiveTintColor: 'white',
         tabBarStyle: {
           height: 85,
+          paddingBottom: Platform.OS === 'android' ? 15 : 0,
           backgroundColor: theme.blue9.val,
         },
-        tabBarInactiveTintColor: "black",
+        tabBarInactiveTintColor: 'black',
         headerRight: () => (
           <Link
-            href={user ? `/profiles/${user?._id}` : "/authentication/login"}
+            href={user ? `/profiles/${user?._id}` : '/authentication/login'}
             asChild
           >
             <TouchableOpacity>
               {user && user?.profileImage ? (
                 <Avatar
-                  size={"$3"}
+                  size={'$3'}
                   mr={25}
                   circular
                   bw={1}
                   bc={theme.color12.val}
+                  bg='white'
                 >
                   <Avatar.Image scale={1.1} src={user.profileImage} />
                 </Avatar>
               ) : (
                 <Ionicons
-                  name="person-sharp"
+                  name='person-sharp'
                   style={{ marginRight: 25 }}
                   size={24}
                   color={theme.color12.val}
@@ -58,26 +60,26 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name='index'
         options={{
-          title: "Trending",
+          title: 'Trending',
           // headerLeft: () => <Dropdown />,
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="fire" size={32} color={color} />
+            <MaterialCommunityIcons name='fire' size={32} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="communities"
+        name='communities'
         options={{
-          title: "Communities",
+          title: 'Communities',
           headerLeft: () => (
             <TouchableOpacity
-              onPress={() => router.push("/communities/newCommunity")}
+              onPress={() => router.push('/communities/newCommunity')}
             >
               <XStack ml={25}>
                 <FontAwesome
-                  name="pencil-square-o"
+                  name='pencil-square-o'
                   size={23}
                   color={theme.color12.val}
                 />
@@ -85,14 +87,14 @@ export default function TabLayout() {
             </TouchableOpacity>
           ),
           tabBarIcon: ({ color }) => (
-            <MaterialIcons name="groups" size={32} color={color} />
+            <MaterialIcons name='groups' size={32} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="search"
+        name='search'
         options={{
-          title: "Search",
+          title: 'Search',
           tabBarActiveTintColor: theme.color12.val,
           tabBarItemStyle: {
             maxWidth: 70,
@@ -104,35 +106,35 @@ export default function TabLayout() {
           tabBarLabel: ({ focused, color }) => (
             <Text
               fontSize={10}
-              color={!focused && colorScheme === "dark" ? "#A9A9A9" : color}
+              color={!focused && colorScheme === 'dark' ? '#A9A9A9' : color}
             >
               Search
             </Text>
           ),
           tabBarIcon: ({ color, focused }) => (
             <Entypo
-              name="magnifying-glass"
+              name='magnifying-glass'
               size={30}
-              color={!focused && colorScheme === "dark" ? "#A9A9A9" : color}
+              color={!focused && colorScheme === 'dark' ? '#A9A9A9' : color}
             />
           ),
         }}
       />
       <Tabs.Screen
-        name="share"
+        name='share'
         options={{
-          title: "Share",
+          title: 'Share',
           tabBarIcon: ({ color }) => (
-            <AntDesign name="plussquareo" size={24} color={color} />
+            <AntDesign name='plussquareo' size={24} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="friends"
+        name='friends'
         options={{
-          title: "Friends",
+          title: 'Friends',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="people-outline" size={32} color={color} />
+            <Ionicons name='people-outline' size={32} color={color} />
           ),
         }}
       />

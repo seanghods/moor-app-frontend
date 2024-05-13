@@ -18,7 +18,7 @@ import BottomSheet from "@/src/components/BottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Alert, TouchableOpacity } from "react-native";
 
-const communityPage = () => {
+const CommunityPage: React.FC = () => {
   const { id } = useLocalSearchParams();
   const { user, setUser } = useUser();
   const theme = useTheme();
@@ -89,6 +89,18 @@ const communityPage = () => {
         return prevCommunity;
       });
     } else {
+      setUser((prevUser) => {
+        if (prevUser) {
+          return {
+            ...prevUser,
+            communitiesFollowed: [
+              ...prevUser.communitiesFollowed,
+              community._id,
+            ],
+          };
+        }
+        return prevUser;
+      });
       setCommunity((prevCommunity) => {
         if (prevCommunity) {
           return {
@@ -98,24 +110,13 @@ const communityPage = () => {
         }
         return prevCommunity;
       });
-      const communitiesFollowed = user.communitiesFollowed;
-      communitiesFollowed.push(community._id);
-      setUser((prevUser) => {
-        if (prevUser) {
-          return {
-            ...prevUser,
-            communitiesFollowed: prevUser.communitiesFollowed
-              ? [...prevUser.communitiesFollowed, community._id]
-              : [community._id],
-          };
-        }
-        return prevUser;
-      });
     }
   }
   return (
     <YStack bg={"$background"} flex={1}>
-      {community ? (
+      {!community ? (
+        <Spinner />
+      ) : (
         <>
           <BottomSheet ref={bottomSheetRef} community={community} />
           <XStack mx={6}>
@@ -199,11 +200,9 @@ const communityPage = () => {
             setCommunity={setCommunity}
           />
         </>
-      ) : (
-        <Spinner />
       )}
     </YStack>
   );
 };
 
-export default communityPage;
+export default CommunityPage;

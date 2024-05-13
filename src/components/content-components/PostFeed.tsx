@@ -1,27 +1,20 @@
-import {
-  Image,
-  useColorScheme,
-  FlatList,
-  TouchableOpacity,
-  Linking,
-} from "react-native";
-import * as React from "react";
+import { Image, FlatList, TouchableOpacity, Linking } from 'react-native';
+import * as React from 'react';
 import {
   Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
-} from "@expo/vector-icons";
-import { Text, View, XStack, YStack } from "tamagui";
-import Colors from "@/src/constants/Colors";
-import { router } from "expo-router";
-import { usePost } from "@/src/app/context/PostContext";
-import AuthorButton from "./AuthorButton";
-import { useTheme } from "tamagui";
-import { PostType, UserType } from "../../api-types/api-types";
-import { useUser } from "../../app/context/UserContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { API_ROUTES } from "../../utils/helpers";
-import { useTrending } from "../../app/context/TrendingContext";
+} from '@expo/vector-icons';
+import { Text, View, XStack, YStack } from 'tamagui';
+import { router } from 'expo-router';
+import { usePost } from '@/src/app/context/PostContext';
+import AuthorButton from './AuthorButton';
+import { useTheme } from 'tamagui';
+import { PostType, UserType } from '../../api-types/api-types';
+import { useUser } from '../../app/context/UserContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_ROUTES } from '../../utils/helpers';
+import { useTrending } from '../../app/context/TrendingContext';
 
 type Props = {
   posts: Array<PostType>;
@@ -30,12 +23,11 @@ type Props = {
 };
 
 const PostFeed: React.FC<Props> = ({ posts, showCommunity, setCommunity }) => {
-  const colorScheme = useColorScheme();
   const theme = useTheme();
   return (
     <FlatList
       data={posts}
-      style={{ backgroundColor: Colors[colorScheme ?? "light"].background }}
+      style={{ backgroundColor: theme.background.val }}
       contentContainerStyle={{ gap: 5 }}
       keyExtractor={(item) => item._id.toString()}
       renderItem={({ item: post }) => (
@@ -62,7 +54,6 @@ export const ShowPost: React.FC<ShowProps> = ({
   showCommunity,
   setCommunity,
 }) => {
-  const colorScheme = useColorScheme();
   const theme = useTheme();
   const { trendingPosts, setTrendingPosts } = useTrending();
   const { setCurrentPost } = usePost();
@@ -72,20 +63,20 @@ export const ShowPost: React.FC<ShowProps> = ({
       console.error("Couldn't load page", err)
     );
   };
-  async function postVote(voteType: "up" | "down") {
+  async function postVote(voteType: 'up' | 'down') {
     if (user && post) {
       try {
-        const token = await AsyncStorage.getItem("userToken");
+        const token = await AsyncStorage.getItem('userToken');
         const response = await fetch(API_ROUTES.postVote, {
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({
             postId: post._id,
             voteType,
           }),
           headers: {
-            Accept: "application/json",
+            Accept: 'application/json',
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         });
         const data = await response.json();
@@ -140,10 +131,10 @@ export const ShowPost: React.FC<ShowProps> = ({
         console.error(error);
       }
     } else {
-      router.push("/authentication/login");
+      router.push('/authentication/login');
     }
   }
-  function getVoteColor(voteType: "up" | "down") {
+  function getVoteColor(voteType: 'up' | 'down') {
     const hasVoted = user?.postVotes.some(
       (vote) => vote.post === post?._id && vote.vote === voteType
     );
@@ -157,64 +148,60 @@ export const ShowPost: React.FC<ShowProps> = ({
         router.push(`/posts/${post._id}`);
       }}
     >
-      <View key={post._id} style={{ width: "100%" }}>
-        {showCommunity && (
+      <View key={post._id} style={{ width: '100%' }}>
+        {showCommunity ? (
           <TouchableOpacity
             delayPressIn={50}
-            style={{ alignSelf: "flex-start", marginVertical: 4 }}
+            style={{ alignSelf: 'flex-start', marginVertical: 4 }}
             onPress={() => router.push(`/communities/${post.community._id}`)}
           >
-            <XStack pl={14} gap={8} alignItems="center">
+            <XStack pl={14} gap={8} alignItems='center'>
               <MaterialIcons
-                name="groups"
+                name='groups'
                 size={25}
-                color={Colors[colorScheme ?? "light"].text}
+                color={theme.color12.val}
               />
-              <Text fontSize={16} fontWeight={"700"}>
+              <Text fontSize={16} fontWeight={'700'}>
                 {post.community.name}
               </Text>
             </XStack>
           </TouchableOpacity>
+        ) : (
+          <YStack h={10} w={'100%'} />
         )}
-        <XStack
-          gap={8}
-          p={8}
-          pt={2}
-          bbw={2}
-          bbc={colorScheme == "light" ? "#eee" : "#333333"}
-        >
+        <XStack gap={8} p={8} pt={2} bbw={2} bbc={theme.color4.val}>
           {post.link && (
             <YStack
-              w="30%"
-              h="auto"
+              w='30%'
+              h='auto'
               aspectRatio={1}
-              justifyContent="center"
-              alignContent="center"
+              justifyContent='center'
+              alignContent='center'
             >
               <TouchableOpacity
                 style={{
-                  width: "100%",
-                  height: "100%",
-                  position: "relative",
+                  width: '100%',
+                  height: '100%',
+                  position: 'relative',
                 }}
                 onPress={() => handleLinkPress(post.link as string)}
               >
                 <Image
-                  style={{ width: "90%", height: "90%", borderRadius: 15 }}
-                  resizeMode="cover"
+                  style={{ width: '90%', height: '90%', borderRadius: 15 }}
+                  resizeMode='cover'
                   source={{ uri: post.thumbnail }}
                 />
                 <YStack
-                  pos="absolute"
+                  pos='absolute'
                   bottom={11}
                   right={16}
-                  bg={"rgba(0, 0, 0, 0.5)"}
-                  width="85%"
+                  bg={'rgba(0, 0, 0, 0.5)'}
+                  width='85%'
                   p={3}
                   br={12}
-                  overflow="hidden"
+                  overflow='hidden'
                 >
-                  <Text color="white" fontSize={10} textAlign="center">
+                  <Text color='white' fontSize={10} textAlign='center'>
                     {post.domain}
                   </Text>
                 </YStack>
@@ -226,17 +213,27 @@ export const ShowPost: React.FC<ShowProps> = ({
               flex: 1,
             }}
           >
-            <Text fontSize={20} fontWeight={"700"} letterSpacing={-0.3}>
+            <Text fontSize={20} fontWeight={'700'} letterSpacing={-0.3}>
               {post.title}
             </Text>
-            <AuthorButton creator={post.creator} type="feed" />
+            <XStack gap={26} alignItems='center'>
+              <AuthorButton creator={post.creator} type='feed' />
+              <Text
+                pt={2}
+                fontWeight={'700'}
+                fontSize={12}
+                color={theme.color12.val}
+              >
+                - {new Date(post.createdAt).toLocaleDateString().slice(0, -5)}
+              </Text>
+            </XStack>
             <Text
               fontSize={14}
               flexGrow={1}
               py={5}
               letterSpacing={-0.3}
               numberOfLines={3}
-              ellipsizeMode="tail"
+              ellipsizeMode='tail'
             >
               {post.description}
             </Text>
@@ -246,37 +243,37 @@ export const ShowPost: React.FC<ShowProps> = ({
               px={8}
               my={5}
               br={15}
-              alignSelf="flex-start"
+              alignSelf='flex-start'
               bw={1}
-              bc={Colors.extraColors.lightGray}
+              bc={'#E0E0E0'}
             >
               <XStack gap={7}>
-                <XStack alignItems="center">
-                  <TouchableOpacity onPress={() => postVote("up")}>
+                <XStack alignItems='center'>
+                  <TouchableOpacity onPress={() => postVote('up')}>
                     <Ionicons
-                      name="chevron-up"
+                      name='chevron-up'
                       size={15}
-                      color={getVoteColor("up")}
+                      color={getVoteColor('up')}
                     />
                   </TouchableOpacity>
                   <Text> {post.voteCount} </Text>
-                  <TouchableOpacity onPress={() => postVote("down")}>
+                  <TouchableOpacity onPress={() => postVote('down')}>
                     <Ionicons
-                      name="chevron-down"
+                      name='chevron-down'
                       size={15}
-                      color={getVoteColor("down")}
+                      color={getVoteColor('down')}
                     />
                   </TouchableOpacity>
                 </XStack>
               </XStack>
-              <XStack gap={5} alignItems="flex-end">
+              <XStack gap={5} alignItems='flex-end'>
                 <MaterialCommunityIcons
-                  name="comment-outline"
+                  name='comment-outline'
                   size={16}
                   color={theme.color12.val}
                 />
                 <Text fontSize={14}>
-                  {" "}
+                  {' '}
                   {post?.discussions.reduce(
                     (acc, currArray) => acc + currArray?.comments?.length ?? 0,
                     0

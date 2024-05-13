@@ -21,6 +21,7 @@ export type PostType = {
   link?: string;
   description?: string;
   discussions: Array<DiscussionType>;
+  createdAt: string;
 };
 
 export type DiscussionType = {
@@ -28,6 +29,7 @@ export type DiscussionType = {
   title: string;
   creator: UserType;
   comments: Array<CommentType>;
+  createdAt: string;
 };
 
 export type CommentType = {
@@ -38,6 +40,7 @@ export type CommentType = {
   parentPost: string;
   parentComment?: string;
   children?: CommentType[];
+  createdAt: string;
 };
 
 export type UserType = {

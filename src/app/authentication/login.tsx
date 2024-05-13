@@ -5,27 +5,27 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   useColorScheme,
-} from "react-native";
-import { useEffect, useState } from "react";
-import Colors from "@/src/constants/Colors";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { Text, View, Button, Form, Spinner, Image, useTheme } from "tamagui";
-import { router } from "expo-router";
-import { useUser } from "../context/UserContext";
-import { API_ROUTES } from "@/src/utils/helpers";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+} from 'react-native';
+import { useEffect, useState } from 'react';
+import Colors from '@/src/constants/Colors';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Text, View, Button, Form, Spinner, Image, useTheme } from 'tamagui';
+import { router } from 'expo-router';
+import { useUser } from '../context/UserContext';
+import { API_ROUTES } from '@/src/utils/helpers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
   const colorScheme = useColorScheme();
   const theme = useTheme();
   const { user, setUser } = useUser();
-  const [formError, setFormError] = useState({ message: "" });
-  const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
-    "off"
+  const [formError, setFormError] = useState({ message: '' });
+  const [status, setStatus] = useState<'off' | 'submitting' | 'submitted'>(
+    'off'
   );
   const [formData, setFormData] = useState({
-    username: "",
-    password: "",
+    username: '',
+    password: '',
   });
   const handleInputChange = (name: string, value: string) => {
     setFormData((prevState) => ({
@@ -34,8 +34,8 @@ export default function Login() {
     }));
   };
   useEffect(() => {
-    if (status === "submitting") {
-      const timer = setTimeout(() => setStatus("off"), 2000);
+    if (status === 'submitting') {
+      const timer = setTimeout(() => setStatus('off'), 2000);
       return () => {
         clearTimeout(timer);
       };
@@ -43,14 +43,14 @@ export default function Login() {
   }, [status]);
   const handleLogIn = async () => {
     setFormError({
-      message: "",
+      message: '',
     });
     try {
-      setStatus("submitting");
+      setStatus('submitting');
       const response = await fetch(API_ROUTES.logIn, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           username: formData.username,
@@ -58,7 +58,7 @@ export default function Login() {
         }),
       });
       if (!response.ok) {
-        setStatus("off");
+        setStatus('off');
         const error = await response.json();
         if (error.message) {
           setFormError({
@@ -66,18 +66,18 @@ export default function Login() {
           });
           return;
         } else {
-          throw new Error("Failed to register");
+          throw new Error('Failed to register');
         }
       }
-      setStatus("off");
+      setStatus('off');
       const data = await response.json();
-      await AsyncStorage.setItem("userToken", data.token);
+      await AsyncStorage.setItem('userToken', data.token);
       setUser(data.user);
-      router.push("/");
+      router.push('/');
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error('Login failed:', error);
       setFormError({
-        message: "Login failed. Please try again.",
+        message: 'Login failed. Please try again.',
       });
     }
   };
@@ -85,31 +85,31 @@ export default function Login() {
     textInput: {
       height: 40,
       paddingLeft: 5,
-      width: "80%",
+      width: '80%',
       color: theme.color12.val,
     },
     textArea: {
       height: 140,
       paddingLeft: 5,
-      width: "80%",
+      width: '80%',
       marginTop: 8,
       color: theme.color12.val,
     },
     inputContainer: {
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
       borderRadius: 20,
     },
   });
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.container} bg="$background">
+      <View style={styles.container} bg='$background'>
         <Image
           source={{
             width: 200,
             height: 200,
-            uri: require("@/assets/images/moor-logo.jpg"),
+            uri: require('@/assets/images/moor-logo-transparent.png'),
           }}
         />
         <Form
@@ -119,26 +119,26 @@ export default function Login() {
         >
           <View>
             <View>
-              <Text p={4} mb={6} fontWeight={"700"}>
-                Username
+              <Text p={4} mb={6} fontWeight={'700'}>
+                Username / Email
               </Text>
             </View>
-            <View style={dynamicStyles.inputContainer} bg="$blue4">
+            <View style={dynamicStyles.inputContainer} bg='$blue4'>
               <Ionicons
-                name="person-sharp"
+                name='person-sharp'
                 style={{ padding: 10 }}
                 size={18}
                 color={theme.color12.val}
               />
               <TextInput
-                returnKeyType="done"
-                placeholder="username"
+                returnKeyType='done'
+                placeholder='username'
                 value={formData.username}
-                onChangeText={(value) => handleInputChange("username", value)}
+                onChangeText={(value) => handleInputChange('username', value)}
                 style={dynamicStyles.textInput}
-                autoCapitalize="none"
+                autoCapitalize='none'
                 placeholderTextColor={
-                  colorScheme === "light"
+                  colorScheme === 'light'
                     ? Colors.extraColors.mediumGray
                     : Colors.extraColors.darkGray
                 }
@@ -147,62 +147,62 @@ export default function Login() {
           </View>
           <View>
             <View>
-              <Text my={6} p={4} fontWeight={"700"}>
+              <Text my={6} p={4} fontWeight={'700'}>
                 Password
               </Text>
             </View>
-            <View style={dynamicStyles.inputContainer} bg="$blue4">
+            <View style={dynamicStyles.inputContainer} bg='$blue4'>
               <MaterialIcons
-                name="password"
+                name='password'
                 style={{ padding: 10 }}
                 size={18}
                 color={theme.color12.val}
               />
               <TextInput
-                returnKeyType="done"
-                placeholder="password"
+                returnKeyType='done'
+                placeholder='password'
                 value={formData.password}
                 secureTextEntry={true}
-                onChangeText={(value) => handleInputChange("password", value)}
+                onChangeText={(value) => handleInputChange('password', value)}
                 style={dynamicStyles.textInput}
-                autoCapitalize="none"
+                autoCapitalize='none'
                 placeholderTextColor={
-                  colorScheme === "light"
+                  colorScheme === 'light'
                     ? Colors.extraColors.mediumGray
                     : Colors.extraColors.darkGray
                 }
               />
             </View>
           </View>
-          <Form.Trigger asChild disabled={status !== "off"}>
+          <Form.Trigger asChild disabled={status !== 'off'}>
             <Button
               icon={
-                status === "submitting" ? () => <Spinner theme="blue" /> : null
+                status === 'submitting' ? () => <Spinner theme='blue' /> : null
               }
               mt={24}
-              alignSelf="center"
-              textAlign="center"
-              fontWeight={"700"}
-              bg={"$blue8"}
+              alignSelf='center'
+              textAlign='center'
+              fontWeight={'700'}
+              bg={'$blue8'}
             >
               Log In
             </Button>
           </Form.Trigger>
-          <Text mt={16} color={"$red9"} alignSelf="center">
+          <Text mt={16} color={'$red9'} alignSelf='center'>
             {formError.message}
           </Text>
         </Form>
         <View
           mt={24}
-          flexDirection="row"
-          justifyContent="center"
-          alignItems="center"
+          flexDirection='row'
+          justifyContent='center'
+          alignItems='center'
         >
           <Text>Don't have an account yet? </Text>
           <TouchableOpacity
-            onPress={() => router.push("/authentication/register")}
+            onPress={() => router.push('/authentication/register')}
           >
-            <Text col="$blue10">Register here</Text>
+            <Text col='$blue10'>Register here</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -213,8 +213,8 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-start",
+    alignItems: 'center',
+    justifyContent: 'flex-start',
     gap: 5,
   },
 });

@@ -8,7 +8,7 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/moor-logo.jpg",
+      "image": "./assets/images/moor-logo-transparent.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

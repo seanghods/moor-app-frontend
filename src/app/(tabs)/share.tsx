@@ -5,32 +5,32 @@ import {
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
-} from "react-native";
-import { useEffect, useState } from "react";
+} from 'react-native';
+import { useEffect, useState } from 'react';
 import {
   MaterialIcons,
   Entypo,
   MaterialCommunityIcons,
-} from "@expo/vector-icons";
-import { Text, Button, Form, Spinner, YStack, XStack, useTheme } from "tamagui";
-import { API_ROUTES } from "@/src/utils/helpers";
-import { CommunityType } from "@/src/api-types/api-types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router } from "expo-router";
+} from '@expo/vector-icons';
+import { Text, Button, Form, Spinner, YStack, XStack, useTheme } from 'tamagui';
+import { API_ROUTES } from '@/src/utils/helpers';
+import { CommunityType } from '@/src/api-types/api-types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 
 export default function Share() {
   const theme = useTheme();
-  const [status, setStatus] = useState<"off" | "submitting" | "submitted">(
-    "off"
+  const [status, setStatus] = useState<'off' | 'submitting' | 'submitted'>(
+    'off'
   );
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [communities, setCommunities] = useState<CommunityType[]>([]);
   const [postData, setPostData] = useState({
-    community: "",
-    postType: "link",
-    title: "",
-    link: "",
-    description: "",
+    community: '',
+    postType: 'link',
+    title: '',
+    link: '',
+    description: '',
   });
   useEffect(() => {
     const fetchCommunities = async () => {
@@ -63,60 +63,60 @@ export default function Share() {
   };
   const createPost = async () => {
     if (!postData.community) {
-      alert("Please select a community");
+      alert('Please select a community');
       return;
     }
     if (!postData.title) {
-      alert("Please enter a title");
+      alert('Please enter a title');
       return;
     }
-    if (postData.postType == "link" && !postData.link) {
-      alert("Please enter a link");
+    if (postData.postType == 'link' && !postData.link) {
+      alert('Please enter a link');
       return;
     } else {
-      if (postData.postType == "link" && !isValidUrl(postData.link)) {
-        alert("Please enter a valid link");
+      if (postData.postType == 'link' && !isValidUrl(postData.link)) {
+        alert('Please enter a valid link');
         return;
       }
     }
     if (!postData.description) {
-      alert("Please enter a description");
+      alert('Please enter a description');
       return;
     }
-    setStatus("submitting");
-    const token = await AsyncStorage.getItem("userToken");
+    setStatus('submitting');
+    const token = await AsyncStorage.getItem('userToken');
     const response = await fetch(API_ROUTES.post, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(postData),
     });
     if (!response.ok) {
-      setStatus("off");
+      setStatus('off');
       const error = await response.json();
       if (error.message) {
         alert(error.message);
         return;
       } else {
-        throw new Error("Failed to create post");
+        throw new Error('Failed to create post');
       }
     }
-    setStatus("submitted");
+    setStatus('submitted');
     const data = await response.json();
     router.replace(`/posts/${data.post._id}`);
   };
   function isValidUrl(url: string) {
     const pattern = new RegExp(
-      "^(https?:\\/\\/)?" + // protocol
-        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name and extension
-        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-        "(\\:\\d+)?" + // port
-        "(\\/[-a-z\\d%_.~+]*)*" + // path
-        "(\\?[;&amp;a-z\\d%_.~+=-]*)?" + // query string
-        "(\\#[-a-z\\d_]*)?$",
-      "i"
+      '^(https?:\\/\\/)?' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name and extension
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?' + // port
+        '(\\/[-a-z\\d%_.~+]*)*' + // path
+        '(\\?[;&amp;a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$',
+      'i'
     ); // fragment locator
     return !!pattern.test(url);
   }
@@ -124,28 +124,29 @@ export default function Share() {
     textInput: {
       height: 40,
       paddingLeft: 5,
-      width: "80%",
+      width: '80%',
       color: theme.color12.val,
     },
     textArea: {
       height: 140,
       paddingLeft: 5,
-      width: "80%",
+      width: '80%',
       marginTop: 8,
       color: theme.color12.val,
+      textAlignVertical: 'top',
     },
   });
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <YStack
         flex={1}
-        alignItems="center"
-        justifyContent="flex-start"
+        alignItems='center'
+        justifyContent='flex-start'
         gap={5}
-        bg="$background"
+        bg='$background'
       >
         <YStack p={15}>
-          <Text fontSize={25} fontWeight="700">
+          <Text fontSize={25} fontWeight='700'>
             Share an Insight
           </Text>
         </YStack>
@@ -154,18 +155,18 @@ export default function Share() {
             btlr={5}
             bblr={5}
             bw={1}
-            bc={postData.postType == "link" ? "$blue11" : theme.color12.val}
+            bc={postData.postType == 'link' ? '$blue11' : theme.color12.val}
             p={6}
-            w="30%"
-            justifyContent="center"
-            alignItems="center"
-            bg={postData.postType == "link" ? "$blue6" : null}
+            w='30%'
+            justifyContent='center'
+            alignItems='center'
+            bg={postData.postType == 'link' ? '$blue6' : null}
             onPress={() =>
-              setPostData((prevData) => ({ ...prevData, postType: "link" }))
+              setPostData((prevData) => ({ ...prevData, postType: 'link' }))
             }
           >
-            <XStack alignItems="center" justifyContent="center" gap={3}>
-              <Entypo name="link" size={16} color={theme.color12.val} />
+            <XStack alignItems='center' justifyContent='center' gap={3}>
+              <Entypo name='link' size={16} color={theme.color12.val} />
               <Text>Link</Text>
             </XStack>
           </YStack>
@@ -173,19 +174,19 @@ export default function Share() {
             btrr={5}
             bbrr={5}
             bw={1}
-            bc={postData.postType == "text" ? "$blue11" : theme.color12.val}
+            bc={postData.postType == 'text' ? '$blue11' : theme.color12.val}
             p={6}
-            w="30%"
-            justifyContent="center"
-            alignItems="center"
-            bg={postData.postType == "text" ? "$blue6" : null}
+            w='30%'
+            justifyContent='center'
+            alignItems='center'
+            bg={postData.postType == 'text' ? '$blue6' : null}
             onPress={() =>
-              setPostData((prevData) => ({ ...prevData, postType: "text" }))
+              setPostData((prevData) => ({ ...prevData, postType: 'text' }))
             }
           >
-            <XStack alignItems="center" justifyContent="center" gap={3}>
+            <XStack alignItems='center' justifyContent='center' gap={3}>
               <MaterialCommunityIcons
-                name="subtitles-outline"
+                name='subtitles-outline'
                 size={16}
                 color={theme.color12.val}
               />
@@ -207,34 +208,34 @@ export default function Share() {
               </Text> */}
             </YStack>
             <XStack
-              width={"92%"}
-              alignSelf="center"
+              width={'92%'}
+              alignSelf='center'
               borderRadius={20}
-              alignItems="center"
-              justifyContent="center"
-              bg="$blue4"
+              alignItems='center'
+              justifyContent='center'
+              bg='$blue4'
               mt={10}
             >
               <MaterialIcons
-                name="groups"
+                name='groups'
                 style={{ padding: 10 }}
                 size={25}
                 color={theme.color12.val}
               />
               <TextInput
-                returnKeyType="done"
-                placeholder="community"
+                returnKeyType='done'
+                placeholder='community'
                 value={search}
                 onChangeText={(value) => {
                   setSearch(value);
                   if (postData.community)
                     setPostData((prevData) => ({
                       ...prevData,
-                      community: "",
+                      community: '',
                     }));
                 }}
                 style={dynamicStyles.textInput}
-                autoCapitalize="none"
+                autoCapitalize='none'
                 placeholderTextColor={theme.color11.val}
               />
             </XStack>
@@ -243,14 +244,14 @@ export default function Share() {
                 <FlatList
                   data={communities}
                   style={{
-                    position: "absolute",
+                    position: 'absolute',
                     borderRadius: 7,
                     height: 200,
                     top: 60,
                     left: 40,
                     width: 200,
                     backgroundColor: theme.background.val,
-                    shadowColor: "#000",
+                    shadowColor: '#000',
                     shadowOpacity: 0.2,
                     shadowRadius: 3,
                     shadowOffset: { width: 0, height: 2 },
@@ -258,8 +259,8 @@ export default function Share() {
                   }}
                   ListHeaderComponent={() => (
                     <YStack>
-                      <YStack bbw={1} bbc={"#eaeaea"} p={10}>
-                        <Text fontWeight={"700"}>Communities:</Text>
+                      <YStack bbw={1} bbc={'#eaeaea'} p={10}>
+                        <Text fontWeight={'700'}>Communities:</Text>
                       </YStack>
                       {communities.length == 0 && (
                         <YStack p={10}>
@@ -273,9 +274,9 @@ export default function Share() {
                     <>
                       <TouchableOpacity
                         style={{
-                          padding: 10,
+                          padding: 7,
                           borderBottomWidth: 1,
-                          borderBottomColor: "#ccc",
+                          borderBottomColor: theme.color6.val,
                         }}
                         onPress={() => handleSelectCommunity(item)}
                       >
@@ -294,32 +295,32 @@ export default function Share() {
               </Text> */}
             </YStack>
             <XStack
-              width={"92%"}
-              alignSelf="center"
+              width={'92%'}
+              alignSelf='center'
               borderRadius={20}
-              alignItems="center"
-              justifyContent="center"
-              bg="$blue4"
+              alignItems='center'
+              justifyContent='center'
+              bg='$blue4'
             >
               <MaterialIcons
-                name="title"
+                name='title'
                 style={{ padding: 10 }}
                 size={25}
                 color={theme.color12.val}
               />
               <TextInput
-                returnKeyType="done"
-                placeholder="title"
+                returnKeyType='done'
+                placeholder='title'
                 value={postData.title}
                 maxLength={100}
-                onChangeText={(value) => handleInputChange("title", value)}
+                onChangeText={(value) => handleInputChange('title', value)}
                 style={dynamicStyles.textInput}
-                autoCapitalize="none"
+                autoCapitalize='none'
                 placeholderTextColor={theme.color11.val}
               />
             </XStack>
           </YStack>
-          {postData.postType == "link" && (
+          {postData.postType == 'link' && (
             <YStack>
               <YStack>
                 {/* <Text my={6} p={4} fontWeight={"700"}>
@@ -327,26 +328,26 @@ export default function Share() {
                 </Text> */}
               </YStack>
               <XStack
-                width={"92%"}
-                alignSelf="center"
+                width={'92%'}
+                alignSelf='center'
                 borderRadius={20}
-                alignItems="center"
-                justifyContent="center"
-                bg="$blue4"
+                alignItems='center'
+                justifyContent='center'
+                bg='$blue4'
               >
                 <Entypo
-                  name="link"
+                  name='link'
                   style={{ padding: 10 }}
                   size={25}
                   color={theme.color12.val}
                 />
                 <TextInput
-                  returnKeyType="done"
-                  placeholder="link"
+                  returnKeyType='done'
+                  placeholder='link'
                   value={postData.link}
-                  onChangeText={(value) => handleInputChange("link", value)}
+                  onChangeText={(value) => handleInputChange('link', value)}
                   style={dynamicStyles.textInput}
-                  autoCapitalize="none"
+                  autoCapitalize='none'
                   placeholderTextColor={theme.color11.val}
                 />
               </XStack>
@@ -359,45 +360,45 @@ export default function Share() {
               </Text> */}
             </YStack>
             <XStack
-              width={"92%"}
-              alignSelf="center"
+              width={'92%'}
+              alignSelf='center'
               borderRadius={20}
-              alignItems="center"
-              justifyContent="center"
-              bg="$blue4"
+              alignItems='center'
+              justifyContent='center'
+              bg='$blue4'
             >
               <MaterialCommunityIcons
-                name="subtitles-outline"
-                style={{ padding: 10, alignSelf: "flex-start" }}
+                name='subtitles-outline'
+                style={{ padding: 10, alignSelf: 'flex-start' }}
                 size={25}
                 color={theme.color12.val}
               />
               <TextInput
-                placeholder="description"
+                placeholder='description'
                 value={postData.description}
                 onChangeText={(value) =>
-                  handleInputChange("description", value)
+                  handleInputChange('description', value)
                 }
                 style={dynamicStyles.textArea}
-                autoCapitalize="none"
+                autoCapitalize='none'
                 multiline={true}
                 numberOfLines={4}
                 placeholderTextColor={theme.color11.val}
               />
             </XStack>
           </YStack>
-          <Form.Trigger asChild disabled={status !== "off"}>
+          <Form.Trigger asChild disabled={status !== 'off'}>
             <Button
               icon={
-                status === "submitting" ? () => <Spinner theme="blue" /> : null
+                status === 'submitting' ? () => <Spinner theme='blue' /> : null
               }
               mt={8}
               pl={30}
               pr={30}
-              alignSelf="center"
-              textAlign="center"
-              fontWeight={"700"}
-              bg={"$blue8"}
+              alignSelf='center'
+              textAlign='center'
+              fontWeight={'700'}
+              bg={'$blue8'}
             >
               Create Post
             </Button>

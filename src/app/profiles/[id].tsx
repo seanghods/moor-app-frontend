@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   Avatar,
   Button,
@@ -11,22 +11,22 @@ import {
   YStack,
   getTokenValue,
   useTheme,
-} from "tamagui";
-import { useUser } from "../context/UserContext";
-import { ImageBackground, TouchableOpacity } from "react-native";
-import PostFeed from "@/src/components/content-components/PostFeed";
-import { router, useLocalSearchParams } from "expo-router";
-import { API_ROUTES } from "@/src/utils/helpers";
-import { UserType } from "@/src/api-types/api-types";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+} from 'tamagui';
+import { useUser } from '../context/UserContext';
+import { ImageBackground, TouchableOpacity } from 'react-native';
+import PostFeed from '@/src/components/content-components/PostFeed';
+import { router, useLocalSearchParams } from 'expo-router';
+import { API_ROUTES } from '@/src/utils/helpers';
+import { UserType } from '@/src/api-types/api-types';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Profile() {
   const { user, setUser } = useUser();
   const [shownUser, setShownUser] = useState<UserType | undefined>(undefined);
   const { id } = useLocalSearchParams();
   const theme = useTheme();
-  const [viewType, setViewType] = useState<"Personal" | "History">("Personal");
+  const [viewType, setViewType] = useState<'Personal' | 'History'>('History');
   useEffect(() => {
     async function getUser() {
       if (user?._id == id) {
@@ -35,7 +35,7 @@ export default function Profile() {
       }
       const response = await fetch(`${API_ROUTES.user}?id=${id}`, {
         headers: {
-          Accept: "application/json",
+          Accept: 'application/json',
         },
       });
       const data = await response.json();
@@ -46,16 +46,16 @@ export default function Profile() {
   async function followUser() {
     if (user) {
       if (shownUser) {
-        const token = await AsyncStorage.getItem("userToken");
+        const token = await AsyncStorage.getItem('userToken');
         const response = await fetch(API_ROUTES.followUser, {
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({
             userId: shownUser._id,
           }),
           headers: {
-            Accept: "application/json",
+            Accept: 'application/json',
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         });
         const data = await response.json();
@@ -89,53 +89,56 @@ export default function Profile() {
         }
       }
     } else {
-      router.push("/authentication/login");
+      router.push('/authentication/login');
     }
   }
   return (
-    <YStack bg="$background" flex={1}>
+    <YStack bg='$background' flex={1}>
       {shownUser ? (
         <>
           <ImageBackground
             source={{ uri: shownUser.coverImage }}
-            resizeMode="cover"
+            resizeMode='cover'
             style={{ backgroundColor: theme.blue8.val, height: 180 }}
           >
-            <XStack w={"100%"} h={5} justifyContent="flex-end">
+            <XStack w={'100%'} h={5} justifyContent='flex-end'>
               <TouchableOpacity>
                 <Text>X</Text>
               </TouchableOpacity>
             </XStack>
             <XStack>
-              <YStack width={"30%"} height={"100%"}>
-                <YStack p={25} width="36%" gap={10}>
-                  <Avatar circular bw={2} bc={theme.color12.val} size="$10">
+              <YStack width={'30%'} height={'100%'}>
+                <YStack p={25} width='36%' gap={10}>
+                  <Avatar
+                    circular
+                    bw={2}
+                    bc={theme.color12.val}
+                    size='$10'
+                    bg='white'
+                  >
                     <Avatar.Image scale={1.1} src={shownUser.profileImage} />
                   </Avatar>
                 </YStack>
               </YStack>
-              <YStack width={"70%"} p={40} gap={5}>
-                <XStack justifyContent="space-between">
-                  <Text fontSize={20} fontWeight={"700"}>
-                    {shownUser.username}
-                  </Text>
+              <YStack width={'70%'} p={40} gap={5}>
+                <XStack justifyContent='flex-end'>
                   {shownUser._id !== user?._id && (
                     <Button
-                      size={"$2"}
-                      bg={"$blue6"}
+                      size={'$2'}
+                      bg={'$blue6'}
                       onPress={() => followUser()}
                     >
                       {user?.usersFollowing.some(
                         (id) => id == shownUser._id
                       ) ? (
                         <AntDesign
-                          name="check"
+                          name='check'
                           size={20}
                           color={theme.color12.val}
                         />
                       ) : (
                         <Ionicons
-                          name="person-add-outline"
+                          name='person-add-outline'
                           size={20}
                           color={theme.color12.val}
                         />
@@ -143,90 +146,104 @@ export default function Profile() {
                     </Button>
                   )}
                 </XStack>
-                <YStack gap={1}>
-                  <Text fontWeight={"700"}>Bio:</Text>
-                  <Text>{shownUser.bio}</Text>
-                </YStack>
               </YStack>
             </XStack>
           </ImageBackground>
-          <XStack width={"100%"} height={"10%"} justifyContent="space-between">
+          <YStack jc='center' ai='center'>
+            <Text fontWeight={'700'} fontSize={18}>
+              {shownUser.username}
+            </Text>
+          </YStack>
+          {shownUser.bio && (
+            <XStack px={10}>
+              <Text fontWeight={'700'} fontSize={12}>
+                Bio:{' '}
+              </Text>
+              <Text fontSize={12}>{shownUser.bio}</Text>
+            </XStack>
+          )}
+          <XStack width={'100%'} height={'10%'} justifyContent='space-between'>
             <XStack p={25} gap={10}>
-              <YStack alignItems="center" gap={3}>
-                <Text fontWeight={"700"}>
+              <YStack alignItems='center' gap={3}>
+                <Text fontWeight={'700'}>
                   {shownUser.usersFollowers?.length ?? 0}
                 </Text>
-                <Text fontSize={10} color={"$gray10"}>
+                <Text fontSize={10} color={'$gray10'}>
                   Followers
                 </Text>
               </YStack>
-              <Separator bc={"$accentColor"} vertical />
-              <YStack alignItems="center" gap={3}>
-                <Text fontWeight={"700"}>
+              <Separator bc={'$accentColor'} vertical />
+              <YStack alignItems='center' gap={3}>
+                <Text fontWeight={'700'}>
                   {shownUser.usersFollowing?.length ?? 0}
                 </Text>
-                <Text fontSize={10} color={"$gray10"}>
+                <Text fontSize={10} color={'$gray10'}>
                   Following
                 </Text>
               </YStack>
-              <Separator bc={"$accentColor"} vertical />
-              <YStack alignItems="center" gap={3}>
-                <Text fontWeight={"700"}>{shownUser.posts?.length ?? 0}</Text>
-                <Text fontSize={10} color={"$gray10"}>
+              <Separator bc={'$accentColor'} vertical />
+              <YStack alignItems='center' gap={3}>
+                <Text fontWeight={'700'}>{shownUser.posts?.length ?? 0}</Text>
+                <Text fontSize={10} color={'$gray10'}>
                   Post
                 </Text>
               </YStack>
-              <Separator bc={"$accentColor"} vertical />
-              <YStack alignItems="center" gap={3}>
-                <Text fontWeight={"700"}>
+              <Separator bc={'$accentColor'} vertical />
+              <YStack alignItems='center' gap={3}>
+                <Text fontWeight={'700'}>
                   {shownUser.communitiesFollowed?.length ?? 0}
                 </Text>
-                <Text fontSize={10} color={"$gray10"}>
+                <Text fontSize={10} color={'$gray10'}>
                   Communities
                 </Text>
               </YStack>
             </XStack>
             <XStack>
-              <XStack alignItems="center" gap={5} mr={15}>
-                <Text fontSize={12} fontWeight={"700"}>
-                  P
+              <XStack alignItems='center' gap={5} mr={15}>
+                <Text fontSize={12} fontWeight={'700'}>
+                  H
                 </Text>
                 <Switch
-                  // checked={postType == "text"}
                   onCheckedChange={() =>
                     setViewType((prev) =>
-                      prev == "Personal" ? "History" : "Personal"
+                      prev == 'Personal' ? 'History' : 'Personal'
                     )
                   }
-                  // bg={postType == "text" ? "$blue3Dark" : "$accentBackground"}
                   native
-                  size="$4"
+                  size='$4'
                   nativeProps={{
-                    ios_backgroundColor: getTokenValue("$blue10Dark"),
+                    ios_backgroundColor: getTokenValue('$blue10Dark'),
                     trackColor: {
-                      false: getTokenValue("$blue10Dark"),
-                      true: getTokenValue("$blue3Dark"),
+                      false: getTokenValue('$blue10Dark'),
+                      true: getTokenValue('$blue3Dark'),
                     },
-                    // thumbColor:
-                    //   postType == "text"
-                    //     ? getTokenValue("$blue10Dark")
-                    //     : getTokenValue("$blue3Dark"),
                   }}
                 >
-                  <Switch.Thumb bg={"$accentBackground"} animation="200ms" />
+                  <Switch.Thumb bg={'$accentBackground'} animation='200ms' />
                 </Switch>
-                <Text fontSize={12} fontWeight={"700"}>
-                  H
+                <Text fontSize={12} fontWeight={'700'}>
+                  P
                 </Text>
               </XStack>
             </XStack>
           </XStack>
-          <XStack justifyContent="center">
-            <Text fontWeight={"700"}>{viewType}</Text>
+          <XStack justifyContent='center'>
+            <Text fontWeight={'700'}>{viewType}</Text>
           </XStack>
           <YStack mt={12}>
             {shownUser.posts && (
-              <PostFeed posts={shownUser.posts} showCommunity={true} />
+              <PostFeed
+                posts={
+                  viewType == 'Personal'
+                    ? shownUser.posts.filter(
+                        (post) => post.community.name == 'Personal'
+                      )
+                    : shownUser.posts.filter(
+                        (post) => post.community.name !== 'Personal'
+                      )
+                }
+                showCommunity={true}
+              />
             )}
           </YStack>
         </>

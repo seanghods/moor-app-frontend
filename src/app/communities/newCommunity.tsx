@@ -6,29 +6,29 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   useColorScheme,
-} from "react-native";
-import { useState } from "react";
-import Colors from "@/src/constants/Colors";
+} from 'react-native';
+import { useState } from 'react';
+import Colors from '@/src/constants/Colors';
 import {
   MaterialIcons,
   Entypo,
   MaterialCommunityIcons,
-} from "@expo/vector-icons";
-import { Text, Button, YStack, XStack, useTheme } from "tamagui";
-import * as ImagePicker from "expo-image-picker";
-import { API_ROUTES } from "@/src/utils/helpers";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router } from "expo-router";
-import { useUser } from "../context/UserContext";
-import validateInput from "@/src/components/ValidateInputFunction";
+} from '@expo/vector-icons';
+import { Text, Button, YStack, XStack, useTheme } from 'tamagui';
+import * as ImagePicker from 'expo-image-picker';
+import { API_ROUTES } from '@/src/utils/helpers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
+import { useUser } from '../context/UserContext';
+import validateInput from '@/src/components/ValidateInputFunction';
 
 export default function newCommunity() {
   const colorScheme = useColorScheme();
   const { setUser } = useUser();
   const theme = useTheme();
   const [communityData, setCommunityData] = useState<CommunityDataType>({
-    name: "",
-    description: "",
+    name: '',
+    description: '',
   });
   const handleInputChange = (name: string, value: string) => {
     setCommunityData((prevState) => ({
@@ -41,7 +41,7 @@ export default function newCommunity() {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissionResult.granted === false) {
-      alert("Permission to access camera roll is required!");
+      alert('Permission to access camera roll is required!');
       return;
     }
 
@@ -61,7 +61,7 @@ export default function newCommunity() {
       const type = getMimeType(uri);
       if (asset.fileSize && asset.fileSize > 5048000) {
         // 5MB in bytes
-        Alert.alert("Error", "File size should not exceed 5MB");
+        Alert.alert('Error', 'File size should not exceed 5MB');
         return;
       }
 
@@ -71,68 +71,68 @@ export default function newCommunity() {
           image: {
             uri: uri,
             type: type,
-            name: "community.jpg",
+            name: 'community.jpg',
           },
         };
       });
     }
   };
   const getMimeType = (uri: string): string => {
-    const extension = uri.split(".").pop(); // Extracts the extension from the URI
-    const lowerCaseExtension = extension ? extension.toLowerCase() : "";
+    const extension = uri.split('.').pop(); // Extracts the extension from the URI
+    const lowerCaseExtension = extension ? extension.toLowerCase() : '';
 
     switch (lowerCaseExtension) {
-      case "jpg":
-      case "jpeg":
-        return "image/jpeg";
-      case "png":
-        return "image/png";
-      case "gif":
-        return "image/gif";
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg';
+      case 'png':
+        return 'image/png';
+      case 'gif':
+        return 'image/gif';
       default:
-        return "application/octet-stream"; // Default fallback for unknown types
+        return 'application/octet-stream'; // Default fallback for unknown types
     }
   };
   const uploadData = async () => {
-    if (communityData.name === "") {
-      Alert.alert("Error", "Please fill in the community name");
+    if (communityData.name === '') {
+      Alert.alert('Error', 'Please fill in the community name');
       return;
     }
     if (communityData.name.length < 3) {
-      Alert.alert("Error", "Community name must be longer than 3 characters");
+      Alert.alert('Error', 'Community name must be longer than 3 characters');
       return;
     }
-    if (communityData.description === "") {
-      Alert.alert("Error", "Please create a community description.");
+    if (communityData.description === '') {
+      Alert.alert('Error', 'Please create a community description.');
       return;
     }
     if (!validateInput(communityData.name, false)) {
       Alert.alert(
-        "Error",
-        "Community name can only contain letters and numbers"
+        'Error',
+        'Community name can only contain letters and numbers'
       );
       return;
     }
     const formData = new FormData();
     if (communityData.image) {
       const { uri, type, name } = communityData.image;
-      formData.append("image", {
+      formData.append('image', {
         uri,
         type,
-        name: communityData.name.toLowerCase().split(" ").join("-"),
+        name: communityData.name.toLowerCase().split(' ').join('-'),
       } as any);
     }
-    formData.append("name", communityData.name);
-    formData.append("description", communityData.description);
+    formData.append('name', communityData.name);
+    formData.append('description', communityData.description);
     try {
-      const token = await AsyncStorage.getItem("userToken");
+      const token = await AsyncStorage.getItem('userToken');
       const response = await fetch(API_ROUTES.community, {
-        method: "POST",
+        method: 'POST',
         body: formData,
         headers: {
-          Accept: "application/json",
+          Accept: 'application/json',
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       });
       const data = await response.json();
@@ -150,36 +150,37 @@ export default function newCommunity() {
       });
       router.replace(`/communities/${data.community._id}`);
     } catch (error) {
-      console.error("Failed to upload data:", error);
+      console.error('Failed to upload data:', error);
     }
   };
   const dynamicStyles = StyleSheet.create({
     textInput: {
       height: 40,
       paddingLeft: 5,
-      width: "80%",
+      width: '80%',
     },
     textArea: {
       height: 140,
       paddingLeft: 5,
-      width: "80%",
+      width: '80%',
       marginTop: 8,
+      textAlignVertical: 'top',
     },
   });
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <YStack
-        alignItems="center"
-        justifyContent="flex-start"
+        alignItems='center'
+        justifyContent='flex-start'
         gap={12}
-        bg="$background"
+        bg='$background'
         flex={1}
       >
         <YStack p={15}>
           <Text
             style={{
               fontSize: 25,
-              fontWeight: "700",
+              fontWeight: '700',
             }}
           >
             Create a Community
@@ -187,46 +188,46 @@ export default function newCommunity() {
         </YStack>
         <YStack>
           <YStack>
-            <Text p={4} mb={6} fontWeight={"700"}>
+            <Text p={4} mb={6} fontWeight={'700'}>
               Community
             </Text>
           </YStack>
           <XStack
             br={20}
-            justifyContent="center"
-            alignItems="center"
-            bg="$blue4"
+            justifyContent='center'
+            alignItems='center'
+            bg='$blue4'
           >
             <MaterialIcons
-              name="groups"
+              name='groups'
               style={{ padding: 10 }}
               size={25}
               color={theme.color12.val}
             />
             <TextInput
-              returnKeyType="done"
+              returnKeyType='done'
               maxLength={20}
-              placeholder="community"
+              placeholder='community'
               value={communityData.name}
-              onChangeText={(value) => handleInputChange("name", value)}
+              onChangeText={(value) => handleInputChange('name', value)}
               style={dynamicStyles.textInput}
-              autoCapitalize="none"
+              autoCapitalize='none'
               placeholderTextColor={
-                colorScheme === "light"
+                colorScheme === 'light'
                   ? Colors.extraColors.mediumGray
                   : Colors.extraColors.darkGray
               }
             />
           </XStack>
         </YStack>
-        <YStack w={"90%"}>
+        <YStack w={'90%'}>
           <YStack>
-            <Text my={6} p={4} fontWeight={"700"}>
+            <Text my={6} p={4} fontWeight={'700'}>
               Community Picture
             </Text>
           </YStack>
           <YStack>
-            <YStack alignSelf="center" mb={5}>
+            <YStack alignSelf='center' mb={5}>
               {communityData.image && (
                 <Image
                   source={{ uri: communityData.image.uri }}
@@ -235,44 +236,44 @@ export default function newCommunity() {
               )}
             </YStack>
             <Button
-              theme="blue"
+              theme='blue'
               onPress={pickImage}
-              w={"80%"}
-              alignSelf="center"
+              w={'80%'}
+              alignSelf='center'
             >
-              <Entypo name="camera" size={20} color={theme.color12.val} />
+              <Entypo name='camera' size={20} color={theme.color12.val} />
               <Text>Pick an image from your camera roll</Text>
             </Button>
           </YStack>
         </YStack>
         <YStack>
           <YStack>
-            <Text my={6} p={4} fontWeight={"700"}>
+            <Text my={6} p={4} fontWeight={'700'}>
               Description
             </Text>
           </YStack>
           <XStack
             br={20}
-            justifyContent="center"
-            alignContent="center"
-            bg="$blue4"
+            justifyContent='center'
+            alignContent='center'
+            bg='$blue4'
           >
             <MaterialCommunityIcons
-              name="subtitles-outline"
+              name='subtitles-outline'
               style={{ padding: 10 }}
               size={25}
               color={theme.color12.val}
             />
             <TextInput
-              placeholder="description"
+              placeholder='description'
               value={communityData.description}
-              onChangeText={(value) => handleInputChange("description", value)}
+              onChangeText={(value) => handleInputChange('description', value)}
               style={dynamicStyles.textArea}
-              autoCapitalize="none"
+              autoCapitalize='none'
               multiline={true}
               numberOfLines={4}
               placeholderTextColor={
-                colorScheme === "light"
+                colorScheme === 'light'
                   ? Colors.extraColors.mediumGray
                   : Colors.extraColors.darkGray
               }
@@ -281,9 +282,9 @@ export default function newCommunity() {
         </YStack>
         <Button
           onPress={uploadData}
-          size={"$4"}
-          fontWeight={"700"}
-          bg={"$blue8"}
+          size={'$4'}
+          fontWeight={'700'}
+          bg={'$blue8'}
           mt={16}
         >
           Create Community

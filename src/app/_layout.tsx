@@ -1,24 +1,22 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
-} from "@react-navigation/native";
-import { useFonts } from "expo-font";
-import { Stack, router } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
-import { TouchableOpacity, useColorScheme } from "react-native";
-import { PostProvider } from "./context/PostContext";
-import { TamaguiProvider, createTamagui } from "tamagui";
-import config from "@/tamagui.config";
-import { UserProvider } from "./context/UserContext";
-import { TrendingProvider } from "./context/TrendingContext";
-import ProfileSettingsHeader from "../components/profile-headers/ProfileSettingsHeader";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import DeleteUserHeader from "../components/profile-headers/DeleteUserHeader";
-import ShowSettingsOrDeleteHeader from "../components/profile-headers/ShowSettingsOrDeleteHeader";
+} from '@react-navigation/native';
+import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
+import { useColorScheme } from 'react-native';
+import { PostProvider } from './context/PostContext';
+import { TamaguiProvider, createTamagui } from 'tamagui';
+import config from '@/tamagui.config';
+import { UserProvider } from './context/UserContext';
+import { TrendingProvider } from './context/TrendingContext';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import ShowSettingsOrDeleteHeader from '../components/profile-headers/ShowSettingsOrDeleteHeader';
 
 const tamaguiConfig = createTamagui(config);
 
@@ -27,12 +25,12 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    Inter: require("@tamagui/font-inter/otf/Inter-Medium.otf"),
-    InterBold: require("@tamagui/font-inter/otf/Inter-Bold.otf"),
-    SpaceMono: require("../../assets/fonts/SpaceMono-Regular.ttf"),
-    DMSans: require("../../assets/fonts/DMSans.ttf"),
-    DMSansSemiBold: require("../../assets/fonts/DMSans-SemiBold.ttf"),
-    DMSansBold: require("../../assets/fonts/DMSans-Bold.ttf"),
+    Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
+    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+    SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
+    DMSans: require('../../assets/fonts/DMSans.ttf'),
+    DMSansSemiBold: require('../../assets/fonts/DMSans-SemiBold.ttf'),
+    DMSansBold: require('../../assets/fonts/DMSans-Bold.ttf'),
     ...FontAwesome.font,
   });
 
@@ -68,33 +66,33 @@ function RootLayoutNav() {
                 defaultTheme={colorScheme as any}
               >
                 <ThemeProvider
-                  value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+                  value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
                 >
                   <Stack>
                     <Stack.Screen
-                      name="(tabs)"
-                      options={{ headerShown: false, title: "Back" }}
+                      name='(tabs)'
+                      options={{ headerShown: false, title: 'Back' }}
                     />
                     <Stack.Screen
-                      name="communities/[id]"
-                      options={{ title: "Community" }}
+                      name='communities/[id]'
+                      options={{ title: 'Community' }}
                     />
                     <Stack.Screen
-                      name="communities/newCommunity"
-                      options={{ title: "New Community" }}
+                      name='communities/newCommunity'
+                      options={{ title: 'New Community' }}
                     />
                     <Stack.Screen
-                      name="posts/[id]"
-                      options={{ title: "Post" }}
+                      name='posts/[id]'
+                      options={{ title: 'Post' }}
                     />
                     <Stack.Screen
-                      name="discussions/[id]"
-                      options={{ title: "Discussion" }}
+                      name='discussions/[id]'
+                      options={{ title: 'Discussion' }}
                     />
                     <Stack.Screen
-                      name="profiles/[id]"
+                      name='profiles/[id]'
                       options={{
-                        title: "Profile",
+                        title: 'Profile',
                         headerRight: () => (
                           <>
                             <ShowSettingsOrDeleteHeader />
@@ -103,16 +101,16 @@ function RootLayoutNav() {
                       }}
                     />
                     <Stack.Screen
-                      name="profiles/settings"
-                      options={{ title: "Settings" }}
+                      name='profiles/settings'
+                      options={{ title: 'Settings' }}
                     />
                     <Stack.Screen
-                      name="authentication/login"
-                      options={{ title: "Log In" }}
+                      name='authentication/login'
+                      options={{ title: 'Log In' }}
                     />
                     <Stack.Screen
-                      name="authentication/register"
-                      options={{ title: "Register" }}
+                      name='authentication/register'
+                      options={{ title: 'Register' }}
                     />
                   </Stack>
                 </ThemeProvider>
