@@ -24,6 +24,7 @@ import { PostType, UserType } from '@/src/api-types/api-types';
 import { useTrending } from '../context/TrendingContext';
 import BottomSheet from '@/src/components/BottomSheet';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { useIsFocused } from '@react-navigation/native';
 
 const postPage: React.FC = () => {
   const theme = useTheme();
@@ -33,6 +34,7 @@ const postPage: React.FC = () => {
   const [newDiscussionName, setNewDiscussionName] = useState<string>('');
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { currentPost, setCurrentPost } = usePost();
+  const isFocused = useIsFocused();
   function openModal() {
     bottomSheetRef.current?.present();
   }
@@ -53,7 +55,7 @@ const postPage: React.FC = () => {
       setCurrentPost(data.post);
     }
     getPostData();
-  }, []);
+  }, [isFocused]);
   async function postVote(voteType: 'up' | 'down') {
     if (user && currentPost) {
       try {
